@@ -1,21 +1,26 @@
+import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import 'react-native-gesture-handler';
+import Provider from "./src/context";
+import Routes from "./src/routes";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Super Vendedor Rommanel</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        <Provider>
+          <Routes />
+          <StatusBar style="light" translucent={false} />
+        </Provider>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#F0F2F7",
   },
 });
