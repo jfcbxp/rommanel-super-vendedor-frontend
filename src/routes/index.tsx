@@ -14,7 +14,7 @@ export default function Routes() {
                     justifyContent: "center",
                     alignItems: "center",
                 }}>
-                <ActivityIndicator size={128} color={global.ROMMANEL_LOGO_PURPLE} />
+                <ActivityIndicator size={128} color="#E0CCDC" />
             </SafeAreaView>
         )
     } else {
