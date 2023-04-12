@@ -30,6 +30,12 @@ const Provider = ({ children }: ProviderProps) => {
     const defaultDialog = { title: "", content: "", visible: false };
 
     useEffect(() => {
+        let _user: User = {
+            userCode: "0001",
+            sellerCode: "FFF1",
+            fullName: "Vendedor Teste",
+        }
+        setUser(_user)
         setLoading(false)
     }, [])
 
