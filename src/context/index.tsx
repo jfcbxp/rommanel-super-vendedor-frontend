@@ -34,6 +34,7 @@ const Provider = ({ children }: ProviderProps) => {
             userCode: "0001",
             sellerCode: "FFF1",
             fullName: "Vendedor Teste",
+            role: "Vendedor Pleno"
         }
         setUser(_user)
         setLoading(false)
