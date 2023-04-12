@@ -13,4 +13,14 @@ export const SignInStyles = StyleSheet.create({
         width: 300,
         color: "#73186D",
     },
+    text: {
+        width: "100%",
+        height: 40,
+        fontSize: 16,
+        fontWeight: "bold",
+        letterSpacing: 0.25,
+        color: "#73186D",
+        textAlign: "center",
+        marginBottom: 40,
+    },
 })

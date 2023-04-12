@@ -7,7 +7,6 @@ import { EmailInput } from "../../components/inputs/email";
 import { PasswordInput } from "../../components/inputs/password";
 import { useState } from "react";
 import { Button } from "../../components/buttons/button";
-import { CommandLink } from "../../components/buttons/command-link";
 
 interface Properties extends StackScreenProps<StackParams, "SignIn"> { }
 
@@ -35,8 +34,7 @@ export default function SignIn({ navigation }: Properties) {
                     title="ENTRAR"
                     onPress={() => { }} />
             </View>
-            <CommandLink
-                title="Solicite seu acesso ao setor de T.I" />
+            <Text style={styles.text}>Solicite seu acesso ao setor de T.I</Text>
             <StatusBar style="light" translucent={false} backgroundColor="#BEC0C5" />
         </View>
     )
