@@ -11,6 +11,7 @@ export default function Routes() {
             <SafeAreaView
                 style={{
                     flex: 1,
+                    backgroundColor: "#73186D",
                     justifyContent: "center",
                     alignItems: "center",
                 }}>
