@@ -44,11 +44,17 @@ const Provider = ({ children }: ProviderProps) => {
         _email: string,
         _password: string,
     ) => {
-
+        setUser({
+            userCode: "",
+            sellerCode: "",
+            fullName: "",
+            role: "",
+        })
+        console.log(defaultDialog.visible)
     }
 
     const signOut = async () => {
-
+        setUser(undefined)
     }
 
     const contextValue = useMemo(
