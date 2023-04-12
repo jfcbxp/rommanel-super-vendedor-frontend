@@ -14,16 +14,9 @@ interface Properties extends StackScreenProps<StackParams, "Home"> { }
 export default function Home({ navigation }: Properties) {
     return (
         <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-                <Header />
-            </View>
-            <View style={{ flex: 9, paddingHorizontal: "5%" }}>
-                <View style={{
-                    flex: 1.5,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingTop: "5%",
-                }}>
+            <Header />
+            <View style={styles.body}>
+                <View style={styles.navigator}>
                     <NavigationButton
                         title="Agendamento"
                         icon="schedule" />
@@ -34,7 +27,7 @@ export default function Home({ navigation }: Properties) {
                         title="Faturamento"
                         icon="attach-money" />
                 </View>
-                <View style={{ flex: 7.5, paddingTop: "2.5%" }}>
+                <View style={styles.bottom}>
                     <Container title="Hoje">
                         <ProgressBar
                             title="Total Vendido"
