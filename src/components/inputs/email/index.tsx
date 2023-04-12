@@ -10,7 +10,7 @@ export function EmailInput(properties: TextInputProps) {
             autoCapitalize="none"
             maxFontSizeMultiplier={14}
             placeholder="E-mail"
-            placeholderTextColor="#601C5C"
+            placeholderTextColor="#73186D"
             style={styles.input} />
     )
 }

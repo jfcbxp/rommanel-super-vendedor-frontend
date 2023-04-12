@@ -11,6 +11,6 @@ export const SignInStyles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "bold",
         width: 300,
-        color: "#601C5C",
+        color: "#73186D",
     },
 })

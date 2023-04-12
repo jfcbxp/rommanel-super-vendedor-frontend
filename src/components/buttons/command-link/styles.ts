@@ -7,7 +7,7 @@ export const CommandLinkStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         letterSpacing: 0.25,
-        color: "#601C5C",
+        color: "#73186D",
         textAlign: "center",
         marginBottom: 40,
     },

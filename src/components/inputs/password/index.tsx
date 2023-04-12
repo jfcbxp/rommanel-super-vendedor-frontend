@@ -12,7 +12,7 @@ export function PasswordInput(properties: Properties) {
             secureTextEntry
             autoCapitalize="none"
             placeholder={properties.placeholder ? properties.placeholder : "Senha"}
-            placeholderTextColor="#601C5C"
+            placeholderTextColor="#73186D"
             style={styles.input} />
     );
 }
