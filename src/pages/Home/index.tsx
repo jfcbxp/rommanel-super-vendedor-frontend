@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParams } from "../../types/stack.params";
 import { HomeStyles as styles } from "./styles";
-import { Header } from "../../components/header";
+import { HomeHeader } from "../../components/headers/home";
 import { Container } from "../../components/container";
 import { NavigationButton } from "../../components/buttons/navigation";
 import { StatusBar } from "expo-status-bar";
@@ -14,7 +14,7 @@ interface Properties extends StackScreenProps<StackParams, "Home"> { }
 export default function Home({ navigation }: Properties) {
     return (
         <View style={styles.container}>
-            <Header />
+            <HomeHeader />
             <View style={styles.body}>
                 <View style={styles.navigator}>
                     <NavigationButton
@@ -22,7 +22,8 @@ export default function Home({ navigation }: Properties) {
                         icon="schedule" />
                     <NavigationButton
                         title="Carteira"
-                        icon="check-box" />
+                        icon="check-box"
+                        onPress={() => { navigation.navigate("Wallet") }} />
                     <NavigationButton
                         title="Faturamento"
                         icon="attach-money" />
