@@ -5,6 +5,7 @@ import { HomeStyles as styles } from "./styles";
 import { Header } from "../../components/header";
 import { Container } from "../../components/container";
 import { NavigationButton } from "../../components/buttons/navigation";
+import { StatusBar } from "expo-status-bar";
 
 interface Properties extends StackScreenProps<StackParams, "Home"> { }
 
@@ -37,6 +38,7 @@ export default function Home({ navigation }: Properties) {
                     </Container>
                 </View>
             </View>
+            <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
         </View>
     )
 }
