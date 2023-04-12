@@ -34,6 +34,7 @@ const Provider = ({ children }: ProviderProps) => {
             userCode: "0001",
             sellerCode: "FFF1",
             fullName: "Vendedor Teste",
+            role: "Vendedor Pleno"
         }
         setUser(_user)
         setLoading(false)
@@ -43,11 +44,17 @@ const Provider = ({ children }: ProviderProps) => {
         _email: string,
         _password: string,
     ) => {
-
+        setUser({
+            userCode: "",
+            sellerCode: "",
+            fullName: "",
+            role: "",
+        })
+        console.log(defaultDialog.visible)
     }
 
     const signOut = async () => {
-
+        setUser(undefined)
     }
 
     const contextValue = useMemo(
