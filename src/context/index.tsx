@@ -44,17 +44,23 @@ const Provider = ({ children }: ProviderProps) => {
         let _costumers: Costumer[] = [
             {
                 code: "XXT001",
-                fullName: "CLIENTE TESTE NA CARTEIRA DO VENDEDOR",
+                fullName: "CLIENTE TESTE 1",
                 status: "Ativo",
                 type: "Carteira",
-                value: 100
+                value: 100,
+                schedule: "08:00",
+                arrival: "Chegou",
+                phone: "(91) 90000-0000"
             },
             {
                 code: "XXT002",
-                fullName: "CLIENTE TESTE NA CARTEIRA DO VENDEDOR",
+                fullName: "CLIENTE TESTE 2",
                 status: "Inativo",
                 type: "Carteira",
-                value: 100
+                value: 100,
+                schedule: "10:00",
+                arrival: "Previsto",
+                phone: "(91) 90000-0002"
             }
         ]
         setCostumers(_costumers)

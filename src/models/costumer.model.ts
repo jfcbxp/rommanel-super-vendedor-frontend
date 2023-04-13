@@ -4,4 +4,7 @@ export interface Costumer {
     type: string
     fullName: string
     value: number
+    phone: string
+    schedule: string
+    arrival: string
 }
