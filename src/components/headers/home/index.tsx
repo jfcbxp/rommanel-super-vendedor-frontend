@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { View, Image, Text } from "react-native";
-import { HeaderStyles as styles } from "./styles";
+import { HomeHeaderStyles as styles } from "./styles";
 import { MaterialIcons as Icon } from "@expo/vector-icons"
 import { Context } from "../../../context";
 
