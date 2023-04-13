@@ -1,9 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView } from "react-native";
-import 'react-native-gesture-handler';
+import { StyleSheet, SafeAreaView, Platform } from "react-native";
+import "react-native-gesture-handler";
 import Provider from "./src/context";
 import Routes from "./src/routes";
+import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
 
 export default function App() {
   return (
@@ -24,3 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F2F7",
   },
 });
+
+if (Platform.OS === "web") {
+  serviceWorkerRegistration.register();
+}
