@@ -15,6 +15,7 @@ export default function Home({ navigation }: Properties) {
     return (
         <View style={styles.container}>
             <HomeHeader />
+
             <View style={styles.body}>
                 <View style={styles.navigator}>
                     <NavigationButton
@@ -24,6 +25,7 @@ export default function Home({ navigation }: Properties) {
                         title="Carteira"
                         icon="check-box"
                         onPress={() => { navigation.navigate("Wallet") }} />
+                        icon="check-box" />
                     <NavigationButton
                         title="Faturamento"
                         icon="attach-money" />

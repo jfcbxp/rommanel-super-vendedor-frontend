@@ -15,6 +15,7 @@ export function Container(properties: Properties) {
             <ScrollView style={{ flex: 1 }}>
                 {properties.children}
             </ScrollView>
+
         </View>
     );
 }
