@@ -1,8 +1,10 @@
 import { createContext, useEffect, useMemo, useState } from "react"
 import { User } from "../models/user.model"
+import { Costumer } from "../models/costumer.model"
 
 type ContextProps = {
     user: User | undefined
+    costumers: Costumer[] | undefined
     loading: boolean
     signIn(
         _email: string,
@@ -13,6 +15,7 @@ type ContextProps = {
 
 const defaultState = {
     user: undefined,
+    costumers: undefined,
     loading: true,
     signIn: async () => { },
     signOut: async () => { },
@@ -26,6 +29,7 @@ type ProviderProps = {
 
 const Provider = ({ children }: ProviderProps) => {
     const [user, setUser] = useState<User>();
+    const [costumers, setCostumers] = useState<Costumer[]>()
     const [loading, setLoading] = useState<boolean>(true);
     const defaultDialog = { title: "", content: "", visible: false };
 
@@ -37,6 +41,23 @@ const Provider = ({ children }: ProviderProps) => {
             role: "Vendedor Pleno"
         }
         setUser(_user)
+        let _costumers: Costumer[] = [
+            {
+                code: "XXT001",
+                fullName: "CLIENTE TESTE NA CARTEIRA DO VENDEDOR",
+                status: "Ativo",
+                type: "Carteira",
+                value: 100
+            },
+            {
+                code: "XXT002",
+                fullName: "CLIENTE TESTE NA CARTEIRA DO VENDEDOR",
+                status: "Inativo",
+                type: "Carteira",
+                value: 100
+            }
+        ]
+        setCostumers(_costumers)
         setLoading(false)
     }, [])
 
@@ -60,12 +81,14 @@ const Provider = ({ children }: ProviderProps) => {
     const contextValue = useMemo(
         () => ({
             user,
+            costumers,
             loading,
             signIn,
             signOut,
         }),
         [
             user,
+            costumers,
             loading,
             signIn,
             signOut,

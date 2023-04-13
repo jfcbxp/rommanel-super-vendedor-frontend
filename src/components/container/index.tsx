@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Divider } from "../divider";
 import { ContainerStyles as styles } from "./styles";
 
@@ -12,7 +12,10 @@ export function Container(properties: Properties) {
         <View style={styles.container}>
             <Text style={styles.title}>{properties.title}</Text>
             <Divider />
-            {properties.children}
+            <ScrollView style={{ flex: 1 }}>
+                {properties.children}
+            </ScrollView>
+
         </View>
     );
 }
