@@ -28,11 +28,11 @@ export const WalletStyles = StyleSheet.create({
     list: {
         flex: 1.6,
         margin: "2.5%",
+        zIndex: -1,
     },
     overviewText: {
         fontSize: 24,
         fontFamily: "Inter_700Bold",
-
         color: "#73186D",
     }
 })

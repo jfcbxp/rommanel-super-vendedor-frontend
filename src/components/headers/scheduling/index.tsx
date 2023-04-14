@@ -2,6 +2,8 @@ import { View, Text } from "react-native";
 import { Divider } from "../../divider";
 import { SchedulingHeaderStyles as styles } from "./styles";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationParams } from "../../../types/navigation.params";
 
 interface Properties {
     total: number
@@ -15,9 +17,16 @@ interface Properties {
 }
 
 export function SchedulingHeader(properties: Properties) {
+    const navigation = useNavigation<NavigationParams>()
+
     return (
         <View style={styles.container}>
             <View style={styles.head}>
+                <Icon
+                    name="chevron-left"
+                    color="white"
+                    size={48}
+                    onPress={() => { navigation.navigate("Home") }} />
                 <Icon
                     name="schedule"
                     color="white"

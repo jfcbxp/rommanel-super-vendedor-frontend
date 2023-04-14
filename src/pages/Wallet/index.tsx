@@ -20,7 +20,7 @@ export default function Wallet({ navigation }: Properties) {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
-        let data = ["Todos"]
+        let data = ["1", "2", "3", "4","Todos"]
         if (data) {
             let array: ItemType<any>[] = []
             Object.entries(data).forEach(([key, value]) => {
