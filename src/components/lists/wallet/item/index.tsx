@@ -11,13 +11,13 @@ export function WalletItem({ data }: { data: Costumer }) {
                     style={[styles.box,
                     { backgroundColor: data.status == "Ativo" ? "#00B81F" : "#C00404" }
                     ]}>
-                    <Text style={{ color: "white" }}>{data.status}</Text>
+                    <Text style={[styles.costumer,{ color: "white" }]}>{data.status}</Text>
                 </View>
                 <View
                     style={[styles.box,
                     { backgroundColor: data.status == "Ativo" ? "#00B81F" : "#C00404" }
                     ]}>
-                    <Text style={{ color: "white" }}>{data.type}</Text>
+                    <Text style={[styles.costumer,{ color: "white" }]}>{data.type}</Text>
                 </View>
             </View>
             <View style={styles.bottom}>

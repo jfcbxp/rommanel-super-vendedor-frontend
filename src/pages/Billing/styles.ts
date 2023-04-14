@@ -40,17 +40,19 @@ export const BillingStyles = StyleSheet.create({
         margin: "2.5%",
     },
     overview_1: {
-        fontSize: 18,
+        fontSize: 14,
+        fontFamily: "Inter_500Medium",
         color: "silver",
+        marginBottom: "2.5%",
     },
     overview_2: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         color: "#73186D",
     },
     overview_3: {
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily: "Inter_500Medium",
         color: "#60D29D",
     }
 })

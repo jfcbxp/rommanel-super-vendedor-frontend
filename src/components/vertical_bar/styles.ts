@@ -9,7 +9,7 @@ export const VerticalBarStyles = StyleSheet.create({
         width: 16,
         borderRadius: 8,
         backgroundColor: "#B024A7",
-        marginHorizontal: 10,
+        marginHorizontal: 8,
     },
     selected: {
         width: 16,
@@ -18,7 +18,8 @@ export const VerticalBarStyles = StyleSheet.create({
         backgroundColor: "#FE38F2"
     },
     title: {
-        fontSize: 16,
+        fontSize: 12,
+        fontFamily: "Inter_500Medium",
         color: "white",
     }
 })

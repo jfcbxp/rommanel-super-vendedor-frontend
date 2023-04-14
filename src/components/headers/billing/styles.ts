@@ -13,14 +13,9 @@ export const BillingHeaderStyles = StyleSheet.create({
         flex: 3,
     },
     title: {
-        fontSize: 22,
-        fontWeight: "bold",
+        fontSize: 24,
+        fontFamily: "Inter_700Bold",
         color: "white",
         marginLeft: "2.5%"
     },
-    text: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "white",
-    }
 })

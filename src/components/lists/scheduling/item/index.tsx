@@ -11,13 +11,13 @@ export function SchedulingItem({ data }: { data: Costumer }) {
                     style={[styles.box,
                     { backgroundColor: data.arrival == "Chegou" ? "#00B81F" : "#C00404" }
                     ]}>
-                    <Text style={{ color: "white" }}>{data.schedule}</Text>
+                    <Text style={[styles.costumer,{ color: "white" }]}>{data.schedule}</Text>
                 </View>
                 <View
                     style={[styles.box,
                     { backgroundColor: data.arrival == "Previsto" ? "#FE38F2" : "#00B81F" }
                     ]}>
-                    <Text style={{ color: "white" }}>{data.arrival}</Text>
+                    <Text style={[styles.costumer,{ color: "white" }]}>{data.arrival}</Text>
                 </View>
             </View>
             <View style={styles.bottom}>

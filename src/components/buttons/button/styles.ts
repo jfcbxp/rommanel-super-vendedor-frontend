@@ -14,7 +14,7 @@ export const ButtonStyles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         letterSpacing: 0.25,
         color: "white",
     },
