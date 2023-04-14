@@ -61,19 +61,19 @@ export default function Billing({ route, navigation }: Properties) {
         let data = [..._DATA]
         if (!item) {
             let _item = data[0].date
-            data.find(element => {
-                if (element.date == _item) {
-                    element.selected = true
-                    setElement(element)
-                }
-            })
+            let element = data.find(element => element.date == _item)!
+            element.selected = true
+            setElement(element)
+            let index = data.findIndex(element => element.date == _item)
+            data[index] = element
+            setData(data)
         } else {
-            data.find(element => {
-                if (element.date == item) {
-                    element.selected = true
-                    setElement(element)
-                }
-            })
+            let element = data.find(element => element.date == item)!
+            element.selected = true
+            setElement(element)
+            let index = data.findIndex(element => element.date == item)
+            data[index] = element
+            setData(data)
         }
         setData(data)
     }, [item])
