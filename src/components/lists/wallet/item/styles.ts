@@ -22,5 +22,11 @@ export const WalletItemStyles = StyleSheet.create({
     costumer: {
         fontSize: 13,
         color: "silver"
+    },
+    box: {
+        paddingVertical: 2,
+        paddingHorizontal: 6,
+        marginHorizontal: 4,
+        borderRadius: 4,
     }
 })

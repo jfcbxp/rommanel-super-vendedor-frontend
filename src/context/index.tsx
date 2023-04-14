@@ -50,7 +50,9 @@ const Provider = ({ children }: ProviderProps) => {
                 value: 100,
                 schedule: "08:00",
                 arrival: "Chegou",
-                phone: "(91) 90000-0000"
+                phone: "(91) 90000-0000",
+                service: "WhatsApp",
+                task: "Comissão"
             },
             {
                 code: "XXT002",
@@ -60,7 +62,9 @@ const Provider = ({ children }: ProviderProps) => {
                 value: 100,
                 schedule: "10:00",
                 arrival: "Previsto",
-                phone: "(91) 90000-0002"
+                phone: "(91) 90000-0002",
+                service: "Normal",
+                task: "Comissão"
             }
         ]
         setCostumers(_costumers)

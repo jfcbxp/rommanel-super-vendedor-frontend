@@ -7,4 +7,6 @@ export interface Costumer {
     phone: string
     schedule: string
     arrival: string
+    service: string
+    task: string
 }

@@ -1,23 +1,29 @@
 import { View, Text } from "react-native";
-import { WalletItemStyles as styles } from "./styles";
+import { BillingItemStyles as styles } from "./styles";
 import { Costumer } from "../../../../models/costumer.model";
 
-export function WalletItem({ data }: { data: Costumer }) {
+export function BillingItem({ data }: { data: Costumer }) {
     return (
         <View style={styles.container}>
             <View style={styles.top}>
                 <Text style={styles.code}>{data.code}</Text>
                 <View
                     style={[styles.box,
-                    { backgroundColor: data.status == "Ativo" ? "#00B81F" : "#C00404" }
+                    { backgroundColor: data.service == "WhatsApp" ? "#00B81F" : "#C00404" }
                     ]}>
-                    <Text style={{ color: "white" }}>{data.status}</Text>
+                    <Text style={{ color: "white" }}>{data.service}</Text>
                 </View>
                 <View
                     style={[styles.box,
-                    { backgroundColor: data.status == "Ativo" ? "#00B81F" : "#C00404" }
+                    { backgroundColor: data.service == "Normal" ? "#C00404" : "#00B81F" }
                     ]}>
                     <Text style={{ color: "white" }}>{data.type}</Text>
+                </View>
+                <View
+                    style={[styles.box,
+                    { backgroundColor: data.service == "WhatsApp" ? "#00B81F" : "#C00404" }
+                    ]}>
+                    <Text style={{ color: "white" }}>{data.task}</Text>
                 </View>
             </View>
             <View style={styles.bottom}>
