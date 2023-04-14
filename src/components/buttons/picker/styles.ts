@@ -12,7 +12,7 @@ export const PickerStyles = StyleSheet.create({
     },
     font: {
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         color: "#73186D",
     },
 })

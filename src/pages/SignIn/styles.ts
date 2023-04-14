@@ -9,7 +9,7 @@ export const SignInStyles = StyleSheet.create({
     },
     title: {
         fontSize: 28,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         width: 300,
         color: "#73186D",
     },
@@ -17,7 +17,8 @@ export const SignInStyles = StyleSheet.create({
         width: "100%",
         height: 40,
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
+
         letterSpacing: 0.25,
         color: "#73186D",
         textAlign: "center",

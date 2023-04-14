@@ -7,7 +7,7 @@ export const InputStyles = StyleSheet.create({
         backgroundColor: "white",
         color: "#73186D",
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         borderRadius: 18,
         paddingHorizontal: 16,
         marginBottom: 16,

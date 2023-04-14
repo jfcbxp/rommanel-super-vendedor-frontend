@@ -30,17 +30,20 @@ export const SchedulingStyles = StyleSheet.create({
         margin: "2.5%",
     },
     overview_1: {
-        fontSize: 18,
+        fontSize: 14,
+        fontFamily: "Inter_500Medium",
         color: "silver",
+        marginBottom: "5%"
     },
     overview_2: {
-        fontSize: 18,
-        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily: "Inter_700Bold",
         color: "#FE38F2",
+        marginBottom: "2.5%"
     },
     overview_3: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
         color: "#73186D",
     },
 })

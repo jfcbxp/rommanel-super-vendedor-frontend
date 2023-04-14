@@ -17,8 +17,8 @@ export const NavigationButtonStyles = StyleSheet.create({
         paddingVertical: 14,
     },
     text: {
-        fontSize: 14,
-        fontWeight: "bold",
+        fontSize: 10.54,
+        fontFamily: "Inter_700Bold",
         color: "#73186D",
         textAlign: "center",
         textAlignVertical: "center",

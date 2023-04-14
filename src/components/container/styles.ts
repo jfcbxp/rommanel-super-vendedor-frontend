@@ -13,7 +13,8 @@ export const ContainerStyles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
+
         color: "#73186D",
         marginBottom: "2.5%",
     },

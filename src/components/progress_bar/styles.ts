@@ -11,11 +11,14 @@ export const ProgressBarStyles = StyleSheet.create({
         justifyContent: "space-between",
     },
     title: {
-        fontWeight: "bold",
+        fontSize: 12,
+        fontFamily: "Inter_500Medium",
+
         color: "#73186D",
     },
     subTitle: {
-        fontWeight: "bold",
+        fontSize: 8,
+        fontFamily: "Inter_500Medium",
         color: "#BEC0C5",
     },
     progressBar: {
@@ -23,8 +26,8 @@ export const ProgressBarStyles = StyleSheet.create({
         paddingVertical: "2.5%",
     },
     icon: {
-        flex: 1, 
-        alignItems: "center", 
+        flex: 1,
+        alignItems: "center",
         justifyContent: "center",
     },
     bar: {

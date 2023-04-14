@@ -32,18 +32,20 @@ export function WalletHeader(properties: Properties) {
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Ativos</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.actives}</Text>
+                    <Text style={[styles.text, { fontSize: 20}]}>
+                        {properties.actives}
+                    </Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.activesStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.activesStatus + "%"}
@@ -53,18 +55,20 @@ export function WalletHeader(properties: Properties) {
                 </View>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Prospecto</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.prospect}</Text>
+                    <Text style={[styles.text, { fontSize: 20}]}>
+                        {properties.prospect}
+                    </Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.prospectStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.prospectStatus + "%"}
@@ -77,18 +81,20 @@ export function WalletHeader(properties: Properties) {
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Inativos</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.inactives}</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>
+                        {properties.inactives}
+                    </Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.inactivesStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.inactivesStatus + "%"}
@@ -98,18 +104,20 @@ export function WalletHeader(properties: Properties) {
                 </View>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Reativos</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.reactives}</Text>
-                    <View style={{ flexDirection: "row" }}>
+                    <Text style={[styles.text, { fontSize: 20 }]}>
+                        {properties.reactives}
+                    </Text>
+                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
                         {properties.reactivesStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.reactivesStatus + "%"}
