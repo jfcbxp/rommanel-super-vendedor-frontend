@@ -5,8 +5,18 @@ import "react-native-gesture-handler";
 import Provider from "./src/context";
 import Routes from "./src/routes";
 import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
+import { useFonts, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Inter_500Medium,
+    Inter_700Bold
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>

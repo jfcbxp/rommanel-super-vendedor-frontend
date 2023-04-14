@@ -9,18 +9,21 @@ export const SchedulingItemStyles = StyleSheet.create({
         padding: "2.5%"
     },
     top: {
-        flexDirection: "row"
+        flexDirection: "row",
+        marginBottom: "2.5%"
     },
     bottom: {
         flexDirection: "row",
         justifyContent: "space-between",
     },
     code: {
-        fontSize: 16,
+        fontSize: 12,
+        fontFamily: "Inter_500Medium",
         color: "#73186D"
     },
     costumer: {
-        fontSize: 13,
+        fontSize: 10,
+        fontFamily: "Inter_500Medium",
         color: "silver"
     },
     box: {

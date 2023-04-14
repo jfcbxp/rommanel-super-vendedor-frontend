@@ -32,18 +32,18 @@ export function SchedulingHeader(properties: Properties) {
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Total</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.total}</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>{properties.total}</Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.totalStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.totalStatus}
@@ -53,18 +53,18 @@ export function SchedulingHeader(properties: Properties) {
                 </View>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Previstos</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.predicted}</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>{properties.predicted}</Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.predictedStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.predictedStatus}
@@ -77,18 +77,18 @@ export function SchedulingHeader(properties: Properties) {
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Faltas</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.absences}</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>{properties.absences}</Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.absencesStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.absencesStatus}
@@ -98,18 +98,18 @@ export function SchedulingHeader(properties: Properties) {
                 </View>
                 <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Chegaram</Text>
-                    <Text style={[styles.text, { fontSize: 32 }]}>{properties.arrivals}</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>{properties.arrivals}</Text>
                     <View style={{ flexDirection: "row" }}>
                         {properties.arrivalsStatus >= 0 ?
                             <Icon
                                 name="arrow-upward"
                                 color="#60D29D"
-                                size={24} />
+                                size={18} />
                             :
                             <Icon
                                 name="arrow-downward"
                                 color="#FF5454"
-                                size={24} />
+                                size={18} />
                         }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.arrivalsStatus}

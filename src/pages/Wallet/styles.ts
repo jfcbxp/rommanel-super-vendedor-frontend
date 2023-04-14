@@ -31,7 +31,8 @@ export const WalletStyles = StyleSheet.create({
     },
     overviewText: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontFamily: "Inter_700Bold",
+
         color: "#73186D",
     }
 })

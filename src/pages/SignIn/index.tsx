@@ -19,7 +19,7 @@ export default function SignIn({ navigation }: Properties) {
             <View style={{ marginBottom: 32 }}>
                 <Image
                     source={require("../../assets/ROMMANEL_BUTTLERFLY.png")}
-                    style={{ width: 72, height: 64 }} />
+                    style={{ width: 85, height: 77 }} />
                 <Text style={styles.title}>Olá,</Text>
                 <Text style={styles.title}>seja bem-vindo(a).</Text>
             </View>
