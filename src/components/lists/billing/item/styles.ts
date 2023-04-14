@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const SchedulingItemStyles = StyleSheet.create({
+export const BillingItemStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",

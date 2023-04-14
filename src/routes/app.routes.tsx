@@ -3,6 +3,7 @@ import { StackParams } from "../types/stack.params";
 import Home from "../pages/Home";
 import Wallet from "../pages/Wallet";
 import Scheduling from "../pages/Scheduling";
+import Billing from "../pages/Billing";
 
 export default function AppRoutes() {
     const Stack = createStackNavigator<StackParams>()
@@ -19,6 +20,9 @@ export default function AppRoutes() {
             <Stack.Screen
                 name="Wallet"
                 component={Wallet} />
+            <Stack.Screen
+                name="Billing"
+                component={Billing} />
         </Stack.Navigator>
     )
 }
