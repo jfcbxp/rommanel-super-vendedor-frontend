@@ -8,23 +8,15 @@ export function SchedulingItem({ data }: { data: Costumer }) {
             <View style={styles.top}>
                 <Text style={styles.code}>{data.code}</Text>
                 <View
-                    style={{
-                        paddingVertical: 2,
-                        paddingHorizontal: 6,
-                        marginHorizontal: 4,
-                        borderRadius: 4,
-                        backgroundColor: data.arrival == "Chegou" ? "#00B81F" : "#C00404"
-                    }}>
+                    style={[styles.box,
+                    { backgroundColor: data.arrival == "Chegou" ? "#00B81F" : "#C00404" }
+                    ]}>
                     <Text style={{ color: "white" }}>{data.schedule}</Text>
                 </View>
                 <View
-                    style={{
-                        paddingVertical: 2,
-                        paddingHorizontal: 6,
-                        marginHorizontal: 4,
-                        borderRadius: 4,
-                        backgroundColor: data.arrival == "Previsto" ? "#FE38F2" : "#00B81F"
-                    }}>
+                    style={[styles.box,
+                    { backgroundColor: data.arrival == "Previsto" ? "#FE38F2" : "#00B81F" }
+                    ]}>
                     <Text style={{ color: "white" }}>{data.arrival}</Text>
                 </View>
             </View>

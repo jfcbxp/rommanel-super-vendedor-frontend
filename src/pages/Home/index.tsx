@@ -27,7 +27,8 @@ export default function Home({ navigation }: Properties) {
                         onPress={() => { navigation.navigate("Wallet") }} />
                     <NavigationButton
                         title="Faturamento"
-                        icon="attach-money" />
+                        icon="bar-chart"
+                        onPress={() => { navigation.navigate("Billing", {}) }} />
                 </View>
                 <View style={styles.bottom}>
                     <Container title="Hoje">

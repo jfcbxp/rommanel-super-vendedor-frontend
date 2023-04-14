@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text } from "react-native";
 import { StackParams } from "../../types/stack.params";
-import { WalletStyles as styles } from "./styles";
+import { SchedulingStyles as styles } from "./styles";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { useContext } from "react";
