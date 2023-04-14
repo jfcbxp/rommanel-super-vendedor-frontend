@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.js": "/rommanel-super-vendedor-frontend/static/js/main.46701507.js",
+    "static/js/468.838be6d5.js": "/rommanel-super-vendedor-frontend/static/js/468.838be6d5.js",
+    "static/media/MaterialIcons.ttf": "/rommanel-super-vendedor-frontend/static/media/MaterialIcons.120b4c7bbd155bd0a04d.ttf",
+    "static/media/tick.png": "/rommanel-super-vendedor-frontend/static/media/tick.32cb45231ee117d499e2.png",
+    "static/media/arrow-up.png": "/rommanel-super-vendedor-frontend/static/media/arrow-up.0b0d1af9a5b464b93fde.png",
+    "static/media/close.png": "/rommanel-super-vendedor-frontend/static/media/close.b65df71afd6c8e422619.png",
+    "static/media/arrow-down.png": "/rommanel-super-vendedor-frontend/static/media/arrow-down.772a5382a31866c9198e.png",
+    "favicon.ico": "/rommanel-super-vendedor-frontend/favicon.ico",
+    "static/media/ROMMANEL_BUTTLERFLY.png": "/rommanel-super-vendedor-frontend/static/media/ROMMANEL_BUTTLERFLY.f27995caea618781ffe4.png",
+    "index.html": "/rommanel-super-vendedor-frontend/index.html",
+    "favicon-32.png": "/rommanel-super-vendedor-frontend/favicon-32.png",
+    "favicon-16.png": "/rommanel-super-vendedor-frontend/favicon-16.png",
+    "manifest.json": "/rommanel-super-vendedor-frontend/manifest.json",
+    "serve.json": "/rommanel-super-vendedor-frontend/serve.json",
+    "main.46701507.js.map": "/rommanel-super-vendedor-frontend/static/js/main.46701507.js.map",
+    "468.838be6d5.js.map": "/rommanel-super-vendedor-frontend/static/js/468.838be6d5.js.map"
+  },
+  "entrypoints": [
+    "static/js/468.838be6d5.js",
+    "static/js/main.46701507.js"
+  ]
+}

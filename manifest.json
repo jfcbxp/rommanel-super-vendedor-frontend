@@ -1,0 +1,9 @@
+{
+  "background_color": "#73186D",
+  "display": "standalone",
+  "lang": "en",
+  "name": "super-vendedor",
+  "short_name": "super-vendedor",
+  "start_url": "/rommanel-super-vendedor-frontend/?utm_source=web_app_manifest",
+  "orientation": "portrait"
+}
