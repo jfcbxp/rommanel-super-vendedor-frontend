@@ -16,6 +16,7 @@ export const SchedulingStyles = StyleSheet.create({
     },
     overview: {
         flex: 0.4,
+        minHeight: 136,
         flexDirection: "row",
         backgroundColor: "white",
         alignItems: "center",

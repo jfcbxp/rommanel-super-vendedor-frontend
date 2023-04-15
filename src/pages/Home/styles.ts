@@ -10,13 +10,13 @@ export const HomeStyles = StyleSheet.create({
         paddingHorizontal: "5%",
     },
     navigator: {
-        flex: 1.5,
+        flex: 1.75,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingTop: "5%",
     },
     bottom: {
-        flex: 7.5,
+        flex: 7.25,
         paddingTop: "2.5%",
     }
 })
