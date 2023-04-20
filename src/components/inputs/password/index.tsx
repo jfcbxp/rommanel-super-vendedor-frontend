@@ -4,6 +4,7 @@ import { InputStyles as styles } from "../styles";
 interface Properties extends TextInputProps {
     placeholder?: string;
 }
+
 export function PasswordInput(properties: Properties) {
     return (
         <TextInput
