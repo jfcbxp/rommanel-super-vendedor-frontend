@@ -27,15 +27,6 @@ export function SchedulingHeader(properties: Properties) {
                     color="white"
                     size={48}
                     onPress={() => { navigation.navigate("Home") }} />
-                <Icon
-                    name="schedule"
-                    color="white"
-                    size={36}
-                    style={{
-                        padding: 8,
-                        backgroundColor: "#FE38F2",
-                        borderRadius: 90,
-                    }} />
                 <Text style={styles.title}>Agendamentos</Text>
             </View>
             <View style={styles.field}>

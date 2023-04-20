@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { StackParams } from "../../types/stack.params";
 import { StatusBar } from "expo-status-bar";
 import { SignInStyles as styles } from "./styles";
-import { EmailInput } from "../../components/inputs/email";
+import { UserCodeInput } from "../../components/inputs/user_code";
 import { PasswordInput } from "../../components/inputs/password";
 import { useState } from "react";
 import { Button } from "../../components/buttons/button";
@@ -11,7 +11,7 @@ import { Button } from "../../components/buttons/button";
 interface Properties extends StackScreenProps<StackParams, "SignIn"> { }
 
 export default function SignIn({ navigation }: Properties) {
-    const [email, setEmail] = useState("")
+    const [code, setCode] = useState("")
     const [password, setPassword] = useState("")
 
     return (
@@ -24,14 +24,15 @@ export default function SignIn({ navigation }: Properties) {
                 <Text style={styles.title}>seja bem-vindo(a).</Text>
             </View>
             <View style={{ marginBottom: 40 }}>
-                <EmailInput
-                    value={email}
-                    onChangeText={setEmail} />
+                <UserCodeInput
+                    value={code}
+                    onChangeText={setCode} />
                 <PasswordInput
                     value={password}
                     onChangeText={setPassword} />
                 <Button
                     title="ENTRAR"
+                    disabled={code.length < 6 && password.length < 3 ? true : false}
                     onPress={() => { }} />
             </View>
             <Text style={styles.text}>Solicite seu acesso ao setor de T.I</Text>

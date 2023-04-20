@@ -27,15 +27,6 @@ export function WalletHeader(properties: Properties) {
                     color="white"
                     size={48}
                     onPress={() => { navigation.navigate("Home") }} />
-                <Icon
-                    name="check-box"
-                    color="white"
-                    size={36}
-                    style={{
-                        padding: 8,
-                        backgroundColor: "#FE38F2",
-                        borderRadius: 90,
-                    }} />
                 <Text style={styles.title}>Carteira de Clientes</Text>
             </View>
             <View style={styles.field}>
