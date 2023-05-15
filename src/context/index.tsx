@@ -46,14 +46,20 @@ const Provider = ({ children }: ProviderProps) => {
     const signInService = useSignInService()
 
     useEffect(() => {
-        _getUser()
-        _getToken()
+        const getFromStorage = async () => {
+            await _getUser()
+            await _getToken()
+        }
+        getFromStorage()
         setLoading(false)
     }, [])
 
-    useEffect(()=> {
-        _getSchedules()
-    },[user, token])
+    useEffect(() => {
+        const initSchedules = async () => {
+            await _getSchedules()
+        }
+        initSchedules()
+    }, [user, token])
 
     const signIn = async (
         username: string,
@@ -61,11 +67,11 @@ const Provider = ({ children }: ProviderProps) => {
     ) => {
         setLoading(true)
         await signInService.signIn(username, password)
-            .then(result => {
+            .then(async result => {
                 setToken(result.token)
-                _storeToken(result.token)
+                await _storeToken(result.token)
                 setUser(_decodeToken(result.token))
-                _storeUser(_decodeToken(result.token))
+                await _storeUser(_decodeToken(result.token))
             })
             .catch(() => {
                 setDialog({
@@ -92,7 +98,7 @@ const Provider = ({ children }: ProviderProps) => {
                     setSchedules(schedules)
                 })
         } else {
-            signOut()
+            await signOut()
             setDialog({
                 title: "Sessão expirada",
                 content: "Efetue acesso novamente",
