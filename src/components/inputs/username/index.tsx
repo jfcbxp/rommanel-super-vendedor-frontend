@@ -1,17 +1,14 @@
 import { TextInput, TextInputProps } from "react-native";
 import { InputStyles as styles } from "../styles";
 
-export function UserCodeInput(properties: TextInputProps) {
+export function UsernameInput(properties: TextInputProps) {
     return (
         <TextInput
             {...properties}
-            textContentType="emailAddress"
-            keyboardType="email-address"
             autoCapitalize="none"
             maxFontSizeMultiplier={14}
-            placeholder="Matrícula"
+            placeholder="Usuário"
             placeholderTextColor="#73186D"
-            maxLength={6}
             style={styles.input} />
     )
 }

@@ -1,28 +1,28 @@
 import { View, Text } from "react-native";
 import { SchedulingItemStyles as styles } from "./styles";
-import { Costumer } from "../../../../models/costumer.model";
+import { Schedule } from "../../../../models/schedule.model";
 
-export function SchedulingItem({ data }: { data: Costumer }) {
+export function SchedulingItem({ data }: { data: Schedule }) {
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <Text style={styles.code}>{data.code}</Text>
+                <Text style={styles.code}>{data.id}</Text>
                 <View
                     style={[styles.box,
-                    { backgroundColor: data.arrival == "Chegou" ? "#00B81F" : "#C00404" }
+                    { backgroundColor: data.horaFinal == "Chegou" ? "#00B81F" : "#C00404" }
                     ]}>
-                    <Text style={[styles.costumer,{ color: "white" }]}>{data.schedule}</Text>
+                    <Text style={[styles.costumer, { color: "white" }]}>{data.horaFinal}</Text>
                 </View>
                 <View
                     style={[styles.box,
-                    { backgroundColor: data.arrival == "Previsto" ? "#FE38F2" : "#00B81F" }
+                    { backgroundColor: data.horaFinal == "Previsto" ? "#FE38F2" : "#00B81F" }
                     ]}>
-                    <Text style={[styles.costumer,{ color: "white" }]}>{data.arrival}</Text>
+                    <Text style={[styles.costumer, { color: "white" }]}>{data.horaFinal}</Text>
                 </View>
             </View>
             <View style={styles.bottom}>
-                <Text style={styles.costumer}>{data.fullName}</Text>
-                <Text style={styles.code}>{data.phone}</Text>
+                <Text style={styles.costumer}>{data.nomeCliente}</Text>
+                <Text style={styles.code}>{data.telefone}</Text>
             </View>
         </View>
     )

@@ -1,8 +1,7 @@
 import { View, Text } from "react-native";
 import { BillingItemStyles as styles } from "./styles";
-import { Costumer } from "../../../../models/costumer.model";
 
-export function BillingItem({ data }: { data: Costumer }) {
+export function BillingItem({ data }: { data: any }) {
     return (
         <View style={styles.container}>
             <View style={styles.top}>

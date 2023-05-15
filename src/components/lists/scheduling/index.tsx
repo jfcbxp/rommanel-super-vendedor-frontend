@@ -1,17 +1,17 @@
 import { FlatList, ListRenderItem, ScrollView } from "react-native";
 import { SchedulingItem } from "./item";
-import { Costumer } from "../../../models/costumer.model";
+import { Schedule } from "../../../models/schedule.model";
 
 interface Properties {
-    data?: Costumer[]
+    data?: Schedule[]
 }
 
 export function SchedulingList(properties: Properties) {
-    const renderItem: ListRenderItem<Costumer> = ({ item }) => (
+    const renderItem: ListRenderItem<Schedule> = ({ item }) => (
         <SchedulingItem data={item} />
     )
     return (
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{ flex: 1 }}>
             <FlatList data={properties.data} renderItem={renderItem} />
         </ScrollView>
     )

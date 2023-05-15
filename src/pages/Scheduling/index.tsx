@@ -18,14 +18,14 @@ export default function Scheduling({ navigation }: Properties) {
         <View style={styles.container}>
             <View style={styles.top}>
                 <SchedulingHeader
-                    total={2}
-                    totalStatus={100}
-                    predicted={1}
-                    predictedStatus={25}
+                    total={0}
+                    totalStatus={0}
+                    predicted={0}
+                    predictedStatus={0}
                     absences={0}
-                    absencesStatus={-20}
-                    arrivals={1}
-                    arrivalsStatus={50} />
+                    absencesStatus={0}
+                    arrivals={0}
+                    arrivalsStatus={0} />
             </View>
             <View style={styles.bottom}>
                 <View style={styles.overview}>
@@ -42,13 +42,13 @@ export default function Scheduling({ navigation }: Properties) {
                             }} />
                     </View>
                     <View style={{ flex: 3, justifyContent: "space-around" }}>
-                        <Text style={styles.overview_1}>Hoje</Text>
-                        <Text style={styles.overview_2}>Próximo Atendimento</Text>
-                        <Text style={styles.overview_3}>CLIENTE TESTE 3</Text>
+                        <Text style={styles.overview_1}></Text>
+                        <Text style={styles.overview_2}></Text>
+                        <Text style={styles.overview_3}></Text>
                     </View>
                 </View>
                 <View style={styles.list}>
-                    <SchedulingList data={context.costumers} />
+                    <SchedulingList data={context.schedules} />
                 </View>
             </View>
             <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
