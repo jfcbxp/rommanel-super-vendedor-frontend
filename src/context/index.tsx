@@ -92,8 +92,8 @@ const Provider = ({ children }: ProviderProps) => {
 
     const _getSchedules = async () => {
         setLoading(true)
-        if (_isUserAuthenticated()) {
-            await schedulingService.get("000004", token!)
+        if (_isUserAuthenticated() && token) {
+            await schedulingService.get("000004", token)
                 .then(schedules => {
                     setSchedules(schedules)
                 })
