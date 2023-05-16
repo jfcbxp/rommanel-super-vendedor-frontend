@@ -1,6 +1,7 @@
 export interface User {
-    userCode: string
-    sellerCode: string
+    sub: string
+    role: string[]
     fullName: string
-    role: string
+    exp: number
+    iat: number
 }

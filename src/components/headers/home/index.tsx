@@ -29,7 +29,8 @@ export function HomeHeader() {
                     name="logout"
                     size={32}
                     color="white"
-                    style={{ marginLeft: "auto" }} />
+                    style={{ marginLeft: "auto" }}
+                    onPress={() => context.signOut()} />
             </View>
         </View>
     )

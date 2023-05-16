@@ -1,10 +1,16 @@
 import { createContext, useEffect, useMemo, useState } from "react"
 import { User } from "../models/user.model"
-import { Costumer } from "../models/costumer.model"
+import { useSchedulingService } from "../services/scheduling.service"
+import { Schedule } from "../models/schedule.model"
+import { useSignInService } from "../services/sign-in.service"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import jwtDecode from "jwt-decode"
+import { Dialog } from "../components/modals/dialog"
 
 type ContextProps = {
     user: User | undefined
-    costumers: Costumer[] | undefined
+    token: string | undefined
+    schedules: Schedule[] | undefined
     loading: boolean
     signIn(
         _email: string,
@@ -15,7 +21,9 @@ type ContextProps = {
 
 const defaultState = {
     user: undefined,
+    token: undefined,
     costumers: undefined,
+    schedules: undefined,
     loading: true,
     signIn: async () => { },
     signOut: async () => { },
@@ -29,76 +37,143 @@ type ProviderProps = {
 
 const Provider = ({ children }: ProviderProps) => {
     const [user, setUser] = useState<User>();
-    const [costumers, setCostumers] = useState<Costumer[]>()
+    const [token, setToken] = useState<string>();
+    const [schedules, setSchedules] = useState<Schedule[]>()
     const [loading, setLoading] = useState<boolean>(true);
     const defaultDialog = { title: "", content: "", visible: false };
+    const [dialog, setDialog] = useState(defaultDialog);
+    const schedulingService = useSchedulingService()
+    const signInService = useSignInService()
 
     useEffect(() => {
-        let _user: User = {
-            userCode: "0001",
-            sellerCode: "FFF1",
-            fullName: "Vendedor Teste",
-            role: "Vendedor Pleno"
+        const getFromStorage = async () => {
+            await _getUser()
+            await _getToken()
         }
-        setUser(_user)
-        let _costumers: Costumer[] = [
-            {
-                code: "XXT001",
-                fullName: "CLIENTE TESTE 1",
-                status: "Ativo",
-                type: "Carteira",
-                value: 100,
-                schedule: "08:00",
-                arrival: "Chegou",
-                phone: "(91) 90000-0000",
-                service: "WhatsApp",
-                task: "Comissão"
-            },
-            {
-                code: "XXT002",
-                fullName: "CLIENTE TESTE 2",
-                status: "Inativo",
-                type: "Carteira",
-                value: 100,
-                schedule: "10:00",
-                arrival: "Previsto",
-                phone: "(91) 90000-0002",
-                service: "Normal",
-                task: "Comissão"
-            }
-        ]
-        setCostumers(_costumers)
+        getFromStorage()
         setLoading(false)
     }, [])
 
+    useEffect(() => {
+        const initSchedules = async () => {
+            await _getSchedules()
+        }
+        initSchedules()
+    }, [user, token])
+
     const signIn = async (
-        _email: string,
-        _password: string,
+        username: string,
+        password: string,
     ) => {
-        setUser({
-            userCode: "",
-            sellerCode: "",
-            fullName: "",
-            role: "",
-        })
-        console.log(defaultDialog.visible)
+        setLoading(true)
+        await signInService.signIn(username, password)
+            .then(async result => {
+                setToken(result.token)
+                await _storeToken(result.token)
+                setUser(_decodeToken(result.token))
+                await _storeUser(_decodeToken(result.token))
+            })
+            .catch(() => {
+                setDialog({
+                    title: "Credenciais inváldias",
+                    content: "Usuário e/ou senha incorreto(a)s",
+                    visible: true
+                })
+            })
+        setLoading(false)
     }
 
     const signOut = async () => {
+        setLoading(true)
         setUser(undefined)
+        AsyncStorage.clear()
+        setLoading(false)
+    }
+
+    const _getSchedules = async () => {
+        setLoading(true)
+        if (_isUserAuthenticated() && token) {
+            await schedulingService.get("000004", token)
+                .then(schedules => {
+                    setSchedules(schedules)
+                })
+        } else {
+            await signOut()
+            setDialog({
+                title: "Sessão expirada",
+                content: "Efetue acesso novamente",
+                visible: true
+            })
+        }
+        setLoading(false)
+    }
+
+    const _getUser = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem("@user")
+            if (jsonValue) {
+                let _user: User = JSON.parse(jsonValue)
+                setUser(_user)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const _storeUser = async (_user: User) => {
+        try {
+            const jsonValue = JSON.stringify(_user)
+            await AsyncStorage.setItem("@user", jsonValue)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const _getToken = async () => {
+        try {
+            const value = await AsyncStorage.getItem("@token")
+            if (value) {
+                setToken(value)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const _storeToken = async (_token: string) => {
+        try {
+            await AsyncStorage.setItem("@token", _token)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const _decodeToken = (_token: string) => {
+        return jwtDecode<User>(_token)
+    }
+
+    const _isUserAuthenticated = () => {
+        let isTokenValid = false
+        if (token && user) {
+            const expiration = user.exp
+            isTokenValid = (expiration * 1000) > Date.now()
+        }
+        return isTokenValid
     }
 
     const contextValue = useMemo(
         () => ({
             user,
-            costumers,
+            token,
+            schedules,
             loading,
             signIn,
             signOut,
         }),
         [
             user,
-            costumers,
+            token,
+            schedules,
             loading,
             signIn,
             signOut,
@@ -107,6 +182,13 @@ const Provider = ({ children }: ProviderProps) => {
 
     return (
         <Context.Provider value={contextValue}>
+            <Dialog
+                title={dialog.title}
+                content={dialog.content}
+                visible={dialog.visible}
+                dismiss={() => {
+                    setDialog(defaultDialog);
+                }} />
             {children}
         </Context.Provider>
     )

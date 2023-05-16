@@ -1,17 +1,16 @@
 import { FlatList, ListRenderItem, ScrollView } from "react-native";
 import { WalletItem } from "./item";
-import { Costumer } from "../../../models/costumer.model";
 
 interface Properties {
-    data?: Costumer[]
+    data?: any[]
 }
 
 export function WalletList(properties: Properties) {
-    const renderItem: ListRenderItem<Costumer> = ({ item }) => (
+    const renderItem: ListRenderItem<any> = ({ item }) => (
         <WalletItem data={item} />
     )
     return (
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{ flex: 1 }}>
             <FlatList data={properties.data} renderItem={renderItem} />
         </ScrollView>
     )
