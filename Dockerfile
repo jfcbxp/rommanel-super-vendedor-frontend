@@ -11,4 +11,4 @@ FROM joseluisq/static-web-server:2-alpine
 COPY --from=base /base/web-build /public/rommanel-super-vendedor-frontend
 COPY ./entrypoint.sh /
 COPY ./static-web-server.toml /
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
