@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "super-vendedor",
-    "slug": "super-vendedor",
+    "name": "Super Vendedor",
+    "slug": "Super Vendedor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -28,7 +28,7 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png",
-      "startUrl": "/rommanel-super-vendedor-frontend/?utm_source=web_app_manifest"
+      "startUrl": "/v1/?utm_source=web_app_manifest"
     }
   }
 }
