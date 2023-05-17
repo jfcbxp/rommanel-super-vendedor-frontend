@@ -12,8 +12,8 @@ import { Context } from "../../context";
 interface Properties extends StackScreenProps<StackParams, "SignIn"> { }
 
 export default function SignIn({ navigation }: Properties) {
-    const [username, setUsername] = useState("diretoria")
-    const [password, setPassword] = useState("rommanelpa2018")
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
     const context = useContext(Context)
 
     return (

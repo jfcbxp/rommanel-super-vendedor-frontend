@@ -6,12 +6,17 @@ import { useSignInService } from "../services/sign-in.service"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import jwtDecode from "jwt-decode"
 import { Dialog } from "../components/modals/dialog"
+import { Totalizer } from "../models/totalizer.model"
+import { useTotalizerService } from "../services/totalizers.service"
 
 type ContextProps = {
     user: User | undefined
     token: string | undefined
+    dailyTotalizer: Totalizer | undefined
+    monthlyTotalizer: Totalizer | undefined
     schedules: Schedule[] | undefined
     loading: boolean
+    getSchedules(): Promise<void>
     signIn(
         _email: string,
         _password: string,
@@ -22,9 +27,11 @@ type ContextProps = {
 const defaultState = {
     user: undefined,
     token: undefined,
-    costumers: undefined,
+    dailyTotalizer: undefined,
+    monthlyTotalizer: undefined,
     schedules: undefined,
     loading: true,
+    getSchedules: async () => { },
     signIn: async () => { },
     signOut: async () => { },
 }
@@ -38,28 +45,24 @@ type ProviderProps = {
 const Provider = ({ children }: ProviderProps) => {
     const [user, setUser] = useState<User>();
     const [token, setToken] = useState<string>();
+    const [dailyTotalizer, setDailyTotalizer] = useState<Totalizer>()
+    const [monthlyTotalizer, setMonthlyTotalizer] = useState<Totalizer>()
     const [schedules, setSchedules] = useState<Schedule[]>()
     const [loading, setLoading] = useState<boolean>(true);
     const defaultDialog = { title: "", content: "", visible: false };
     const [dialog, setDialog] = useState(defaultDialog);
-    const schedulingService = useSchedulingService()
     const signInService = useSignInService()
+    const schedulingService = useSchedulingService()
+    const totalizerService = useTotalizerService()
 
     useEffect(() => {
         const getFromStorage = async () => {
             await _getUser()
             await _getToken()
         }
-        getFromStorage()
+        getFromStorage().catch(error => console.error(error))
         setLoading(false)
     }, [])
-
-    useEffect(() => {
-        const initSchedules = async () => {
-            await _getSchedules()
-        }
-        initSchedules()
-    }, [user, token])
 
     const signIn = async (
         username: string,
@@ -90,13 +93,13 @@ const Provider = ({ children }: ProviderProps) => {
         setLoading(false)
     }
 
-    const _getSchedules = async () => {
-        setLoading(true)
+    const getSchedules = async () => {
         if (_isUserAuthenticated() && token) {
-            await schedulingService.get("000004", token)
+            await schedulingService.get(user?.sub!, token)
                 .then(schedules => {
                     setSchedules(schedules)
                 })
+            await _getTotalizers()
         } else {
             await signOut()
             setDialog({
@@ -105,7 +108,19 @@ const Provider = ({ children }: ProviderProps) => {
                 visible: true
             })
         }
-        setLoading(false)
+    }
+
+    const _getTotalizers = async () => {
+        if (_isUserAuthenticated() && token) {
+            await totalizerService.getDaily(user?.sub!, token)
+                .then(_dailyTotalizer => {
+                    setDailyTotalizer(_dailyTotalizer)
+                })
+            await totalizerService.getMontly(user?.sub!, token)
+                .then(_monthlyTotalizer => {
+                    setMonthlyTotalizer(_monthlyTotalizer)
+                })
+        }
     }
 
     const _getUser = async () => {
@@ -165,16 +180,22 @@ const Provider = ({ children }: ProviderProps) => {
         () => ({
             user,
             token,
+            dailyTotalizer,
+            monthlyTotalizer,
             schedules,
             loading,
+            getSchedules,
             signIn,
             signOut,
         }),
         [
             user,
             token,
+            dailyTotalizer,
+            monthlyTotalizer,
             schedules,
             loading,
+            getSchedules,
             signIn,
             signOut,
         ]
