@@ -8,6 +8,7 @@ import jwtDecode from "jwt-decode"
 import { Dialog } from "../components/modals/dialog"
 import { Totalizer } from "../models/totalizer.model"
 import { useTotalizerService } from "../services/totalizers.service"
+import { Loading } from "../components/modals/loading"
 
 type ContextProps = {
     user: User | undefined
@@ -94,6 +95,7 @@ const Provider = ({ children }: ProviderProps) => {
     }
 
     const getSchedules = async () => {
+        setLoading(true)
         if (_isUserAuthenticated() && token) {
             await schedulingService.get(user?.sub!, token)
                 .then(schedules => {
@@ -108,9 +110,11 @@ const Provider = ({ children }: ProviderProps) => {
                 visible: true
             })
         }
+        setLoading(false)
     }
 
     const _getTotalizers = async () => {
+        setLoading(true)
         if (_isUserAuthenticated() && token) {
             await totalizerService.getDaily(user?.sub!, token)
                 .then(_dailyTotalizer => {
@@ -121,6 +125,7 @@ const Provider = ({ children }: ProviderProps) => {
                     setMonthlyTotalizer(_monthlyTotalizer)
                 })
         }
+        setLoading(false)
     }
 
     const _getUser = async () => {
@@ -210,6 +215,7 @@ const Provider = ({ children }: ProviderProps) => {
                 dismiss={() => {
                     setDialog(defaultDialog);
                 }} />
+            <Loading visible={loading} />
             {children}
         </Context.Provider>
     )

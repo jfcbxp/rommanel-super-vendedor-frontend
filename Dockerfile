@@ -1,10 +1,14 @@
 FROM node:16 AS base
-WORKDIR /app
-COPY package*.json /app/
+WORKDIR /base
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
-COPY ./ /app/
+COPY . .
 ENV NODE_ENV=production
 RUN npx expo export:web
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.24
-COPY --from=base /app/web-build/ /usr/share/nginx/html/rommanel-super-vendedor-frontend
+
+FROM joseluisq/static-web-server:2-alpine
+COPY --from=base /base/web-build /public/v1
+COPY ./entrypoint.sh /
+COPY ./static-web-server.toml /
+ENTRYPOINT ["sh", "/entrypoint.sh"]

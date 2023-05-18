@@ -28,7 +28,7 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png",
-      "startUrl": "/rommanel-super-vendedor-frontend/?utm_source=web_app_manifest"
+      "startUrl": "/v1/?utm_source=web_app_manifest"
     }
   }
 }
