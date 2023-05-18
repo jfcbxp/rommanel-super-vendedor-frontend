@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 export const SchedulingStyles = StyleSheet.create({
     container: {
         flex: 1,
-        maxHeight: "100vh",
         backgroundColor: "#F0F2F7",
     },
     top: {
