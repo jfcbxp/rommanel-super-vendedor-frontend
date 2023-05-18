@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Super Vendedor",
-    "slug": "Super Vendedor",
+    "slug": "super-vendedor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -24,11 +24,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jfcbxp.supervendedor"
     },
     "web": {
       "favicon": "./src/assets/favicon.png",
       "startUrl": "/rommanel-super-vendedor-frontend/?utm_source=web_app_manifest"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ce78c35f-85ee-4684-a6fe-9d5d98719591"
+      }
     }
   }
 }
