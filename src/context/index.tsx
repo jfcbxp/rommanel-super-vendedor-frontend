@@ -79,7 +79,7 @@ const Provider = ({ children }: ProviderProps) => {
             })
             .catch(() => {
                 setDialog({
-                    title: "Credenciais inváldias",
+                    title: "Credenciais inválidas",
                     content: "Usuário e/ou senha incorreto(a)s",
                     visible: true
                 })
