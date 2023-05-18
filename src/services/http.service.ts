@@ -7,8 +7,6 @@ export function http(token?: string) {
       baseURL: _baseURL,
       headers: {
         "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "24022023",
-        "Bypass-Tunnel-Reminder": "27022023",
         Authorization: `Bearer ${token}`,
       },
       timeout: 20000,
@@ -18,8 +16,6 @@ export function http(token?: string) {
       baseURL: _baseURL,
       headers: {
         "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "24022023",
-        "Bypass-Tunnel-Reminder": "27022023",
       },
       timeout: 20000,
     });
