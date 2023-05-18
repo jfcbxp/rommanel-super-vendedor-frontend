@@ -20,7 +20,8 @@ export default function Wallet({ navigation }: Properties) {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
-        let data = ["1", "2", "3", "4","Todos"]
+        console.log(context.loading)
+        let data = ["1", "2", "3", "4", "Todos"]
         if (data) {
             let array: ItemType<any>[] = []
             Object.entries(data).forEach(([key, value]) => {
@@ -72,7 +73,7 @@ export default function Wallet({ navigation }: Properties) {
                     </View>
                 </View>
                 <View style={styles.list}>
-                    <WalletList data={context.costumers} />
+                    <WalletList data={undefined} />
                 </View>
             </View>
             <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
