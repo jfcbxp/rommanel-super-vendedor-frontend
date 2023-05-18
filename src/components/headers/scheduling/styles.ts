@@ -5,12 +5,13 @@ export const SchedulingHeaderStyles = StyleSheet.create({
         flex: 1,
     },
     head: {
+        flex: 1,
         flexDirection: "row",
         alignItems: "center",
         padding: "5%",
     },
     field: {
-        flex: 1,
+        flex: 3,
         flexDirection: "row",
         justifyContent: "space-around",
     },
