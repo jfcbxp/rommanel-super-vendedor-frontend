@@ -24,32 +24,37 @@ export default function Home({ navigation }: Properties) {
                     <NavigationButton
                         title="Carteira"
                         icon="check-box"
-                        onPress={() => { navigation.navigate("Wallet") }} />
+                        onPress={() => { /* navigation.navigate("Wallet") */ }} />
                     <NavigationButton
                         title="Faturamento"
                         icon="bar-chart"
-                        onPress={() => { navigation.navigate("Billing", {}) }} />
+                        onPress={() => { /* navigation.navigate("Billing", {}) */ }} />
                 </View>
                 <View style={styles.bottom}>
                     <Container title="Hoje">
-                        <ProgressBar
-                            title="Total Vendido"
-                            step={1800}
-                            steps={3000}
-                            type="money" />
-                        <Divider />
-                        <ProgressBar
-                            title="Clientes Atendidos"
-                            step={10}
-                            steps={10}
-                            type="number" />
-                        <Divider />
-                        <ProgressBar
-                            title="Prospectos"
-                            step={0}
-                            steps={10}
-                            type="number" />
-                        <Divider />
+                        {false ?
+                            <>
+                                <ProgressBar
+                                    title="Total Vendido"
+                                    step={1800}
+                                    steps={3000}
+                                    type="money" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Clientes Atendidos"
+                                    step={10}
+                                    steps={10}
+                                    type="number" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Prospectos"
+                                    step={0}
+                                    steps={10}
+                                    type="number" />
+                                <Divider />
+                            </>
+                            : undefined
+                        }
                     </Container>
                 </View>
             </View>
