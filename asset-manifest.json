@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/v1/static/js/main.33566549.js",
+    "main.js": "/v1/static/js/main.1bdc3106.js",
     "static/js/966.029dd567.js": "/v1/static/js/966.029dd567.js",
     "static/media/Inter_800ExtraBold.ttf": "/v1/static/media/Inter_800ExtraBold.e4a4cb7133001f282a15.ttf",
     "static/media/Inter_900Black.ttf": "/v1/static/media/Inter_900Black.143c28420846d45c5834.ttf",
@@ -23,11 +23,11 @@
     "favicon-16.png": "/v1/favicon-16.png",
     "manifest.json": "/v1/manifest.json",
     "serve.json": "/v1/serve.json",
-    "main.33566549.js.map": "/v1/static/js/main.33566549.js.map",
+    "main.1bdc3106.js.map": "/v1/static/js/main.1bdc3106.js.map",
     "966.029dd567.js.map": "/v1/static/js/966.029dd567.js.map"
   },
   "entrypoints": [
     "static/js/966.029dd567.js",
-    "static/js/main.33566549.js"
+    "static/js/main.1bdc3106.js"
   ]
 }
