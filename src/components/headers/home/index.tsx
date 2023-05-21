@@ -21,7 +21,7 @@ export function HomeHeader() {
                     }} />
             </View>
             <View style={styles.titles}>
-                <Text style={styles.title}>{context.user?.fullName}</Text>
+                <Text style={styles.title}>{context.user?.fullName.trim()}</Text>
                 <Text style={styles.subTitle}>{context.user?.role[0] == "ROLE_USER" ? "Vendedor" : undefined}</Text>
             </View>
             <View style={styles.logout}>

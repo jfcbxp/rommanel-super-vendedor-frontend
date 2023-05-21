@@ -19,7 +19,7 @@ type ContextProps = {
     loading: boolean
     getSchedules(): Promise<void>
     signIn(
-        _email: string,
+        _code: string,
         _password: string,
     ): Promise<void>
     signOut(): Promise<void>
@@ -66,11 +66,11 @@ const Provider = ({ children }: ProviderProps) => {
     }, [])
 
     const signIn = async (
-        username: string,
+        code: string,
         password: string,
     ) => {
         setLoading(true)
-        await signInService.signIn(username, password)
+        await signInService.signIn(code, password)
             .then(async result => {
                 setToken(result.token)
                 await _storeToken(result.token)
@@ -80,7 +80,7 @@ const Provider = ({ children }: ProviderProps) => {
             .catch(() => {
                 setDialog({
                     title: "Credenciais inválidas",
-                    content: "Usuário e/ou senha incorreto(a)s",
+                    content: "Código do vendedor e/ou senha incorreto(a)s",
                     visible: true
                 })
             })
