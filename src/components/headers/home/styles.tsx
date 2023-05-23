@@ -23,7 +23,7 @@ export const HomeHeaderStyles = StyleSheet.create({
         justifyContent: "center",
     },
     title: {
-        fontSize: 24,
+        fontSize: 18,
         fontFamily: "Inter_700Bold",
         color: "white",
     },
