@@ -34,17 +34,7 @@ export function SchedulingHeader(properties: Properties) {
                     <Text style={styles.text}>Total</Text>
                     <Text style={[styles.text, { fontSize: 20 }]}>{properties.dailyTotal}</Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.monthlyTotal >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
+                        <SchedulingHeader_ status={properties.monthlyTotal} />
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.monthlyTotal}
                         </Text>
@@ -55,17 +45,7 @@ export function SchedulingHeader(properties: Properties) {
                     <Text style={styles.text}>Previstos</Text>
                     <Text style={[styles.text, { fontSize: 20 }]}>{properties.dailyPredicted}</Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.monthlyPredicted >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
+                        <SchedulingHeader_ status={properties.monthlyPredicted} />
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.monthlyPredicted}
                         </Text>
@@ -79,17 +59,7 @@ export function SchedulingHeader(properties: Properties) {
                     <Text style={styles.text}>Faltas</Text>
                     <Text style={[styles.text, { fontSize: 20 }]}>{properties.dailyAbsences}</Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.monthlyAbsences >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
+                        <SchedulingHeader_ status={properties.monthlyAbsences} />
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.monthlyAbsences}
                         </Text>
@@ -100,17 +70,7 @@ export function SchedulingHeader(properties: Properties) {
                     <Text style={styles.text}>Chegaram</Text>
                     <Text style={[styles.text, { fontSize: 20 }]}>{properties.dailyArrivals}</Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.monthlyArrivals >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
+                        <SchedulingHeader_ status={properties.monthlyArrivals} />
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
                             {properties.monthlyArrivals}
                         </Text>
@@ -119,5 +79,24 @@ export function SchedulingHeader(properties: Properties) {
                 </View>
             </View>
         </View>
+    )
+}
+
+interface PropertiesStatus {
+    status: number
+}
+
+function SchedulingHeader_(properties: PropertiesStatus) {
+    return (
+        properties.status >= 0 ?
+            <Icon
+                name="arrow-upward"
+                color="#60D29D"
+                size={18} />
+            :
+            <Icon
+                name="arrow-downward"
+                color="#FF5454"
+                size={18} />
     )
 }

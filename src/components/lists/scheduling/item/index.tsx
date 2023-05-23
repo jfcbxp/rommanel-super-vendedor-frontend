@@ -1,7 +1,6 @@
 import { View, Text, Pressable, Linking } from "react-native";
 import { SchedulingItemStyles as styles } from "./styles";
 import { Schedule } from "../../../../models/schedule.model";
-import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 export function SchedulingItem({ data }: { data: Schedule }) {
     const adjustPhone = (phone: string) => {
@@ -76,10 +75,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
                 </View>
                 <View style={styles.bottom}>
                     <Text style={styles.costumer}>{data.nomeCliente.trim()}</Text>
-                    <View>
-                        <Icon name="phone" color="#73186D" size={12} />
-                        <Text style={styles.code}>{adjustPhone(data.telefone)}</Text>
-                    </View>
+                    <Text style={styles.code}>{adjustPhone(data.telefone)}</Text>
                 </View>
             </Pressable>
         </View>
