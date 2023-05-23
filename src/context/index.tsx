@@ -6,18 +6,26 @@ import { useSignInService } from "../services/sign-in.service"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import jwtDecode from "jwt-decode"
 import { Dialog } from "../components/modals/dialog"
-import { Totalizer } from "../models/totalizer.model"
-import { useTotalizerService } from "../services/totalizers.service"
+import { SchedulingTotalizer } from "../models/scheduling.totalizer.model"
+import { useSchedulingTotalizerService } from "../services/scheduling.totalizers.service"
 import { Loading } from "../components/modals/loading"
+import { WalletTotalizer } from "../models/wallet.totalizer.model"
+import { useWalletWalletTotalizerService } from "../services/wallet.totalizers.service"
+import { Wallet } from "../models/wallet.model"
+import { useWalletService } from "../services/wallet.service"
 
 type ContextProps = {
     user: User | undefined
     token: string | undefined
-    dailyTotalizer: Totalizer | undefined
-    monthlyTotalizer: Totalizer | undefined
+    dailyTotalizer: SchedulingTotalizer | undefined
+    monthlyTotalizer: SchedulingTotalizer | undefined
     schedules: Schedule[] | undefined
+    activesTotalizer: WalletTotalizer | undefined
+    inactivesTotalizer: WalletTotalizer | undefined
+    wallets: Wallet[] | undefined
     loading: boolean
     getSchedules(): Promise<void>
+    getWallets(): Promise<void>
     signIn(
         _code: string,
         _password: string,
@@ -31,8 +39,12 @@ const defaultState = {
     dailyTotalizer: undefined,
     monthlyTotalizer: undefined,
     schedules: undefined,
+    activesTotalizer: undefined,
+    inactivesTotalizer: undefined,
+    wallets: undefined,
     loading: true,
     getSchedules: async () => { },
+    getWallets: async () => { },
     signIn: async () => { },
     signOut: async () => { },
 }
@@ -44,17 +56,22 @@ type ProviderProps = {
 }
 
 const Provider = ({ children }: ProviderProps) => {
-    const [user, setUser] = useState<User>();
-    const [token, setToken] = useState<string>();
-    const [dailyTotalizer, setDailyTotalizer] = useState<Totalizer>()
-    const [monthlyTotalizer, setMonthlyTotalizer] = useState<Totalizer>()
+    const [user, setUser] = useState<User>()
+    const [token, setToken] = useState<string>()
+    const [dailyTotalizer, setDailyTotalizer] = useState<SchedulingTotalizer>()
+    const [monthlyTotalizer, setMonthlyTotalizer] = useState<SchedulingTotalizer>()
     const [schedules, setSchedules] = useState<Schedule[]>()
-    const [loading, setLoading] = useState<boolean>(true);
-    const defaultDialog = { title: "", content: "", visible: false };
-    const [dialog, setDialog] = useState(defaultDialog);
+    const [activesTotalizer, setActivesTotalizer] = useState<WalletTotalizer>()
+    const [inactivesTotalizer, setInactivesTotalizer] = useState<WalletTotalizer>()
+    const [wallets, setWallets] = useState<Wallet[]>()
+    const [loading, setLoading] = useState<boolean>(true)
+    const defaultDialog = { title: "", content: "", visible: false }
+    const [dialog, setDialog] = useState(defaultDialog)
     const signInService = useSignInService()
     const schedulingService = useSchedulingService()
-    const totalizerService = useTotalizerService()
+    const schedulingTotalizerService = useSchedulingTotalizerService()
+    const walletService = useWalletService()
+    const walletTotalizerService = useWalletWalletTotalizerService()
 
     useEffect(() => {
         const getFromStorage = async () => {
@@ -101,7 +118,7 @@ const Provider = ({ children }: ProviderProps) => {
                 .then(schedules => {
                     setSchedules(schedules)
                 })
-            await _getTotalizers()
+            await _getSchedulingTotalizers()
         } else {
             await signOut()
             setDialog({
@@ -113,16 +130,50 @@ const Provider = ({ children }: ProviderProps) => {
         setLoading(false)
     }
 
-    const _getTotalizers = async () => {
+    const _getSchedulingTotalizers = async () => {
         setLoading(true)
         if (_isUserAuthenticated() && token) {
-            await totalizerService.getDaily(user?.sub!, token)
+            await schedulingTotalizerService.getDaily(user?.sub!, token)
                 .then(_dailyTotalizer => {
                     setDailyTotalizer(_dailyTotalizer)
                 })
-            await totalizerService.getMontly(user?.sub!, token)
+            await schedulingTotalizerService.getMontly(user?.sub!, token)
                 .then(_monthlyTotalizer => {
                     setMonthlyTotalizer(_monthlyTotalizer)
+                })
+        }
+        setLoading(false)
+    }
+
+    const getWallets = async () => {
+        setLoading(true)
+        if (_isUserAuthenticated() && token) {
+            await walletService.get(user?.sub!, token)
+                .then(_wallets => {
+                    setWallets(_wallets)
+                })
+            await _getWalletTotalizers()
+        } else {
+            await signOut()
+            setDialog({
+                title: "Sessão expirada",
+                content: "Efetue acesso novamente",
+                visible: true
+            })
+        }
+        setLoading(false)
+    }
+
+    const _getWalletTotalizers = async () => {
+        setLoading(true)
+        if (_isUserAuthenticated() && token) {
+            await walletTotalizerService.getActives(user?.sub!, token)
+                .then(_activeTotalizer => {
+                    setActivesTotalizer(_activeTotalizer)
+                })
+            await walletTotalizerService.getInactives(user?.sub!, token)
+                .then(_inactiveTotalizer => {
+                    setInactivesTotalizer(_inactiveTotalizer)
                 })
         }
         setLoading(false)
@@ -188,8 +239,12 @@ const Provider = ({ children }: ProviderProps) => {
             dailyTotalizer,
             monthlyTotalizer,
             schedules,
+            activesTotalizer,
+            inactivesTotalizer,
+            wallets,
             loading,
             getSchedules,
+            getWallets,
             signIn,
             signOut,
         }),
@@ -199,8 +254,12 @@ const Provider = ({ children }: ProviderProps) => {
             dailyTotalizer,
             monthlyTotalizer,
             schedules,
+            activesTotalizer,
+            inactivesTotalizer,
+            wallets,
             loading,
             getSchedules,
+            getWallets,
             signIn,
             signOut,
         ]

@@ -24,11 +24,11 @@ export default function Home({ navigation }: Properties) {
                     <NavigationButton
                         title="Carteira"
                         icon="check-box"
-                        onPress={() => { /* navigation.navigate("Wallet") */ }} />
+                        onPress={() => { navigation.navigate("Wallet") }} />
                     <NavigationButton
                         title="Faturamento"
                         icon="bar-chart"
-                        onPress={() => { /* navigation.navigate("Billing", {}) */ }} />
+                        onPress={() => { navigation.navigate("Billing", {}) }} />
                 </View>
                 <View style={styles.bottom}>
                     <Container title="Hoje">

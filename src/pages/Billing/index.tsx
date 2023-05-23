@@ -112,7 +112,7 @@ export default function Billing({ route, navigation }: Properties) {
                     </View>
                 </View>
                 <View style={styles.list}>
-                    <BillingList data={context.costumers} />
+                    <BillingList data={undefined} />
                 </View>
             </View>
             <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />

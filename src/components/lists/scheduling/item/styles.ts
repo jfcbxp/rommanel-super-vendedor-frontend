@@ -6,11 +6,11 @@ export const SchedulingItemStyles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 8,
         marginVertical: "2.5%",
-        padding: "2.5%"
+        padding: "2.5%",
     },
     top: {
         flexDirection: "row",
-        marginBottom: "2.5%"
+        marginBottom: "5%"
     },
     bottom: {
         flexDirection: "row",
