@@ -6,14 +6,14 @@ import { useNavigation } from "@react-navigation/native";
 import { NavigationParams } from "../../../types/navigation.params";
 
 interface Properties {
+    total: number
+    total_: number
     actives: number
-    activesStatus: number
-    prospect: number
-    prospectStatus: number
+    actives_: number
+    preInactives: number
+    preInactives_: number
     inactives: number
-    inactivesStatus: number
-    reactives: number
-    reactivesStatus: number
+    inactives_: number
 }
 
 export function WalletHeader(properties: Properties) {
@@ -31,101 +31,76 @@ export function WalletHeader(properties: Properties) {
             </View>
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
-                    <Text style={styles.text}>Ativos</Text>
-                    <Text style={[styles.text, { fontSize: 20}]}>
-                        {properties.actives}
+                    <Text style={styles.text}>Total</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>
+                        {properties.total}
                     </Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.activesStatus >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
-                            {properties.activesStatus + "%"}
+                            {properties.total_}
                         </Text>
-                        <Text style={styles.text}> último mês</Text>
+                        <Text style={styles.text}> carteira inativos</Text>
                     </View>
                 </View>
                 <View style={{ justifyContent: "space-around" }}>
-                    <Text style={styles.text}>Prospecto</Text>
-                    <Text style={[styles.text, { fontSize: 20}]}>
-                        {properties.prospect}
+                    <Text style={styles.text}>Ativos</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>
+                        {properties.actives}
                     </Text>
                     <View style={{ flexDirection: "row" }}>
-                        {properties.prospectStatus >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
-                            {properties.prospectStatus + "%"}
+                            {properties.actives_}
                         </Text>
-                        <Text style={styles.text}> último mês</Text>
+                        <Text style={styles.text}> carteira inativos</Text>
                     </View>
                 </View>
             </View>
             <Divider />
             <View style={styles.field}>
                 <View style={{ justifyContent: "space-around" }}>
+                    <Text style={styles.text}>Pre Inativos</Text>
+                    <Text style={[styles.text, { fontSize: 20 }]}>
+                        {properties.preInactives}
+                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                        <Text style={[styles.text, { color: "#FE38F2" }]}>
+                            {properties.preInactives_}
+                        </Text>
+                        <Text style={styles.text}> carteira inativos</Text>
+                    </View>
+                </View>
+                <View style={{ justifyContent: "space-around" }}>
                     <Text style={styles.text}>Inativos</Text>
                     <Text style={[styles.text, { fontSize: 20 }]}>
                         {properties.inactives}
                     </Text>
-                    <View style={{ flexDirection: "row" }}>
-                        {properties.inactivesStatus >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
-                        <Text style={[styles.text, { color: "#FE38F2" }]}>
-                            {properties.inactivesStatus + "%"}
-                        </Text>
-                        <Text style={styles.text}> último mês</Text>
-                    </View>
-                </View>
-                <View style={{ justifyContent: "space-around" }}>
-                    <Text style={styles.text}>Reativos</Text>
-                    <Text style={[styles.text, { fontSize: 20 }]}>
-                        {properties.reactives}
-                    </Text>
                     <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                        {properties.reactivesStatus >= 0 ?
-                            <Icon
-                                name="arrow-upward"
-                                color="#60D29D"
-                                size={18} />
-                            :
-                            <Icon
-                                name="arrow-downward"
-                                color="#FF5454"
-                                size={18} />
-                        }
                         <Text style={[styles.text, { color: "#FE38F2" }]}>
-                            {properties.reactivesStatus + "%"}
+                            {properties.inactives_}
                         </Text>
-                        <Text style={styles.text}> último mês</Text>
+                        <Text style={styles.text}> carteira inativos</Text>
                     </View>
                 </View>
             </View>
         </View>
+    )
+}
+
+interface Properties2 {
+    status: number
+}
+
+function WalletHeader_(properties: Properties2) {
+    return (
+        properties.status >= 0 ?
+            <Icon
+                name="arrow-upward"
+                color="#60D29D"
+                size={18} />
+            :
+            <Icon
+                name="arrow-downward"
+                color="#FF5454"
+                size={18} />
     )
 }
