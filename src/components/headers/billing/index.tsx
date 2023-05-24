@@ -4,9 +4,10 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { BarChart } from "../../lists/billing/bar-chart";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationParams } from "../../../types/navigation.params";
+import { BillingProgress } from "../../../models/billing.progress.model";
 
 interface Properties {
-    data?: any[]
+    data?: BillingProgress[]
 }
 
 export function BillingHeader(properties: Properties) {
@@ -19,7 +20,7 @@ export function BillingHeader(properties: Properties) {
                     name="chevron-left"
                     color="white"
                     size={48}
-                    onPress={() => { navigation.navigate("Home")}} />
+                    onPress={() => { navigation.navigate("Home") }} />
                 <Text style={styles.title}>Faturamento</Text>
             </View>
             <BarChart data={properties.data} />

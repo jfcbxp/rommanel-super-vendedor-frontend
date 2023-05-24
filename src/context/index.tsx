@@ -13,6 +13,10 @@ import { WalletTotalizer } from "../models/wallet.totalizer.model"
 import { useWalletWalletTotalizerService } from "../services/wallet.totalizers.service"
 import { Wallet } from "../models/wallet.model"
 import { useWalletService } from "../services/wallet.service"
+import { BillingProgress } from "../models/billing.progress.model"
+import { useBillingProgressService } from "../services/billing.progress.service"
+import { useBillingService } from "../services/billing.service"
+import { BillingModel } from "../models/billing.model"
 
 type ContextProps = {
     user: User | undefined
@@ -23,9 +27,15 @@ type ContextProps = {
     activesTotalizer: WalletTotalizer | undefined
     inactivesTotalizer: WalletTotalizer | undefined
     wallets: Wallet[] | undefined
+    billings: BillingModel[] | undefined
+    billingProgresses: BillingProgress[] | undefined
     loading: boolean
     getSchedules(): Promise<void>
     getWallets(): Promise<void>
+    getBillingProgresses(): Promise<void>
+    getBilling(
+        _date: string
+    ): Promise<void>
     signIn(
         _code: string,
         _password: string,
@@ -42,9 +52,13 @@ const defaultState = {
     activesTotalizer: undefined,
     inactivesTotalizer: undefined,
     wallets: undefined,
+    billings: undefined,
+    billingProgresses: undefined,
     loading: true,
     getSchedules: async () => { },
     getWallets: async () => { },
+    getBillingProgresses: async () => { },
+    getBilling: async () => { },
     signIn: async () => { },
     signOut: async () => { },
 }
@@ -64,6 +78,8 @@ const Provider = ({ children }: ProviderProps) => {
     const [activesTotalizer, setActivesTotalizer] = useState<WalletTotalizer>()
     const [inactivesTotalizer, setInactivesTotalizer] = useState<WalletTotalizer>()
     const [wallets, setWallets] = useState<Wallet[]>()
+    const [billings, setBillings] = useState<BillingModel[]>()
+    const [billingProgresses, setBillingProgresses] = useState<BillingProgress[]>()
     const [loading, setLoading] = useState<boolean>(true)
     const defaultDialog = { title: "", content: "", visible: false }
     const [dialog, setDialog] = useState(defaultDialog)
@@ -72,6 +88,8 @@ const Provider = ({ children }: ProviderProps) => {
     const schedulingTotalizerService = useSchedulingTotalizerService()
     const walletService = useWalletService()
     const walletTotalizerService = useWalletWalletTotalizerService()
+    const billingProgressService = useBillingProgressService()
+    const billingService = useBillingService()
 
     useEffect(() => {
         const getFromStorage = async () => {
@@ -179,6 +197,28 @@ const Provider = ({ children }: ProviderProps) => {
         setLoading(false)
     }
 
+    const getBillingProgresses = async () => {
+        setLoading(true)
+        if (_isUserAuthenticated() && token) {
+            await billingProgressService.get(user?.sub!, token)
+                .then(_billingProgresses => {
+                    setBillingProgresses(_billingProgresses)
+                })
+        }
+        setLoading(false)
+    }
+
+    const getBilling = async (_date: string) => {
+        setLoading(true)
+        if (_isUserAuthenticated() && token) {
+            await billingService.get(user?.sub!, _date, token)
+                .then(_billings => {
+                    setBillings(_billings)
+                })
+        }
+        setLoading(false)
+    }
+
     const _getUser = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem("@user")
@@ -242,9 +282,13 @@ const Provider = ({ children }: ProviderProps) => {
             activesTotalizer,
             inactivesTotalizer,
             wallets,
+            billingProgresses,
             loading,
             getSchedules,
             getWallets,
+            billings,
+            getBillingProgresses,
+            getBilling,
             signIn,
             signOut,
         }),
@@ -257,9 +301,13 @@ const Provider = ({ children }: ProviderProps) => {
             activesTotalizer,
             inactivesTotalizer,
             wallets,
+            billingProgresses,
             loading,
             getSchedules,
             getWallets,
+            billings,
+            getBillingProgresses,
+            getBilling,
             signIn,
             signOut,
         ]

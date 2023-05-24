@@ -1,4 +1,4 @@
-export interface Billing {
+export interface BillingModel {
     id: number
     orcamento: string
     empresa: string

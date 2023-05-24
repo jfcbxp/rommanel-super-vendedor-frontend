@@ -20,8 +20,7 @@ export const WalletStyles = StyleSheet.create({
         paddingHorizontal: "2.5%",
     },
     overview: {
-        flex: 0.4,
-        flexDirection: "row",
+        flex: 0.8,
         backgroundColor: "white",
         alignItems: "center",
         justifyContent: "space-around",

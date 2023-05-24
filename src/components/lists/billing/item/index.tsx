@@ -1,33 +1,22 @@
 import { View, Text } from "react-native";
 import { BillingItemStyles as styles } from "./styles";
+import { BillingModel } from "../../../../models/billing.model";
 
-export function BillingItem({ data }: { data: any }) {
+export function BillingItem({ data }: { data: BillingModel }) {
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <Text style={styles.code}>{data.code}</Text>
+                <Text style={styles.code}>{data.id}</Text>
                 <View
                     style={[styles.box,
-                    { backgroundColor: data.service == "WhatsApp" ? "#00B81F" : "#C00404" }
+                    { backgroundColor: "#00B81F" }
                     ]}>
-                    <Text style={[styles.costumer,{ color: "white" }]}>{data.service}</Text>
-                </View>
-                <View
-                    style={[styles.box,
-                    { backgroundColor: data.service == "Normal" ? "#C00404" : "#00B81F" }
-                    ]}>
-                    <Text style={[styles.costumer,{ color: "white" }]}>{data.type}</Text>
-                </View>
-                <View
-                    style={[styles.box,
-                    { backgroundColor: data.service == "WhatsApp" ? "#00B81F" : "#C00404" }
-                    ]}>
-                    <Text style={[styles.costumer,{ color: "white" }]}>{data.task}</Text>
+                    <Text style={[styles.costumer, { color: "white" }]}>{data.tipoOrcamento}</Text>
                 </View>
             </View>
             <View style={styles.bottom}>
-                <Text style={styles.costumer}>{data.fullName}</Text>
-                <Text style={styles.code}>R$ {data.value.toFixed(2).replace(".", ",")}</Text>
+                <Text style={styles.costumer}>{data.nomeCliente}</Text>
+                <Text style={styles.code}>R$ {data.total.toFixed(2).replace(".", ",")}</Text>
             </View>
         </View>
     )
