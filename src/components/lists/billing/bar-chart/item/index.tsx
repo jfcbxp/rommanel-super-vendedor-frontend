@@ -1,11 +1,12 @@
 import { VerticalBar } from "../../../../vertical_bar";
+import { BillingProgress } from "../../../../../models/billing.progress.model";
 
-export function BarChartItem({ data }: { data: any }) {
+export function BarChartItem({ data }: { data: BillingProgress }) {
     return (
         <VerticalBar
-            title={data.date}
-            step={data.bill}
-            steps={1000}
+            title={data.periodo}
+            step={data.total}
+            steps={100}
             selected={data.selected} />
     )
 }
