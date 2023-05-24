@@ -11,104 +11,114 @@ import { Context } from "../../context";
 import { WalletHeader } from "../../components/headers/wallet";
 import { WalletList } from "../../components/lists/wallet";
 
-interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
+interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
 
 export default function Wallet({ navigation }: Properties) {
-    const context = useContext(Context)
-    const [items, setItems] = useState<ItemType<any>[]>()
-    const [value, setValue] = useState("Todos")
-    const [open, setOpen] = useState(false)
-    const DATA = context.wallets
-    const [data, setData] = useState(DATA)
+  const context = useContext(Context);
+  const [items, setItems] = useState<ItemType<any>[]>();
+  const [value, setValue] = useState("Todos");
+  const [open, setOpen] = useState(false);
+  const DATA = context.wallets;
+  const [data, setData] = useState(DATA);
 
-    useEffect(() => {
-        context.getWallets()
-    }, [])
+  useEffect(() => {
+    context.getWallets().then((response) => {
+      let data = [
+        "Todos",
+        "Ativo",
+        "Bloqueado media de vendas",
+        "Bloqueado 90 dias sem compras",
+        "Bloqueado 150 dias sem compras",
+        "Pre Inativo 1 60 dias sem compras",
+        "Pre Inativo 2 70 dias sem compras",
+        "Pre Inativo 3 80 dias sem compras",
+        "365 dias sem compras",
+        "730 dias sem compras",
+        "Bloqueado sem compras",
+      ];
+      if (data) {
+        let array: ItemType<any>[] = [];
+        Object.entries(data).forEach(([key, value]) => {
+          array = [
+            ...array,
+            {
+              value: value,
+              label: value,
+            },
+          ];
+        });
+        setItems(array);
+      }
+    });
+  }, []);
 
-    useEffect(() => {
-        let data = [
-            "Todos",
-            "Ativo",
-            "Bloqueado media de vendas",
-            "Bloqueado 90 dias sem compras",
-            "Bloqueado 150 dias sem compras",
-            "Pre Inativo 1 60 dias sem compras",
-            "Pre Inativo 2 70 dias sem compras",
-            "Pre Inativo 3 80 dias sem compras",
-            "365 dias sem compras",
-            "730 dias sem compras",
-            "Bloqueado sem compras"
-        ]
-        if (data) {
-            let array: ItemType<any>[] = []
-            Object.entries(data).forEach(([key, value]) => {
-                array = [
-                    ...array,
-                    {
-                        value: value,
-                        label: value
-                    }
-                ]
-            })
-            setItems(array)
-        }
-    }, [])
-
-    const handleFilter = () => {
-        if (DATA) {
-            if (value == "Todos" || value == "") {
-                setData(DATA)
-            } else {
-                setData(DATA.filter((element) => {
-                    return element.situacao.includes(value)
-                }))
-            }
-        }
+  const handleFilter = () => {
+    if (DATA) {
+      if (value == "Todos" || value == "") {
+        setData(DATA);
+      } else {
+        setData(
+          DATA.filter((element) => {
+            return element.situacao.includes(value);
+          })
+        );
+      }
     }
+  };
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.top}>
-                <WalletHeader
-                    total={context.activesTotalizer?.total!}
-                    total_={context.inactivesTotalizer?.total!}
-                    actives={context.activesTotalizer?.ativos!}
-                    actives_={context.inactivesTotalizer?.ativos!}
-                    preInactives={context.activesTotalizer?.preInativos!}
-                    preInactives_={context.inactivesTotalizer?.preInativos!}
-                    inactives={context.activesTotalizer?.inativos!}
-                    inactives_={context.inactivesTotalizer?.inativos!} />
-            </View>
-            <View style={styles.bottom}>
-                <View style={styles.overview}>
-                    <View style={{ flexDirection: "row", width: "90%", alignItems: "center", gap: 64 }}>
-                        <Icon
-                            name="remove-red-eye"
-                            color="white"
-                            size={36}
-                            style={{
-                                padding: 8,
-                                backgroundColor: "#FE38F2",
-                                borderRadius: 90,
-                            }} />
-                        <Text style={styles.overviewText}>Overview</Text>
-                    </View>
-                    <View style={{ width: "90%" }}>
-                        <Picker
-                            items={items!}
-                            value={value}
-                            setValue={setValue}
-                            open={open}
-                            setOpen={setOpen}
-                            onChangeValue={handleFilter}
-                            placeholder="Todos" />
-                    </View>
-                </View>
-                <View style={styles.list}>
-                    <WalletList data={data} />
-                </View>
-            </View>
-            <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
+  return (
+    <View style={styles.container}>
+      <View style={styles.top}>
+        <WalletHeader
+          total={context.activesTotalizer?.total!}
+          total_={context.inactivesTotalizer?.total!}
+          actives={context.activesTotalizer?.ativos!}
+          actives_={context.inactivesTotalizer?.ativos!}
+          preInactives={context.activesTotalizer?.preInativos!}
+          preInactives_={context.inactivesTotalizer?.preInativos!}
+          inactives={context.activesTotalizer?.inativos!}
+          inactives_={context.inactivesTotalizer?.inativos!}
+        />
+      </View>
+      <View style={styles.bottom}>
+        <View style={styles.overview}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "90%",
+              alignItems: "center",
+              gap: 64,
+            }}
+          >
+            <Icon
+              name="remove-red-eye"
+              color="white"
+              size={36}
+              style={{
+                padding: 8,
+                backgroundColor: "#FE38F2",
+                borderRadius: 90,
+              }}
+            />
+            <Text style={styles.overviewText}>Overview</Text>
+          </View>
+          <View style={{ width: "90%" }}>
+            <Picker
+              items={items!}
+              value={value}
+              setValue={setValue}
+              open={open}
+              setOpen={setOpen}
+              onChangeValue={handleFilter}
+              placeholder="Todos"
+            />
+          </View>
         </View>
-    )
+        <View style={styles.list}>
+          <WalletList data={data} />
+        </View>
+      </View>
+      <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
+    </View>
+  );
 }
