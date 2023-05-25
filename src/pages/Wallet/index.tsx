@@ -11,7 +11,7 @@ import { Context } from "../../context";
 import { WalletHeader } from "../../components/headers/wallet";
 import { WalletList } from "../../components/lists/wallet";
 
-interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
+interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
@@ -22,35 +22,39 @@ export default function Wallet({ navigation }: Properties) {
   const [data, setData] = useState(DATA);
 
   useEffect(() => {
-    context.getWallets().then((response) => {
-      let data = [
-        "Todos",
-        "Ativo",
-        "Bloqueado media de vendas",
-        "Bloqueado 90 dias sem compras",
-        "Bloqueado 150 dias sem compras",
-        "Pre Inativo 1 60 dias sem compras",
-        "Pre Inativo 2 70 dias sem compras",
-        "Pre Inativo 3 80 dias sem compras",
-        "365 dias sem compras",
-        "730 dias sem compras",
-        "Bloqueado sem compras",
-      ];
-      if (data) {
-        let array: ItemType<any>[] = [];
-        Object.entries(data).forEach(([key, value]) => {
-          array = [
-            ...array,
-            {
-              value: value,
-              label: value,
-            },
-          ];
-        });
-        setItems(array);
-      }
-    });
+    const init = async () => {
+      await context.getWallets().then((_) => handlePicker())
+    }
+    init().catch(error => console.error(error))
+
   }, []);
+
+  const handlePicker = () => {
+    let _data = [
+      "Todos",
+      "Ativo",
+      "Bloqueado media de vendas",
+      "Bloqueado 90 dias sem compras",
+      "Bloqueado 150 dias sem compras",
+      "Pre Inativo 1 60 dias sem compras",
+      "Pre Inativo 2 70 dias sem compras",
+      "Pre Inativo 3 80 dias sem compras",
+      "365 dias sem compras",
+      "730 dias sem compras",
+      "Bloqueado sem compras",
+    ];
+    let array: ItemType<any>[] = [];
+    Object.entries(_data).forEach(([key, value]) => {
+      array = [
+        ...array,
+        {
+          value: value,
+          label: value,
+        },
+      ];
+    });
+    setItems(array);
+  }
 
   const handleFilter = () => {
     if (DATA) {
@@ -104,7 +108,7 @@ export default function Wallet({ navigation }: Properties) {
           </View>
           <View style={{ width: "90%" }}>
             <Picker
-              items={items!}
+              items={items ? items : []}
               value={value}
               setValue={setValue}
               open={open}

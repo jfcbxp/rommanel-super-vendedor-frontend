@@ -17,23 +17,31 @@ import { BillingProgress } from "../models/billing.progress.model";
 import { useBillingProgressService } from "../services/billing.progress.service";
 import { useBillingService } from "../services/billing.service";
 import { BillingModel } from "../models/billing.model";
+import { useMetaService } from "../services/meta.service";
+import { Meta } from "../models/meta.model";
 
 type ContextProps = {
   user: User | undefined;
   token: string | undefined;
+  meta: Meta | undefined;
   dailyTotalizer: SchedulingTotalizer | undefined;
   monthlyTotalizer: SchedulingTotalizer | undefined;
   schedules: Schedule[] | undefined;
   activesTotalizer: WalletTotalizer | undefined;
   inactivesTotalizer: WalletTotalizer | undefined;
   wallets: Wallet[] | undefined;
+  billingTitle: string | undefined;
   billings: BillingModel[] | undefined;
   billingProgresses: BillingProgress[] | undefined;
   loading: boolean;
+  getMeta(): Promise<void>;
   getSchedules(): Promise<void>;
   getWallets(): Promise<void>;
   getBillingProgresses(): Promise<void>;
   getBilling(_date: string): Promise<void>;
+  handleChangeBillingTitle(
+    _title: string
+  ): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
 };
@@ -41,21 +49,25 @@ type ContextProps = {
 const defaultState = {
   user: undefined,
   token: undefined,
+  meta: undefined,
   dailyTotalizer: undefined,
   monthlyTotalizer: undefined,
   schedules: undefined,
   activesTotalizer: undefined,
   inactivesTotalizer: undefined,
   wallets: undefined,
+  billingTitle: undefined,
   billings: undefined,
   billingProgresses: undefined,
   loading: true,
-  getSchedules: async () => {},
-  getWallets: async () => {},
-  getBillingProgresses: async () => {},
-  getBilling: async () => {},
-  signIn: async () => {},
-  signOut: async () => {},
+  getMeta: async () => { },
+  getSchedules: async () => { },
+  getWallets: async () => { },
+  getBillingProgresses: async () => { },
+  getBilling: async () => { },
+  handleChangeBillingTitle: () => { },
+  signIn: async () => { },
+  signOut: async () => { },
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -67,6 +79,7 @@ type ProviderProps = {
 const Provider = ({ children }: ProviderProps) => {
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
+  const [meta, setMeta] = useState<Meta>();
   const [dailyTotalizer, setDailyTotalizer] = useState<SchedulingTotalizer>();
   const [monthlyTotalizer, setMonthlyTotalizer] =
     useState<SchedulingTotalizer>();
@@ -75,6 +88,7 @@ const Provider = ({ children }: ProviderProps) => {
   const [inactivesTotalizer, setInactivesTotalizer] =
     useState<WalletTotalizer>();
   const [wallets, setWallets] = useState<Wallet[]>();
+  const [billingTitle, setBillingTitle] = useState<string>()
   const [billings, setBillings] = useState<BillingModel[]>();
   const [billingProgresses, setBillingProgresses] =
     useState<BillingProgress[]>();
@@ -88,13 +102,16 @@ const Provider = ({ children }: ProviderProps) => {
   const walletTotalizerService = useWalletWalletTotalizerService();
   const billingProgressService = useBillingProgressService();
   const billingService = useBillingService();
+  const metaService = useMetaService();
 
   useEffect(() => {
-    const getFromStorage = async () => {
-      await _getUser();
+    const init = async () => {
+      if (!user || !token)
+        await _getUser();
       await _getToken();
     };
-    getFromStorage().catch((error) => console.error(error));
+    init()
+      .catch((error) => console.error(error));
     setLoading(false);
   }, []);
 
@@ -121,9 +138,27 @@ const Provider = ({ children }: ProviderProps) => {
   const signOut = async () => {
     setLoading(true);
     setUser(undefined);
-    AsyncStorage.clear();
+    await AsyncStorage.clear();
     setLoading(false);
   };
+
+  const getMeta = async () => {
+    setLoading(true)
+    if (_isUserAuthenticated() && token) {
+      await metaService.get(user?.sub!, token)
+        .then(_meta => {
+          setMeta(_meta)
+        })
+    } else {
+      await signOut();
+      setDialog({
+        title: "Sessão expirada",
+        content: "Efetue acesso novamente",
+        visible: true,
+      });
+    }
+    setLoading(false)
+  }
 
   const getSchedules = async () => {
     setLoading(true);
@@ -208,14 +243,16 @@ const Provider = ({ children }: ProviderProps) => {
   };
 
   const getBilling = async (_date: string) => {
-    setLoading(true);
     if (_isUserAuthenticated() && token) {
       await billingService.get(user?.sub!, _date, token).then((_billings) => {
         setBillings(_billings);
       });
     }
-    setLoading(false);
   };
+
+  const handleChangeBillingTitle = (_title: string) => {
+    setBillingTitle(_title)
+  }
 
   const _getUser = async () => {
     try {
@@ -274,6 +311,7 @@ const Provider = ({ children }: ProviderProps) => {
     () => ({
       user,
       token,
+      meta,
       dailyTotalizer,
       monthlyTotalizer,
       schedules,
@@ -284,15 +322,19 @@ const Provider = ({ children }: ProviderProps) => {
       loading,
       getSchedules,
       getWallets,
+      billingTitle,
       billings,
+      getMeta,
       getBillingProgresses,
       getBilling,
+      handleChangeBillingTitle,
       signIn,
       signOut,
     }),
     [
       user,
       token,
+      meta,
       dailyTotalizer,
       monthlyTotalizer,
       schedules,
@@ -301,11 +343,14 @@ const Provider = ({ children }: ProviderProps) => {
       wallets,
       billingProgresses,
       loading,
+      getMeta,
       getSchedules,
       getWallets,
+      billingTitle,
       billings,
       getBillingProgresses,
       getBilling,
+      handleChangeBillingTitle,
       signIn,
       signOut,
     ]

@@ -3,7 +3,5 @@ export type StackParams = {
     Home: undefined
     Wallet: undefined
     Scheduling: undefined
-    Billing: {
-        item?: any
-    }
+    Billing: undefined
 }
