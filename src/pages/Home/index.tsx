@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParams } from "../../types/stack.params";
 import { HomeStyles as styles } from "./styles";
@@ -42,23 +42,33 @@ export default function Home({ navigation }: Properties) {
                         onPress={() => { navigation.navigate("Billing") }} />
                 </View>
                 <View style={styles.bottom}>
-                    <Container title="Hoje">
+                    <Container title="Apuração">
+                        <Text style={styles.subtitle}>
+                            Última atualização: {context.meta ? context.meta.dataAtualizacao : "--/--/----"} as {context.meta ? context.meta.horaAtualizacao : " --:--"}
+                        </Text>
                         <ProgressBar
-                            title="Meta Mensal"
-                            step={context.meta ? context.meta.metaValor : 0}
+                            title="Período atual"
+                            step={context.meta ? context.meta.dias : 0}
+                            steps={context.meta ? context.meta.progressoPeriodo : 0}
+                            period={context.meta ? `${context.meta.dataInicial} / ${context.meta.dataFinal}` : "nada consta"}
+                            type="date" />
+                        <Divider />
+                        <ProgressBar
+                            title="Total Vendido"
+                            step={context.meta ? context.meta.totalVendido : 0}
                             steps={context.meta ? context.meta.metaValor : 0}
                             type="money" />
                         <Divider />
                         <ProgressBar
-                            title="Meta diária"
-                            step={context.meta ? (context.meta.metaValor / context.meta.dias) : 0}
-                            steps={context.meta ? (context.meta.metaValor / context.meta.dias) : 0}
-                            type="money" />
+                            title="Prospectos"
+                            step={context.meta ? context.meta.quantidadeProspectos : 0}
+                            steps={context.meta ? context.meta.metaProspecto : 0}
+                            type="number" />
                         <Divider />
                         <ProgressBar
-                            title="Prospectos"
-                            step={context.meta ? context.meta?.metaProspecto : 0}
-                            steps={context.meta ? context.meta?.metaProspecto : 0}
+                            title="Ticket Médio"
+                            step={context.meta ? context.meta.ticketMedio : 0}
+                            steps={context.meta ? context.meta.ticketMedio : 0}
                             type="number" />
                         <Divider />
                     </Container>

@@ -18,5 +18,11 @@ export const HomeStyles = StyleSheet.create({
     bottom: {
         flex: 7.25,
         paddingTop: "2.5%",
+    },
+    subtitle: {
+        fontSize: 13,
+        fontFamily: "Inter_700Bold",
+        color: "#73186D",
+        alignSelf: "flex-end",
     }
 })

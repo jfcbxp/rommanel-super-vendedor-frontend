@@ -12,7 +12,7 @@ import { BillingProgress } from "../../models/billing.progress.model";
 import { useBillingDailyTotalizer } from "../../services/billing.totalizer.service";
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> {}
+interface Properties extends StackScreenProps<StackParams, "Billing"> { }
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
@@ -29,7 +29,16 @@ export default function Billing({ navigation }: Properties) {
         await context.getBillingProgresses();
       }
     };
-    init().catch((error) => console.error(error));
+    init()
+      .then(() => {
+        if (!context.billingProgresses) {
+          context.showDialog(
+            "Nada consta",
+            "Nenhum dado para exibir"
+          )
+        }
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
@@ -50,15 +59,17 @@ export default function Billing({ navigation }: Properties) {
       DATA.forEach((element) => {
         data.push(element);
       });
-      let _item = data[data.length - 1].periodo;
-      let element = data.find((element) => element.periodo == _item)!;
-      element.selected = true;
-      setElement(element);
-      let index = data.findIndex((element) => element.periodo == _item);
-      data[index] = element;
-      setData(data);
-      await context.getBilling(_item);
-      await getDailyTotalizer(_item);
+      if (data.length > 0) {
+        let _item = data[data.length - 1].periodo;
+        let element = data.find((element) => element.periodo == _item)!;
+        element.selected = true;
+        setElement(element);
+        let index = data.findIndex((element) => element.periodo == _item);
+        data[index] = element;
+        setData(data);
+        await context.getBilling(_item);
+        await getDailyTotalizer(_item);
+      }
     }
   };
 
@@ -116,9 +127,11 @@ export default function Billing({ navigation }: Properties) {
           <View style={{ flex: 3 }}>
             <Text style={styles.overview_1}>{element?.periodo}</Text>
             <View style={styles.overview_box}>
-              <Text style={styles.overview_2}>
-                R$ {dailyTotalizer?.liquido.toFixed(2).replace(".", ",")}
-              </Text>
+              {dailyTotalizer ?
+                <Text style={styles.overview_2}>
+                  R$ {dailyTotalizer.liquido.toFixed(2).replace(".", ",")}
+                </Text>
+                : undefined}
               {false ? (
                 <View style={styles.overview_inner_box}>
                   <Icon name="arrow-upward" color="#60D29D" size={18} />

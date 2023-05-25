@@ -4,10 +4,10 @@ import { BillingProgress } from "../../../../../models/billing.progress.model";
 export function BarChartItem({ data }: { data: BillingProgress }) {
   return (
     <VerticalBar
-      title={data.periodo}
-      step={data.total}
+      title={data ? data.periodo : ""}
+      step={data ? data.total : 0}
       steps={10}
-      selected={data.selected}
+      selected={data ? data.selected : false}
     />
   );
 }
