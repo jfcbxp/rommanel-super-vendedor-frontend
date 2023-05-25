@@ -9,4 +9,13 @@ export interface Meta {
     dias: number
     metaValor: number
     metaProspecto: number
+    dataAtualizacao: string
+    horaAtualizacao: string
+    quantidadeProspectos: number
+    ticketMedio: number
+    quantidadeVendas: number
+    totalVendido: number
+    quantidadeDevolvido: number
+    totalDevolvido: number
+    progressoPeriodo: number
 }

@@ -10,7 +10,7 @@ import { Context } from "../../context";
 import { WalletHeader } from "../../components/headers/wallet";
 import { WalletList } from "../../components/lists/wallet";
 
-interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
+interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
@@ -24,7 +24,16 @@ export default function Wallet({ navigation }: Properties) {
     const init = async () => {
       await context.getWallets().then((_) => handlePicker());
     };
-    init().catch((error) => console.error(error));
+    init()
+      .then(() => {
+        if (!context.wallets) {
+          context.showDialog(
+            "Nada consta",
+            "Nenhum dado para ser exibido"
+          )
+        }
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   const handlePicker = () => {

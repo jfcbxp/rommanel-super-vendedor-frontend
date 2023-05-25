@@ -15,21 +15,33 @@ export default function Scheduling({ navigation }: Properties) {
     const context = useContext(Context)
 
     useEffect(() => {
-        context.getSchedules()
+        const init = async () => {
+            await context.getSchedules()
+        }
+        init()
+            .then(() => {
+                if (!context.schedules) {
+                    context.showDialog(
+                        "Nada consta",
+                        "Nenhum dado para ser exibido"
+                    )
+                }
+            })
+            .catch(error => console.log(error))
     }, [])
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
                 <SchedulingHeader
-                    dailyTotal={context.dailyTotalizer?.total ? context.dailyTotalizer?.total : 0}
-                    monthlyTotal={context.monthlyTotalizer?.total ? context.monthlyTotalizer.total : 0}
-                    dailyPredicted={context.dailyTotalizer?.previstos ? context.dailyTotalizer.previstos : 0}
-                    monthlyPredicted={context.monthlyTotalizer?.previstos ? context.monthlyTotalizer.previstos : 0}
-                    dailyAbsences={context.dailyTotalizer?.faltas ? context.dailyTotalizer.faltas : 0}
-                    monthlyAbsences={context.monthlyTotalizer?.faltas ? context.monthlyTotalizer.faltas : 0}
-                    dailyArrivals={context.dailyTotalizer?.chegadas ? context.dailyTotalizer.chegadas : 0}
-                    monthlyArrivals={context.monthlyTotalizer?.chegadas ? context.monthlyTotalizer.chegadas : 0} />
+                    dailyTotal={context.dailyTotalizer ? context.dailyTotalizer?.total : 0}
+                    monthlyTotal={context.monthlyTotalizer ? context.monthlyTotalizer.total : 0}
+                    dailyPredicted={context.dailyTotalizer ? context.dailyTotalizer.previstos : 0}
+                    monthlyPredicted={context.monthlyTotalizer ? context.monthlyTotalizer.previstos : 0}
+                    dailyAbsences={context.dailyTotalizer ? context.dailyTotalizer.faltas : 0}
+                    monthlyAbsences={context.monthlyTotalizer ? context.monthlyTotalizer.faltas : 0}
+                    dailyArrivals={context.dailyTotalizer ? context.dailyTotalizer.chegadas : 0}
+                    monthlyArrivals={context.monthlyTotalizer ? context.monthlyTotalizer.chegadas : 0} />
             </View>
             <View style={styles.bottom}>
                 {false ?

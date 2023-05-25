@@ -6,7 +6,8 @@ interface Properties {
   title: string;
   step: number;
   steps: number;
-  type: "number" | "money";
+  period?: string;
+  type: "number" | "money" | "date";
 }
 
 export function ProgressBar(properties: Properties) {
@@ -14,22 +15,27 @@ export function ProgressBar(properties: Properties) {
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
-        {properties.step >= properties.steps ? (
+        {properties.step >= properties.steps ?
           <Icon name="check-box" color="#73186D" size={32} />
-        ) : (
+          :
           <Icon name="check-box-outline-blank" color="#73186D" size={32} />
-        )}
+        }
       </View>
       <View style={styles.bar}>
         <View style={styles.titles}>
           <Text style={styles.title}>{properties.title}</Text>
-          {properties.type == "money" ? (
+          {properties.type == "money" || properties.type == "date" ?
             <Text style={styles.subTitle}>
-              R$ {properties.steps.toFixed(2).replace(".", ",")}
+              {properties.type == "money" ?
+                `R$ ${properties.step.toFixed(2).replace(".", ",")} / R$ ${properties.steps.toFixed(2).replace(".", ",")}`
+                : undefined}
+              {properties.type == "date" ?
+                `${properties.period}`
+                : undefined}
             </Text>
-          ) : (
-            <Text style={styles.subTitle}>{properties.steps}</Text>
-          )}
+            :
+            <Text style={styles.subTitle}>{properties.step} / {properties.steps}</Text>
+          }
         </View>
         <View style={styles.progressBar}>
           <View

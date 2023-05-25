@@ -19,6 +19,8 @@ import { useBillingService } from "../services/billing.service";
 import { BillingModel } from "../models/billing.model";
 import { useMetaService } from "../services/meta.service";
 import { Meta } from "../models/meta.model";
+import { NavigationParams } from "../types/navigation.params";
+import { useNavigation } from "@react-navigation/native";
 
 type ContextProps = {
   user: User | undefined;
@@ -44,6 +46,10 @@ type ContextProps = {
   ): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
+  showDialog(
+    _title: string,
+    _content: string
+  ): void;
 };
 
 const defaultState = {
@@ -68,6 +74,7 @@ const defaultState = {
   handleChangeBillingTitle: () => { },
   signIn: async () => { },
   signOut: async () => { },
+  showDialog: async () => { },
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -103,6 +110,7 @@ const Provider = ({ children }: ProviderProps) => {
   const billingProgressService = useBillingProgressService();
   const billingService = useBillingService();
   const metaService = useMetaService();
+  const navigation = useNavigation<NavigationParams>();
 
   useEffect(() => {
     const init = async () => {
@@ -147,7 +155,9 @@ const Provider = ({ children }: ProviderProps) => {
     if (_isUserAuthenticated() && token) {
       await metaService.get(user?.sub!, token)
         .then(_meta => {
-          setMeta(_meta)
+          if (_meta) {
+            setMeta(_meta)
+          }
         })
     } else {
       await signOut();
@@ -163,9 +173,12 @@ const Provider = ({ children }: ProviderProps) => {
   const getSchedules = async () => {
     setLoading(true);
     if (_isUserAuthenticated() && token) {
-      await schedulingService.get(user?.sub!, token).then((schedules) => {
-        setSchedules(schedules);
-      });
+      await schedulingService.get(user?.sub!, token)
+        .then(_schedules => {
+          if (_schedules) {
+            setSchedules(_schedules);
+          }
+        });
       await _getSchedulingTotalizers();
     } else {
       await signOut();
@@ -183,13 +196,17 @@ const Provider = ({ children }: ProviderProps) => {
     if (_isUserAuthenticated() && token) {
       await schedulingTotalizerService
         .getDaily(user?.sub!, token)
-        .then((_dailyTotalizer) => {
-          setDailyTotalizer(_dailyTotalizer);
+        .then(_dailyTotalizer => {
+          if (_dailyTotalizer) {
+            setDailyTotalizer(_dailyTotalizer);
+          }
         });
       await schedulingTotalizerService
         .getMontly(user?.sub!, token)
-        .then((_monthlyTotalizer) => {
-          setMonthlyTotalizer(_monthlyTotalizer);
+        .then(_monthlyTotalizer => {
+          if (_monthlyTotalizer) {
+            setMonthlyTotalizer(_monthlyTotalizer);
+          }
         });
     }
     setLoading(false);
@@ -198,9 +215,12 @@ const Provider = ({ children }: ProviderProps) => {
   const getWallets = async () => {
     setLoading(true);
     if (_isUserAuthenticated() && token) {
-      await walletService.get(user?.sub!, token).then((_wallets) => {
-        setWallets(_wallets);
-      });
+      await walletService.get(user?.sub!, token)
+        .then(_wallets => {
+          if (_wallets) {
+            setWallets(_wallets);
+          }
+        });
       await _getWalletTotalizers();
     } else {
       await signOut();
@@ -218,13 +238,17 @@ const Provider = ({ children }: ProviderProps) => {
     if (_isUserAuthenticated() && token) {
       await walletTotalizerService
         .getActives(user?.sub!, token)
-        .then((_activeTotalizer) => {
-          setActivesTotalizer(_activeTotalizer);
+        .then(_activeTotalizer => {
+          if (_activeTotalizer) {
+            setActivesTotalizer(_activeTotalizer);
+          }
         });
       await walletTotalizerService
         .getInactives(user?.sub!, token)
-        .then((_inactiveTotalizer) => {
-          setInactivesTotalizer(_inactiveTotalizer);
+        .then(_inactiveTotalizer => {
+          if (_inactiveTotalizer) {
+            setInactivesTotalizer(_inactiveTotalizer);
+          }
         });
     }
     setLoading(false);
@@ -235,8 +259,10 @@ const Provider = ({ children }: ProviderProps) => {
     if (_isUserAuthenticated() && token) {
       await billingProgressService
         .get(user?.sub!, token)
-        .then((_billingProgresses) => {
-          setBillingProgresses(_billingProgresses);
+        .then(_billingProgresses => {
+          if (_billingProgresses) {
+            setBillingProgresses(_billingProgresses);
+          }
         });
     }
     setLoading(false);
@@ -244,9 +270,12 @@ const Provider = ({ children }: ProviderProps) => {
 
   const getBilling = async (_date: string) => {
     if (_isUserAuthenticated() && token) {
-      await billingService.get(user?.sub!, _date, token).then((_billings) => {
-        setBillings(_billings);
-      });
+      await billingService.get(user?.sub!, _date, token)
+        .then(_billings => {
+          if (_billings) {
+            setBillings(_billings);
+          }
+        });
     }
   };
 
@@ -307,6 +336,15 @@ const Provider = ({ children }: ProviderProps) => {
     return isTokenValid;
   };
 
+  const showDialog = (_title: string, _content: string) => {
+    setDialog({
+      title: _title,
+      content: _content,
+      visible: true,
+    });
+    navigation.navigate("Home")
+  }
+
   const contextValue = useMemo(
     () => ({
       user,
@@ -330,6 +368,7 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeBillingTitle,
       signIn,
       signOut,
+      showDialog,
     }),
     [
       user,
@@ -353,6 +392,7 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeBillingTitle,
       signIn,
       signOut,
+      showDialog,
     ]
   );
 
