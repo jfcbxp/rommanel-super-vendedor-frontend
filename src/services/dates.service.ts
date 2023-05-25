@@ -6,7 +6,7 @@ export const getDates = () => {
         month = "0" + month
     }
     let year = date.getFullYear().toString()
-    for (let day = date.getDate(); day == 1; day--) {
+    for (let day = date.getDate(); day >= 1; day--) {
         if (day.toString().length == 1) {
             dates.push(`0${day}/${month}/${year}`)
         } else {

@@ -8,10 +8,21 @@ import { NavigationButton } from "../../components/buttons/navigation";
 import { StatusBar } from "expo-status-bar";
 import { ProgressBar } from "../../components/progress_bar";
 import { Divider } from "../../components/divider";
+import { useContext, useEffect } from "react";
+import { Context } from "../../context";
 
 interface Properties extends StackScreenProps<StackParams, "Home"> { }
 
 export default function Home({ navigation }: Properties) {
+    const context = useContext(Context)
+
+    useEffect(() => {
+        const init = async () => {
+            await context.getMeta()
+        }
+        init().catch(error => console.error(error))
+    }, [])
+
     return (
         <View style={styles.container}>
             <HomeHeader />
@@ -28,33 +39,28 @@ export default function Home({ navigation }: Properties) {
                     <NavigationButton
                         title="Faturamento"
                         icon="bar-chart"
-                        onPress={() => { navigation.navigate("Billing", {}) }} />
+                        onPress={() => { navigation.navigate("Billing") }} />
                 </View>
                 <View style={styles.bottom}>
                     <Container title="Hoje">
-                        {false ?
-                            <>
-                                <ProgressBar
-                                    title="Total Vendido"
-                                    step={1800}
-                                    steps={3000}
-                                    type="money" />
-                                <Divider />
-                                <ProgressBar
-                                    title="Clientes Atendidos"
-                                    step={10}
-                                    steps={10}
-                                    type="number" />
-                                <Divider />
-                                <ProgressBar
-                                    title="Prospectos"
-                                    step={0}
-                                    steps={10}
-                                    type="number" />
-                                <Divider />
-                            </>
-                            : undefined
-                        }
+                        <ProgressBar
+                            title="Meta Mensal"
+                            step={context.meta ? context.meta.metaValor : 0}
+                            steps={context.meta ? context.meta.metaValor : 0}
+                            type="money" />
+                        <Divider />
+                        <ProgressBar
+                            title="Meta diária"
+                            step={context.meta ? (context.meta.metaValor / context.meta.dias) : 0}
+                            steps={context.meta ? (context.meta.metaValor / context.meta.dias) : 0}
+                            type="money" />
+                        <Divider />
+                        <ProgressBar
+                            title="Prospectos"
+                            step={context.meta ? context.meta?.metaProspecto : 0}
+                            steps={context.meta ? context.meta?.metaProspecto : 0}
+                            type="number" />
+                        <Divider />
                     </Container>
                 </View>
             </View>

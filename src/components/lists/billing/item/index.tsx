@@ -13,10 +13,21 @@ export function BillingItem({ data }: { data: BillingModel }) {
                     ]}>
                     <Text style={[styles.costumer, { color: "white" }]}>{data.tipoOrcamento}</Text>
                 </View>
+                <View style={{
+                    position: "absolute",
+                    right: 0,
+                }}>
+                    <Text style={[styles.code, { color: "green" }]}>R$ {data.total.toFixed(2).replace(".", ",")}</Text>
+                    {data.valorNCC > 0 ?
+                        <>
+                            <Text style={[styles.code, { color: "red" }]}>R$ {data.valorNCC.toFixed(2).replace(".", ",")}</Text>
+                            <Text style={styles.code}>R$ {(data.total - data.valorNCC).toFixed(2).replace(".", ",")}</Text>
+                        </>
+                        : undefined}
+                </View>
             </View>
             <View style={styles.bottom}>
                 <Text style={styles.costumer}>{data.nomeCliente}</Text>
-                <Text style={styles.code}>R$ {data.total.toFixed(2).replace(".", ",")}</Text>
             </View>
         </View>
     )

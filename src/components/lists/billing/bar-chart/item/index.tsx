@@ -6,7 +6,7 @@ export function BarChartItem({ data }: { data: BillingProgress }) {
         <VerticalBar
             title={data.periodo}
             step={data.total}
-            steps={100}
+            steps={10}
             selected={data.selected} />
     )
 }
