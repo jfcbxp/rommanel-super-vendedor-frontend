@@ -1,9 +1,8 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { StackParams } from "../../types/stack.params";
 import { WalletStyles as styles } from "./styles";
 import { StatusBar } from "expo-status-bar";
-import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Picker } from "../../components/buttons/picker";
 import { ItemType } from "react-native-dropdown-picker";
 import { useEffect, useState, useContext } from "react";
@@ -11,7 +10,7 @@ import { Context } from "../../context";
 import { WalletHeader } from "../../components/headers/wallet";
 import { WalletList } from "../../components/lists/wallet";
 
-interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
+interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
@@ -23,25 +22,21 @@ export default function Wallet({ navigation }: Properties) {
 
   useEffect(() => {
     const init = async () => {
-      await context.getWallets().then((_) => handlePicker())
-    }
-    init().catch(error => console.error(error))
-
+      await context.getWallets().then((_) => handlePicker());
+    };
+    init().catch((error) => console.error(error));
   }, []);
 
   const handlePicker = () => {
     let _data = [
       "Todos",
       "Ativo",
-      "Bloqueado media de vendas",
-      "Bloqueado 90 dias sem compras",
-      "Bloqueado 150 dias sem compras",
       "Pre Inativo 1 60 dias sem compras",
       "Pre Inativo 2 70 dias sem compras",
       "Pre Inativo 3 80 dias sem compras",
-      "365 dias sem compras",
-      "730 dias sem compras",
-      "Bloqueado sem compras",
+      "Bloqueado media de vendas",
+      "Bloqueado 90 dias sem compras",
+      "Bloqueado 150 dias sem compras",
     ];
     let array: ItemType<any>[] = [];
     Object.entries(_data).forEach(([key, value]) => {
@@ -54,7 +49,7 @@ export default function Wallet({ navigation }: Properties) {
       ];
     });
     setItems(array);
-  }
+  };
 
   const handleFilter = () => {
     if (DATA) {
@@ -86,26 +81,6 @@ export default function Wallet({ navigation }: Properties) {
       </View>
       <View style={styles.bottom}>
         <View style={styles.overview}>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "90%",
-              alignItems: "center",
-              gap: 64,
-            }}
-          >
-            <Icon
-              name="remove-red-eye"
-              color="white"
-              size={36}
-              style={{
-                padding: 8,
-                backgroundColor: "#FE38F2",
-                borderRadius: 90,
-              }}
-            />
-            <Text style={styles.overviewText}>Overview</Text>
-          </View>
           <View style={{ width: "90%" }}>
             <Picker
               items={items ? items : []}

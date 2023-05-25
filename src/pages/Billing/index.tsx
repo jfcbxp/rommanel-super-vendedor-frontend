@@ -12,41 +12,43 @@ import { BillingProgress } from "../../models/billing.progress.model";
 import { useBillingDailyTotalizer } from "../../services/billing.totalizer.service";
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> { }
+interface Properties extends StackScreenProps<StackParams, "Billing"> {}
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
   let DATA = context.billingProgresses;
   const [data, setData] = useState<BillingProgress[] | undefined>();
   const [element, setElement] = useState<BillingProgress>();
-  const [dailyTotalizer, setDailyTotalizer] = useState<DailyTotalizer>()
-  let item = context.billingTitle
-  const billingDailyTotalizer = useBillingDailyTotalizer()
+  const [dailyTotalizer, setDailyTotalizer] = useState<DailyTotalizer>();
+  let item = context.billingTitle;
+  const billingDailyTotalizer = useBillingDailyTotalizer();
 
   useEffect(() => {
     const init = async () => {
       if (!DATA) {
         await context.getBillingProgresses();
       }
-    }
-    init().catch(error => console.error(error))
+    };
+    init().catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
     const init = async () => {
-      await handleBillingProgresses(DATA)
-      await handleChangeItem(DATA, item)
-    }
+      await handleBillingProgresses(DATA);
+      await handleChangeItem(DATA, item);
+    };
     if (context.billingProgresses) {
-      init().catch(error => console.error(error))
+      init().catch((error) => console.error(error));
     }
   }, [DATA, context.billingTitle]);
 
-  const handleBillingProgresses = async (DATA: BillingProgress[] | undefined) => {
+  const handleBillingProgresses = async (
+    DATA: BillingProgress[] | undefined
+  ) => {
     if (DATA) {
-      let data: BillingProgress[] = []
-      DATA.forEach(element => {
-        data.push(element)
+      let data: BillingProgress[] = [];
+      DATA.forEach((element) => {
+        data.push(element);
       });
       let _item = data[data.length - 1].periodo;
       let element = data.find((element) => element.periodo == _item)!;
@@ -58,17 +60,20 @@ export default function Billing({ navigation }: Properties) {
       await context.getBilling(_item);
       await getDailyTotalizer(_item);
     }
-  }
+  };
 
-  const handleChangeItem = async (DATA: BillingProgress[] | undefined, _item?: string) => {
+  const handleChangeItem = async (
+    DATA: BillingProgress[] | undefined,
+    _item?: string
+  ) => {
     if (DATA && _item) {
-      let data: BillingProgress[] = []
-      DATA.forEach(element => {
-        data.push(element)
+      let data: BillingProgress[] = [];
+      DATA.forEach((element) => {
+        data.push(element);
       });
       let _element = data.find((element) => element.periodo == _item)!;
-      DATA.forEach(element => {
-        element.selected = false
+      DATA.forEach((element) => {
+        element.selected = false;
       });
       _element.selected = true;
       setElement(_element);
@@ -78,14 +83,15 @@ export default function Billing({ navigation }: Properties) {
       await context.getBilling(_item);
       await getDailyTotalizer(_item);
     }
-  }
+  };
 
   const getDailyTotalizer = async (date: string) => {
-    await billingDailyTotalizer.get(context.user?.sub!, date, context.token!)
-      .then(_dailyTotalizer => {
-        setDailyTotalizer(_dailyTotalizer)
-      })
-  }
+    await billingDailyTotalizer
+      .get(context.user?.sub!, date, context.token!)
+      .then((_dailyTotalizer) => {
+        setDailyTotalizer(_dailyTotalizer);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -104,7 +110,8 @@ export default function Billing({ navigation }: Properties) {
                 backgroundColor: "#FE38F2",
                 borderRadius: 90,
                 alignSelf: "center",
-              }} />
+              }}
+            />
           </View>
           <View style={{ flex: 3 }}>
             <Text style={styles.overview_1}>{element?.periodo}</Text>
@@ -112,12 +119,12 @@ export default function Billing({ navigation }: Properties) {
               <Text style={styles.overview_2}>
                 R$ {dailyTotalizer?.liquido.toFixed(2).replace(".", ",")}
               </Text>
-              {false ?
+              {false ? (
                 <View style={styles.overview_inner_box}>
                   <Icon name="arrow-upward" color="#60D29D" size={18} />
                   <Text style={styles.overview_3}>10%</Text>
                 </View>
-                : undefined}
+              ) : undefined}
             </View>
           </View>
         </View>
