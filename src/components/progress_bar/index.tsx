@@ -11,15 +11,24 @@ interface Properties {
 }
 
 export function ProgressBar(properties: Properties) {
+  if (!properties) {
+    properties = {
+      title: "",
+      step: 0,
+      steps: 0,
+      period: "nada consta",
+      type: "number"
+    }
+  }
   const progress = (properties.step * 100) / properties.steps + "%";
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
-        {properties.step >= properties.steps ? (
+        {properties.step >= properties.steps ?
           <Icon name="check-box" color="#73186D" size={32} />
-        ) : (
+          :
           <Icon name="check-box-outline-blank" color="#73186D" size={32} />
-        )}
+        }
       </View>
       <View style={styles.bar}>
         <View style={styles.titles}>
