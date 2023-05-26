@@ -18,4 +18,5 @@ export interface Meta {
     quantidadeDevolvido: number
     totalDevolvido: number
     progressoPeriodo: number
+    quantidadeReativos: number
 }

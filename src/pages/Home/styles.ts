@@ -19,10 +19,16 @@ export const HomeStyles = StyleSheet.create({
         flex: 7.25,
         paddingTop: "2.5%",
     },
-    subtitle: {
+    title: {
         fontSize: 13,
         fontFamily: "Inter_700Bold",
         color: "#73186D",
         alignSelf: "flex-end",
-    }
+    },
+    subtitle: {
+        fontSize: 12,
+        fontFamily: "Inter_500Medium",
+        textAlign: "center",
+        color: "#BEC0C5",
+    },
 })
