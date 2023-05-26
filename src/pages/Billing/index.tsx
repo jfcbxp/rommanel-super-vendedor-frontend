@@ -13,7 +13,7 @@ import { useBillingDailyTotalizer } from "../../services/billing.totalizer.servi
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 import { AlternateLoading } from "../../components/modals/loading";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> {}
+interface Properties extends StackScreenProps<StackParams, "Billing"> { }
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
@@ -105,6 +105,12 @@ export default function Billing({ navigation }: Properties) {
       });
   };
 
+  let liquido = dailyTotalizer?.liquido.toLocaleString("pt-BR")
+
+  if (liquido && liquido.split(",")[1].length < 2) {
+    liquido += "0"
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -129,9 +135,7 @@ export default function Billing({ navigation }: Properties) {
             <Text style={styles.overview_1}>{element?.periodo}</Text>
             <View style={styles.overview_box}>
               {dailyTotalizer ? (
-                <Text style={styles.overview_2}>
-                  R$ {dailyTotalizer.liquido.toLocaleString("pt-BR")}
-                </Text>
+                <Text style={styles.overview_2}>R$ {liquido}</Text>
               ) : undefined}
               {false ? (
                 <View style={styles.overview_inner_box}>

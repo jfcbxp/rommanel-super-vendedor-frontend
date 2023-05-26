@@ -21,6 +21,18 @@ export function ProgressBar(properties: Properties) {
     }
   }
   const progress = (properties.step * 100) / properties.steps + "%";
+
+  let moneyStep = properties.step.toLocaleString("pt-BR")
+  let moneySteps = properties.steps.toLocaleString("pt-BR")
+
+  if (moneyStep.split(",")[1].length < 2) {
+    moneyStep += "0"
+  }
+
+  if (moneySteps.split(",")[1].length < 2) {
+    moneySteps += "0"
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
@@ -36,9 +48,7 @@ export function ProgressBar(properties: Properties) {
           {properties.type == "money" || properties.type == "date" ? (
             <Text style={styles.subTitle}>
               {properties.type == "money"
-                ? `R$ ${properties.step.toLocaleString(
-                    "pt-BR"
-                  )} / R$ ${properties.steps.toLocaleString("pt-BR")}`
+                ? `R$ ${moneyStep} / R$ ${moneySteps}`
                 : undefined}
               {properties.type == "date" ? `${properties.period}` : undefined}
             </Text>
