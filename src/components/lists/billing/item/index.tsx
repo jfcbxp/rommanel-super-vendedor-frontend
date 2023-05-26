@@ -3,21 +3,20 @@ import { BillingItemStyles as styles } from "./styles";
 import { BillingModel } from "../../../../models/billing.model";
 
 export function BillingItem({ data }: { data: BillingModel }) {
-  let total = data.total.toLocaleString("pt-BR")
-  let valorNCC = data.valorNCC.toLocaleString("pt-BR")
-  let total_valorNCC = (data.total - data.valorNCC).toLocaleString("pt-BR")
-
-  if (total.split(",")[1].length < 2) {
-    total += "0"
+  const checkZeros = (currency: string) => {
+    if (!currency.includes(",")) {
+      currency = `${currency},00`
+    } else {
+      if (currency.split(",")[1].length < 2) {
+        currency = `${currency}0`
+      }
+    }
+    return currency
   }
 
-  if (valorNCC.split(",")[1].length < 2) {
-    valorNCC += "0"
-  }
-
-  if (total_valorNCC.split(",")[1].length < 2) {
-    total_valorNCC += "0"
-  }
+  let total = checkZeros(data.total.toLocaleString("pt-BR"))
+  let valorNCC = checkZeros(data.valorNCC.toLocaleString("pt-BR"))
+  let total_valorNCC = checkZeros((data.total - data.valorNCC).toLocaleString("pt-BR"))
 
   return (
     <View style={styles.container}>

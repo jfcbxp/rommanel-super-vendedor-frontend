@@ -22,7 +22,7 @@ export default function Home({ navigation }: Properties) {
             await context.getMeta()
         }
         init().catch(error => console.error(error))
-    }, [])
+    }, [context.token])
 
     return (
         <View style={styles.container}>
@@ -72,7 +72,7 @@ export default function Home({ navigation }: Properties) {
                                     title="Ticket Médio"
                                     step={meta.ticketMedio}
                                     steps={meta.ticketMedio}
-                                    type="number" />
+                                    type="money" />
                                 <Divider />
                                 <ProgressBar
                                     title="Reativos"

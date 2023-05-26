@@ -99,17 +99,24 @@ export default function Billing({ navigation }: Properties) {
 
   const getDailyTotalizer = async (date: string) => {
     await billingDailyTotalizer
-      .get(context.user?.sub!, date, context.token!)
+      .get(context.user?.sub!, date, context.token?.token!)
       .then((_dailyTotalizer) => {
         setDailyTotalizer(_dailyTotalizer);
       });
   };
 
-  let liquido = dailyTotalizer?.liquido.toLocaleString("pt-BR")
-
-  if (liquido && liquido.split(",")[1].length < 2) {
-    liquido += "0"
+  const checkZeros = (currency: string) => {
+    if (!currency.includes(",")) {
+      currency = `${currency},00`
+    } else {
+      if (currency.split(",")[1].length < 2) {
+        currency = `${currency}0`
+      }
+    }
+    return currency
   }
+
+  let liquido = dailyTotalizer ? checkZeros(dailyTotalizer.liquido.toLocaleString("pt-BR")) : 0
 
   return (
     <View style={styles.container}>

@@ -22,16 +22,19 @@ export function ProgressBar(properties: Properties) {
   }
   const progress = (properties.step * 100) / properties.steps + "%";
 
-  let moneyStep = properties.step.toLocaleString("pt-BR")
-  let moneySteps = properties.steps.toLocaleString("pt-BR")
-
-  if (moneyStep.split(",")[1].length < 2) {
-    moneyStep += "0"
+  const checkZeros = (currency: string) => {
+    if (!currency.includes(",")) {
+      currency = `${currency},00`
+    } else {
+      if (currency.split(",")[1].length < 2) {
+        currency = `${currency}0`
+      }
+    }
+    return currency
   }
 
-  if (moneySteps.split(",")[1].length < 2) {
-    moneySteps += "0"
-  }
+  let moneyStep = checkZeros(properties.step.toLocaleString("pt-BR"))
+  let moneySteps = checkZeros(properties.steps.toLocaleString("pt-BR"))
 
   return (
     <View style={styles.container}>
