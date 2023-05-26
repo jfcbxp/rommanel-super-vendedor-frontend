@@ -373,8 +373,8 @@ const Provider = ({ children }: ProviderProps) => {
       const expiration = user.exp;
       isTokenValid = expiration * 1000 > Date.now();
     }
-    if (!isTokenValid) {
-      await _renewToken(token!)
+    if (!isTokenValid && token) {
+      await _renewToken(token)
     }
   };
 
