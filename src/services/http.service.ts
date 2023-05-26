@@ -4,8 +4,9 @@ export function http(token?: string) {
   // test : "26.214.78.128"
   // production : "192.168.0.239"
   const host = "192.168.0.239";
-  const _baseURL = `http://${host}:9191/super-vendedor`;
-  // const _baseURL = `http://bb58-170-82-181-193.ngrok-free.app/super-vendedor`;
+  const domain = `http://${host}:9191`
+  // const domain = "http://a28d-170-82-181-193.ngrok-free.app/";
+  const _baseURL = `${domain}/super-vendedor`;
   if (token) {
     return axios.create({
       baseURL: _baseURL,

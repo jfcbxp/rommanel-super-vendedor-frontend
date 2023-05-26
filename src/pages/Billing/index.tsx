@@ -11,6 +11,7 @@ import { BillingList } from "../../components/lists/billing";
 import { BillingProgress } from "../../models/billing.progress.model";
 import { useBillingDailyTotalizer } from "../../services/billing.totalizer.service";
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
+import { AlternateLoading } from "../../components/modals/loading";
 
 interface Properties extends StackScreenProps<StackParams, "Billing"> { }
 
@@ -22,6 +23,11 @@ export default function Billing({ navigation }: Properties) {
   const [dailyTotalizer, setDailyTotalizer] = useState<DailyTotalizer>();
   let item = context.billingTitle;
   const billingDailyTotalizer = useBillingDailyTotalizer();
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    // context.showDialog("Nada consta", "Nenhum dado para ser exibido")
+  }, [])
 
   useEffect(() => {
     const init = async () => {
@@ -29,16 +35,7 @@ export default function Billing({ navigation }: Properties) {
         await context.getBillingProgresses();
       }
     };
-    init()
-      .then(() => {
-        if (!context.billingProgresses) {
-          context.showDialog(
-            "Nada consta",
-            "Nenhum dado para exibir"
-          )
-        }
-      })
-      .catch((error) => console.error(error));
+    init().catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
@@ -54,6 +51,7 @@ export default function Billing({ navigation }: Properties) {
   const handleBillingProgresses = async (
     DATA: BillingProgress[] | undefined
   ) => {
+    setLoading(true)
     if (DATA) {
       let data: BillingProgress[] = [];
       DATA.forEach((element) => {
@@ -71,12 +69,14 @@ export default function Billing({ navigation }: Properties) {
         await getDailyTotalizer(_item);
       }
     }
+    setLoading(false)
   };
 
   const handleChangeItem = async (
     DATA: BillingProgress[] | undefined,
     _item?: string
   ) => {
+    setLoading(true)
     if (DATA && _item) {
       let data: BillingProgress[] = [];
       DATA.forEach((element) => {
@@ -94,6 +94,7 @@ export default function Billing({ navigation }: Properties) {
       await context.getBilling(_item);
       await getDailyTotalizer(_item);
     }
+    setLoading(false)
   };
 
   const getDailyTotalizer = async (date: string) => {
@@ -145,6 +146,7 @@ export default function Billing({ navigation }: Properties) {
           <BillingList data={context.billings} />
         </View>
       </View>
+      <AlternateLoading visible={loading} />
       <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
     </View>
   );

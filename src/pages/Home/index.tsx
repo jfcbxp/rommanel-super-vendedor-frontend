@@ -43,34 +43,47 @@ export default function Home({ navigation }: Properties) {
                 </View>
                 <View style={styles.bottom}>
                     <Container title="Apuração">
-                        <Text style={styles.subtitle}>
-                            Última atualização: {context.meta ? context.meta.dataAtualizacao : "--/--/----"} as {context.meta ? context.meta.horaAtualizacao : " --:--"}
-                        </Text>
-                        <ProgressBar
-                            title="Período atual"
-                            step={context.meta ? context.meta.dias : 0}
-                            steps={context.meta ? context.meta.progressoPeriodo : 0}
-                            period={context.meta ? `${context.meta.dataInicial} / ${context.meta.dataFinal}` : "nada consta"}
-                            type="date" />
-                        <Divider />
-                        <ProgressBar
-                            title="Total Vendido"
-                            step={context.meta ? context.meta.totalVendido : 0}
-                            steps={context.meta ? context.meta.metaValor : 0}
-                            type="money" />
-                        <Divider />
-                        <ProgressBar
-                            title="Prospectos"
-                            step={context.meta ? context.meta.quantidadeProspectos : 0}
-                            steps={context.meta ? context.meta.metaProspecto : 0}
-                            type="number" />
-                        <Divider />
-                        <ProgressBar
-                            title="Ticket Médio"
-                            step={context.meta ? context.meta.ticketMedio : 0}
-                            steps={context.meta ? context.meta.ticketMedio : 0}
-                            type="number" />
-                        <Divider />
+                        {context.meta ?
+                            <>
+                                <Text style={styles.title}>
+                                    Última atualização: {context.meta ? context.meta.dataAtualizacao : "--/--/----"} as {context.meta ? context.meta.horaAtualizacao : " --:--"}
+                                </Text>
+                                <ProgressBar
+                                    title="Período atual"
+                                    step={context.meta ? context.meta.dias : 0}
+                                    steps={context.meta ? context.meta.progressoPeriodo : 0}
+                                    period={context.meta ? `${context.meta.dataInicial} / ${context.meta.dataFinal}` : "nada consta"}
+                                    type="date" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Total Vendido"
+                                    step={context.meta ? context.meta.totalVendido : 0}
+                                    steps={context.meta ? context.meta.metaValor : 0}
+                                    type="money" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Prospectos"
+                                    step={context.meta ? context.meta.quantidadeProspectos : 0}
+                                    steps={context.meta ? context.meta.metaProspecto : 0}
+                                    type="number" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Ticket Médio"
+                                    step={context.meta ? context.meta.ticketMedio : 0}
+                                    steps={context.meta ? context.meta.ticketMedio : 0}
+                                    type="number" />
+                                <Divider />
+                                <ProgressBar
+                                    title="Reativos"
+                                    step={context.meta ? context.meta.quantidadeReativos : 0}
+                                    steps={context.meta ? context.meta.quantidadeReativos : 0}
+                                    type="number" />
+                                <Divider />
+                                <Text style={styles.subtitle}>Solicite a atualização da apuração para seu gerente.</Text>
+                            </>
+                            :
+                            <Text style={styles.subtitle}>Você ainda não possui apuração calculada, verifique com seu gerente.</Text>
+                        }
                     </Container>
                 </View>
             </View>

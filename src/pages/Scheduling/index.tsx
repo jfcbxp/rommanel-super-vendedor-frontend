@@ -18,16 +18,7 @@ export default function Scheduling({ navigation }: Properties) {
         const init = async () => {
             await context.getSchedules()
         }
-        init()
-            .then(() => {
-                if (!context.schedules) {
-                    context.showDialog(
-                        "Nada consta",
-                        "Nenhum dado para ser exibido"
-                    )
-                }
-            })
-            .catch(error => console.log(error))
+        init().catch(error => console.log(error))
     }, [])
 
     return (

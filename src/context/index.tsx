@@ -46,10 +46,6 @@ type ContextProps = {
   ): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
-  showDialog(
-    _title: string,
-    _content: string
-  ): void;
 };
 
 const defaultState = {
@@ -74,7 +70,6 @@ const defaultState = {
   handleChangeBillingTitle: () => { },
   signIn: async () => { },
   signOut: async () => { },
-  showDialog: async () => { },
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -84,6 +79,7 @@ type ProviderProps = {
 };
 
 const Provider = ({ children }: ProviderProps) => {
+  const navigation = useNavigation<NavigationParams>()
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
   const [meta, setMeta] = useState<Meta>();
@@ -110,18 +106,35 @@ const Provider = ({ children }: ProviderProps) => {
   const billingProgressService = useBillingProgressService();
   const billingService = useBillingService();
   const metaService = useMetaService();
-  const navigation = useNavigation<NavigationParams>();
 
   useEffect(() => {
     const init = async () => {
-      if (!user || !token)
+      if (!user || !token) {
         await _getUser();
-      await _getToken();
-    };
-    init()
-      .catch((error) => console.error(error));
+        await _getToken();
+      };
+      init().catch((error) => console.error(error));
+    }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      _check(1)
+    }
+  }, [schedules])
+
+  useEffect(() => {
+    if (user) {
+      _check(2)
+    }
+  }, [wallets])
+
+  useEffect(() => {
+    if (user) {
+      _check(3)
+    }
+  }, [billingProgresses])
 
   const signIn = async (code: string, password: string) => {
     setLoading(true);
@@ -146,6 +159,17 @@ const Provider = ({ children }: ProviderProps) => {
   const signOut = async () => {
     setLoading(true);
     setUser(undefined);
+    setMeta(undefined)
+    setBillingProgresses(undefined)
+    setSchedules(undefined)
+    setBillings(undefined)
+    setToken(undefined)
+    setDailyTotalizer(undefined)
+    setMonthlyTotalizer(undefined)
+    setActivesTotalizer(undefined)
+    setWallets(undefined)
+    setBillingTitle(undefined)
+    setInactivesTotalizer(undefined)
     await AsyncStorage.clear();
     setLoading(false);
   };
@@ -263,7 +287,7 @@ const Provider = ({ children }: ProviderProps) => {
           if (_billingProgresses) {
             setBillingProgresses(_billingProgresses);
           }
-        });
+        })
     }
     setLoading(false);
   };
@@ -336,13 +360,37 @@ const Provider = ({ children }: ProviderProps) => {
     return isTokenValid;
   };
 
-  const showDialog = (_title: string, _content: string) => {
-    setDialog({
-      title: _title,
-      content: _content,
-      visible: true,
-    });
-    navigation.navigate("Home")
+  const _check = (option: number) => {
+    const _title = "Nada consta"
+    const _content = "Nenhum dado foi encontrado para exibir"
+    if (option == 1) {
+      if (!schedules || schedules.length == 0) {
+        navigation.goBack()
+        setDialog({
+          title: _title,
+          content: _content,
+          visible: true
+        })
+      }
+    } else if (option == 2) {
+      if (!wallets || wallets.length == 0) {
+        navigation.goBack()
+        setDialog({
+          title: _title,
+          content: _content,
+          visible: true
+        })
+      }
+    } else if (option = 3) {
+      if (!billingProgresses || billingProgresses.length == 0) {
+        navigation.goBack()
+        setDialog({
+          title: _title,
+          content: _content,
+          visible: true
+        })
+      }
+    }
   }
 
   const contextValue = useMemo(
@@ -368,7 +416,6 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeBillingTitle,
       signIn,
       signOut,
-      showDialog,
     }),
     [
       user,
@@ -392,7 +439,6 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeBillingTitle,
       signIn,
       signOut,
-      showDialog,
     ]
   );
 

@@ -22,18 +22,9 @@ export default function Wallet({ navigation }: Properties) {
 
   useEffect(() => {
     const init = async () => {
-      await context.getWallets().then((_) => handlePicker());
+      await context.getWallets().then(() => handlePicker());
     };
-    init()
-      .then(() => {
-        if (!context.wallets) {
-          context.showDialog(
-            "Nada consta",
-            "Nenhum dado para ser exibido"
-          )
-        }
-      })
-      .catch((error) => console.error(error));
+    init().catch((error) => console.error(error));
   }, []);
 
   const handlePicker = () => {
