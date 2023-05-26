@@ -381,7 +381,7 @@ const Provider = ({ children }: ProviderProps) => {
           visible: true
         })
       }
-    } else if (option = 3) {
+    } else if (option == 3) {
       if (!billingProgresses || billingProgresses.length == 0) {
         navigation.goBack()
         setDialog({
