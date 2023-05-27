@@ -13,7 +13,7 @@ import { useBillingDailyTotalizer } from "../../services/billing.totalizer.servi
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 import { AlternateLoading } from "../../components/modals/loading";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> {}
+interface Properties extends StackScreenProps<StackParams, "Billing"> { }
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
@@ -99,11 +99,24 @@ export default function Billing({ navigation }: Properties) {
 
   const getDailyTotalizer = async (date: string) => {
     await billingDailyTotalizer
-      .get(context.user?.sub!, date, context.token!)
+      .get(context.user?.sub!, date, context.token?.token!)
       .then((_dailyTotalizer) => {
         setDailyTotalizer(_dailyTotalizer);
       });
   };
+
+  const checkZeros = (currency: string) => {
+    if (!currency.includes(",")) {
+      currency = `${currency},00`
+    } else {
+      if (currency.split(",")[1].length < 2) {
+        currency = `${currency}0`
+      }
+    }
+    return currency
+  }
+
+  let liquido = dailyTotalizer ? checkZeros(dailyTotalizer.liquido.toLocaleString("pt-BR")) : 0
 
   return (
     <View style={styles.container}>
@@ -129,9 +142,7 @@ export default function Billing({ navigation }: Properties) {
             <Text style={styles.overview_1}>{element?.periodo}</Text>
             <View style={styles.overview_box}>
               {dailyTotalizer ? (
-                <Text style={styles.overview_2}>
-                  R$ {dailyTotalizer.liquido.toLocaleString("pt-BR")}
-                </Text>
+                <Text style={styles.overview_2}>R$ {liquido}</Text>
               ) : undefined}
               {false ? (
                 <View style={styles.overview_inner_box}>

@@ -1,4 +1,4 @@
-import { FlatList, ListRenderItem, ScrollView } from "react-native";
+import { FlatList, ListRenderItem } from "react-native";
 import { WalletItem } from "./item";
 import { Wallet } from "../../../models/wallet.model";
 

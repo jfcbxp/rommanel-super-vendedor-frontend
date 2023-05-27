@@ -1,5 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { User } from "../models/user.model";
+import { Token } from "../models/token.model";
 import { useSchedulingService } from "../services/scheduling.service";
 import { Schedule } from "../models/schedule.model";
 import { useSignInService } from "../services/sign-in.service";
@@ -21,10 +22,11 @@ import { useMetaService } from "../services/meta.service";
 import { Meta } from "../models/meta.model";
 import { NavigationParams } from "../types/navigation.params";
 import { useNavigation } from "@react-navigation/native";
+import { useTokenRenewService } from "../services/token-renew.service";
 
 type ContextProps = {
   user: User | undefined;
-  token: string | undefined;
+  token: Token | undefined;
   meta: Meta | undefined;
   dailyTotalizer: SchedulingTotalizer | undefined;
   monthlyTotalizer: SchedulingTotalizer | undefined;
@@ -81,7 +83,7 @@ type ProviderProps = {
 const Provider = ({ children }: ProviderProps) => {
   const navigation = useNavigation<NavigationParams>()
   const [user, setUser] = useState<User>();
-  const [token, setToken] = useState<string>();
+  const [token, setToken] = useState<Token>();
   const [meta, setMeta] = useState<Meta>();
   const [dailyTotalizer, setDailyTotalizer] = useState<SchedulingTotalizer>();
   const [monthlyTotalizer, setMonthlyTotalizer] =
@@ -99,6 +101,7 @@ const Provider = ({ children }: ProviderProps) => {
   const defaultDialog = { title: "", content: "", visible: false };
   const [dialog, setDialog] = useState(defaultDialog);
   const signInService = useSignInService();
+  const tokenRenewService = useTokenRenewService()
   const schedulingService = useSchedulingService();
   const schedulingTotalizerService = useSchedulingTotalizerService();
   const walletService = useWalletService();
@@ -109,12 +112,10 @@ const Provider = ({ children }: ProviderProps) => {
 
   useEffect(() => {
     const init = async () => {
-      if (!user || !token) {
-        await _getUser();
-        await _getToken();
-      };
-      init().catch((error) => console.error(error));
+      await _getUser()
+      await _getToken()
     }
+    init().catch((error) => console.error(error));
     setLoading(false);
   }, []);
 
@@ -140,11 +141,11 @@ const Provider = ({ children }: ProviderProps) => {
     setLoading(true);
     await signInService
       .signIn(code, password)
-      .then(async (result) => {
-        setToken(result.token);
-        await _storeToken(result.token);
-        setUser(_decodeToken(result.token));
-        await _storeUser(_decodeToken(result.token));
+      .then(async _token => {
+        setToken(_token);
+        await _storeToken(_token);
+        setUser(_decodeToken(_token));
+        await _storeUser(_decodeToken(_token));
       })
       .catch(() => {
         setDialog({
@@ -155,6 +156,18 @@ const Provider = ({ children }: ProviderProps) => {
       });
     setLoading(false);
   };
+
+  const _renewToken = async (_token: Token) => {
+    setLoading(true)
+    await tokenRenewService.renewToken(_token)
+      .then(async token_ => {
+        setToken(token_)
+        await _storeToken(token_)
+        setUser(_decodeToken(token_));
+        await _storeUser(_decodeToken(token_));
+      })
+    setLoading(false)
+  }
 
   const signOut = async () => {
     setLoading(true);
@@ -176,131 +189,131 @@ const Provider = ({ children }: ProviderProps) => {
 
   const getMeta = async () => {
     setLoading(true)
-    if (_isUserAuthenticated() && token) {
-      await metaService.get(user?.sub!, token)
-        .then(_meta => {
-          if (_meta) {
-            setMeta(_meta)
-          }
-        })
-    } else {
-      await signOut();
-      setDialog({
-        title: "Sessão expirada",
-        content: "Efetue acesso novamente",
-        visible: true,
-      });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await metaService.get(user?.sub!, token.token)
+            .then(_meta => {
+              if (_meta) {
+                setMeta(_meta)
+              }
+            })
+        }
+      })
     setLoading(false)
   }
 
   const getSchedules = async () => {
     setLoading(true);
-    if (_isUserAuthenticated() && token) {
-      await schedulingService.get(user?.sub!, token)
-        .then(_schedules => {
-          if (_schedules) {
-            setSchedules(_schedules);
-          }
-        });
-      await _getSchedulingTotalizers();
-    } else {
-      await signOut();
-      setDialog({
-        title: "Sessão expirada",
-        content: "Efetue acesso novamente",
-        visible: true,
-      });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await schedulingService.get(user?.sub!, token.token)
+            .then(_schedules => {
+              if (_schedules) {
+                setSchedules(_schedules);
+              }
+            });
+          await _getSchedulingTotalizers();
+        }
+      })
     setLoading(false);
   };
 
   const _getSchedulingTotalizers = async () => {
     setLoading(true);
-    if (_isUserAuthenticated() && token) {
-      await schedulingTotalizerService
-        .getDaily(user?.sub!, token)
-        .then(_dailyTotalizer => {
-          if (_dailyTotalizer) {
-            setDailyTotalizer(_dailyTotalizer);
-          }
-        });
-      await schedulingTotalizerService
-        .getMontly(user?.sub!, token)
-        .then(_monthlyTotalizer => {
-          if (_monthlyTotalizer) {
-            setMonthlyTotalizer(_monthlyTotalizer);
-          }
-        });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await schedulingTotalizerService
+            .getDaily(user?.sub!, token.token)
+            .then(_dailyTotalizer => {
+              if (_dailyTotalizer) {
+                setDailyTotalizer(_dailyTotalizer);
+              }
+            });
+          await schedulingTotalizerService
+            .getMontly(user?.sub!, token.token)
+            .then(_monthlyTotalizer => {
+              if (_monthlyTotalizer) {
+                setMonthlyTotalizer(_monthlyTotalizer);
+              }
+            });
+        }
+      })
     setLoading(false);
   };
 
   const getWallets = async () => {
     setLoading(true);
-    if (_isUserAuthenticated() && token) {
-      await walletService.get(user?.sub!, token)
-        .then(_wallets => {
-          if (_wallets) {
-            setWallets(_wallets);
-          }
-        });
-      await _getWalletTotalizers();
-    } else {
-      await signOut();
-      setDialog({
-        title: "Sessão expirada",
-        content: "Efetue acesso novamente",
-        visible: true,
-      });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await walletService.get(user?.sub!, token.token)
+            .then(_wallets => {
+              if (_wallets) {
+                setWallets(_wallets);
+              }
+            });
+          await _getWalletTotalizers();
+        }
+      })
     setLoading(false);
   };
 
   const _getWalletTotalizers = async () => {
     setLoading(true);
-    if (_isUserAuthenticated() && token) {
-      await walletTotalizerService
-        .getActives(user?.sub!, token)
-        .then(_activeTotalizer => {
-          if (_activeTotalizer) {
-            setActivesTotalizer(_activeTotalizer);
-          }
-        });
-      await walletTotalizerService
-        .getInactives(user?.sub!, token)
-        .then(_inactiveTotalizer => {
-          if (_inactiveTotalizer) {
-            setInactivesTotalizer(_inactiveTotalizer);
-          }
-        });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token && !activesTotalizer && !inactivesTotalizer) {
+          await walletTotalizerService
+            .getActives(user?.sub!, token.token)
+            .then(_activeTotalizer => {
+              if (_activeTotalizer) {
+                setActivesTotalizer(_activeTotalizer);
+              }
+            });
+          await walletTotalizerService
+            .getInactives(user?.sub!, token.token)
+            .then(_inactiveTotalizer => {
+              if (_inactiveTotalizer) {
+                setInactivesTotalizer(_inactiveTotalizer);
+              }
+            });
+        }
+      })
     setLoading(false);
   };
 
   const getBillingProgresses = async () => {
     setLoading(true);
-    if (_isUserAuthenticated() && token) {
-      await billingProgressService
-        .get(user?.sub!, token)
-        .then(_billingProgresses => {
-          if (_billingProgresses) {
-            setBillingProgresses(_billingProgresses);
-          }
-        })
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await billingProgressService
+            .get(user?.sub!, token.token)
+            .then(_billingProgresses => {
+              if (_billingProgresses) {
+                setBillingProgresses(_billingProgresses);
+              }
+            })
+        }
+      })
     setLoading(false);
   };
 
   const getBilling = async (_date: string) => {
-    if (_isUserAuthenticated() && token) {
-      await billingService.get(user?.sub!, _date, token)
-        .then(_billings => {
-          if (_billings) {
-            setBillings(_billings);
-          }
-        });
-    }
+    await _isUserAuthenticated()
+      .then(async () => {
+        if (token) {
+          await billingService.get(user?.sub!, _date, token.token)
+            .then(_billings => {
+              if (_billings) {
+                setBillings(_billings);
+              }
+            });
+        }
+      })
   };
 
   const handleChangeBillingTitle = (_title: string) => {
@@ -330,34 +343,39 @@ const Provider = ({ children }: ProviderProps) => {
 
   const _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem("@token");
-      if (value) {
-        setToken(value);
+      const jsonValue = await AsyncStorage.getItem("@token");
+      if (jsonValue) {
+        let _token: Token = JSON.parse(jsonValue);
+        setToken(_token);
+        await _renewToken(_token)
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const _storeToken = async (_token: string) => {
+  const _storeToken = async (_token: Token) => {
     try {
-      await AsyncStorage.setItem("@token", _token);
+      const jsonValue = JSON.stringify(_token);
+      await AsyncStorage.setItem("@token", jsonValue);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const _decodeToken = (_token: string) => {
-    return jwtDecode<User>(_token);
+  const _decodeToken = (_token: Token) => {
+    return jwtDecode<User>(_token.token);
   };
 
-  const _isUserAuthenticated = () => {
+  const _isUserAuthenticated = async () => {
     let isTokenValid = false;
     if (token && user) {
       const expiration = user.exp;
       isTokenValid = expiration * 1000 > Date.now();
     }
-    return isTokenValid;
+    if (!isTokenValid && token) {
+      await _renewToken(token)
+    }
   };
 
   const _check = (option: number) => {
