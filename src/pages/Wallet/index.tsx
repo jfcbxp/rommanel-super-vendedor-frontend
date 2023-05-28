@@ -9,55 +9,81 @@ import { useEffect, useState, useContext } from "react";
 import { Context } from "../../context";
 import { WalletHeader } from "../../components/headers/wallet";
 import { WalletList } from "../../components/lists/wallet";
-
-interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
+import { WalletStatusEnum } from "../../enums/wallet.status.enum";
+import { useWalletService } from "../../services/wallet.service";
+import { Wallet as WalletModel } from "../../models/wallet.model";
+import { WalletTotalizer } from "../../models/wallet.totalizer.model";
+import { useWalletWalletTotalizerService } from "../../services/wallet.totalizers.service";
+interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
-  const [items, setItems] = useState<ItemType<any>[]>();
-  const [value, setValue] = useState("Todos");
+  const [items, setItems] = useState<ItemType<WalletStatusEnum>[]>();
+  const [value, setValue] = useState(WalletStatusEnum.ATIVO);
   const [open, setOpen] = useState(false);
-  const DATA = context.wallets;
-  const [data, setData] = useState(DATA);
+  const [wallets, setWallets] = useState<WalletModel[]>();
+  const [walletsReponse, setWalletsResponse] = useState<WalletModel[]>();
+  const [activesTotalizer, setActivesTotalizer] = useState<WalletTotalizer>();
+  const [inactivesTotalizer, setInactivesTotalizer] =
+    useState<WalletTotalizer>();
+  const walletService = useWalletService();
+  const walletTotalizerService = useWalletWalletTotalizerService();
 
   useEffect(() => {
-    const init = async () => {
-      await context.getWallets().then(() => handlePicker());
-    };
-    init().catch((error) => console.error(error));
+    context.startLoading();
+    init()
+      .finally(() => context.stopLoading())
+      .catch((error) => console.error(error));
   }, []);
 
-  const handlePicker = () => {
-    let _data = [
-      "Todos",
-      "Ativo",
-      "Pre Inativo 1 60 dias sem compras",
-      "Pre Inativo 2 70 dias sem compras",
-      "Pre Inativo 3 80 dias sem compras",
-      "Bloqueado media de vendas",
-      "Bloqueado 90 dias sem compras",
-      "Bloqueado 150 dias sem compras",
-    ];
-    let array: ItemType<any>[] = [];
-    Object.entries(_data).forEach(([key, value]) => {
-      array = [
-        ...array,
-        {
-          value: value,
-          label: value,
-        },
-      ];
+  const init = async () => {
+    await context.isUserAuthenticated().then(async () => {
+      if (context.token) {
+        await Promise.all([
+          walletService.get(context.user?.sub!, context.token.token),
+          walletTotalizerService.getActives(
+            context.user?.sub!,
+            context.token.token
+          ),
+          walletTotalizerService.getInactives(
+            context.user?.sub!,
+            context.token.token
+          ),
+        ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
+          if (!walletResponse.length) {
+            await context.showDialog();
+          } else {
+            walletResponse = walletResponse.sort((n1, n2) =>
+              n1.nomeCliente > n2.nomeCliente ? 1 : -1
+            );
+            setWallets(walletResponse);
+            setWalletsResponse(walletResponse);
+            setActivesTotalizer(activesResponse);
+            setInactivesTotalizer(inactiveResponse);
+            handlePicker();
+          }
+        });
+      }
     });
-    setItems(array);
+  };
+
+  const handlePicker = () => {
+    setItems(
+      Object.entries(WalletStatusEnum).flatMap(
+        (stat): ItemType<WalletStatusEnum> => {
+          return { value: stat[1], label: stat[1] };
+        }
+      )
+    );
   };
 
   const handleFilter = () => {
-    if (DATA) {
-      if (value == "Todos" || value == "") {
-        setData(DATA);
+    if (walletsReponse) {
+      if (value == WalletStatusEnum.TODOS) {
+        setWallets(walletsReponse);
       } else {
-        setData(
-          DATA.filter((element) => {
+        setWallets(
+          walletsReponse.filter((element) => {
             return element.situacao.includes(value);
           })
         );
@@ -69,14 +95,14 @@ export default function Wallet({ navigation }: Properties) {
     <View style={styles.container}>
       <View style={styles.top}>
         <WalletHeader
-          total={context.activesTotalizer?.total!}
-          total_={context.inactivesTotalizer?.total!}
-          actives={context.activesTotalizer?.ativos!}
-          actives_={context.inactivesTotalizer?.ativos!}
-          preInactives={context.activesTotalizer?.preInativos!}
-          preInactives_={context.inactivesTotalizer?.preInativos!}
-          inactives={context.activesTotalizer?.inativos!}
-          inactives_={context.inactivesTotalizer?.inativos!}
+          total={activesTotalizer?.total!}
+          total_={inactivesTotalizer?.total!}
+          actives={activesTotalizer?.ativos!}
+          actives_={inactivesTotalizer?.ativos!}
+          preInactives={activesTotalizer?.preInativos!}
+          preInactives_={inactivesTotalizer?.preInativos!}
+          inactives={activesTotalizer?.inativos!}
+          inactives_={inactivesTotalizer?.inativos!}
         />
       </View>
       <View style={styles.bottom}>
@@ -94,7 +120,7 @@ export default function Wallet({ navigation }: Properties) {
           </View>
         </View>
         <View style={styles.list}>
-          <WalletList data={data} />
+          <WalletList data={wallets} />
         </View>
       </View>
       <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />
