@@ -13,7 +13,7 @@ import { useBillingDailyTotalizer } from "../../services/billing.totalizer.servi
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 import { AlternateLoading } from "../../components/modals/loading";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> { }
+interface Properties extends StackScreenProps<StackParams, "Billing"> {}
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
@@ -24,10 +24,6 @@ export default function Billing({ navigation }: Properties) {
   let item = context.billingTitle;
   const billingDailyTotalizer = useBillingDailyTotalizer();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // context.showDialog("Nada consta", "Nenhum dado para ser exibido")
-  }, []);
 
   useEffect(() => {
     const init = async () => {
@@ -107,16 +103,18 @@ export default function Billing({ navigation }: Properties) {
 
   const checkZeros = (currency: string) => {
     if (!currency.includes(",")) {
-      currency = `${currency},00`
+      currency = `${currency},00`;
     } else {
       if (currency.split(",")[1].length < 2) {
-        currency = `${currency}0`
+        currency = `${currency}0`;
       }
     }
-    return currency
-  }
+    return currency;
+  };
 
-  let liquido = dailyTotalizer ? checkZeros(dailyTotalizer.liquido.toLocaleString("pt-BR")) : 0
+  let liquido = dailyTotalizer
+    ? checkZeros(dailyTotalizer.liquido.toLocaleString("pt-BR"))
+    : 0;
 
   return (
     <View style={styles.container}>

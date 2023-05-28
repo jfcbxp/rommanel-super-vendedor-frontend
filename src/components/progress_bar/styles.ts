@@ -16,7 +16,7 @@ export const ProgressBarStyles = StyleSheet.create({
     color: "#73186D",
   },
   subTitle: {
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: "Inter_500Medium",
     color: "#BEC0C5",
   },
