@@ -15,7 +15,7 @@ export function Container(properties: Properties) {
         <View style={styles.container}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Text style={styles.title}>{properties.title}</Text>
-                {properties.onReload ?
+                {properties.onReload && !properties.disabled ?
                     <Icon
                         name="reload"
                         color="#73186D"
