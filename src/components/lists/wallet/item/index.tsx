@@ -1,67 +1,13 @@
-import { View, Text, Linking } from "react-native";
+import { View, Text } from "react-native";
 import { WalletItemStyles as styles } from "./styles";
 import { Wallet } from "../../../../models/wallet.model";
 import {
   MaterialIcons as Icon,
   MaterialCommunityIcons as Icons,
 } from "@expo/vector-icons";
+import { adjustPhone, onPressPhoneCall, onPressWhatsApp } from "../../../../services/phone.service";
 
 export function WalletItem({ data }: { data: Wallet }) {
-  const adjustPhone = (phone: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    phone = phone.startsWith("0") ? phone.slice(1) : phone;
-    let ddd = "";
-    let _phone = "";
-    let phone_ = "";
-    let pattern = "";
-    if (phone.length == 11) {
-      ddd = phone.slice(0, 2);
-      _phone = phone.slice(2, 7);
-      phone_ = phone.slice(7, 11);
-      pattern = `(${ddd}) ${_phone}-${phone_}`;
-    } else if (phone.length == 10) {
-      ddd = phone.slice(0, 2);
-      _phone = phone.slice(2, 6);
-      phone_ = phone.slice(6, 10);
-      pattern = `(${ddd}) 9${_phone}-${phone_}`;
-    } else {
-      return phone
-    }
-    return pattern;
-  };
-
-  const onPressWhatsApp = (phone: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    if (phone.startsWith("0")) {
-      phone = phone.slice(1);
-    }
-    phone = `55${phone}`;
-    let text = `Olá *${data.nomeCliente}*`;
-    const link = async () => {
-      await Linking.canOpenURL(`whatsapp://send?text=${text}`).then((suppoted) => {
-        if (suppoted) {
-          return Linking.openURL(`whatsapp://send?phone=${phone}&text=${text}`);
-        } else {
-          return Linking.openURL(
-            `https://api.whatsapp.com/send?phone=${phone}&text=${text}`
-          );
-        }
-      });
-    }
-    link().catch(error => console.error(error))
-  };
-
-  const onPressPhoneCall = (phone: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    if (phone.startsWith("0")) {
-      phone = phone.slice(1);
-    }
-    const link = async () => {
-      await Linking.openURL(`tel:${phone}`);
-    }
-    link().catch(error => console.error(error))
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -98,7 +44,7 @@ export function WalletItem({ data }: { data: Wallet }) {
                 color="green"
                 size={24}
                 onPress={() => {
-                  onPressWhatsApp(data.telefone);
+                  onPressWhatsApp(data.telefone, data.nomeCliente);
                 }} />
             </>
             : undefined}

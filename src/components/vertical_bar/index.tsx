@@ -28,7 +28,7 @@ export function VerticalBar(properties: Properties) {
           styles.bar,
           { height: progress > 90 ? 90 + "%" : progress + "%" },
         ]}
-      >
+        disabled={properties.selected}>
         {properties.selected ? <View style={styles.selected} /> : undefined}
       </TouchableOpacity>
       <Text style={styles.title}>{day}</Text>

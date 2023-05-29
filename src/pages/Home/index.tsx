@@ -25,7 +25,7 @@ export default function Home({ navigation }: Properties) {
     init()
       .finally(() => context.stopLoading())
       .catch(() => context.showDialog());
-  }, [navigation])
+  }, [navigation.isFocused()])
 
   const init = async () => {
     await context.isUserAuthenticated().then(async () => {
@@ -42,6 +42,13 @@ export default function Home({ navigation }: Properties) {
           })
       }
     })
+  }
+
+  const reload = () => {
+    context.startLoading()
+    init()
+      .finally(() => context.stopLoading())
+      .catch(() => context.showDialog());
   }
 
   return (
@@ -72,7 +79,7 @@ export default function Home({ navigation }: Properties) {
           />
         </View>
         <View style={styles.bottom}>
-          <Container title="Apuração">
+          <Container title="Apuração" onReload={reload} disabled={meta ? true : false}>
             {meta ? (
               <>
                 <Text style={styles.title}>

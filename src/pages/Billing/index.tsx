@@ -44,7 +44,7 @@ export default function Billing({ navigation }: Properties) {
         await Promise.all([
           billingProgressService.get(context.user?.sub!, context.token.token)
         ]).then(async ([_billingProgresses]) => {
-          if (!_billingProgresses) {
+          if (_billingProgresses.length < 1) {
             context.showDialog()
           } else {
             setBillingProgresses(_billingProgresses)
@@ -175,7 +175,7 @@ export default function Billing({ navigation }: Properties) {
           <View style={{ flex: 3 }}>
             <Text style={styles.overview_1}>{element?.periodo}</Text>
             <View style={styles.overview_box}>
-              {dailyTotalizer ? (
+              {dailyTotalizer && liquido != "R$ 0,00" ? (
                 <Text style={styles.overview_2}>R$ {liquido}</Text>
               ) : undefined}
               {false ? (
