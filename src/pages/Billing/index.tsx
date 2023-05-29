@@ -44,9 +44,12 @@ export default function Billing({ navigation }: Properties) {
         await Promise.all([
           billingProgressService.get(context.user?.sub!, context.token.token)
         ]).then(async ([_billingProgresses]) => {
-          if (_billingProgresses.length < 1) {
+          if (!_billingProgresses.length) {
             context.showDialog()
           } else {
+            _billingProgresses = _billingProgresses.sort((i, j) =>
+              i.periodo > j.periodo ? 1 : -1
+            )
             setBillingProgresses(_billingProgresses)
           }
         })
