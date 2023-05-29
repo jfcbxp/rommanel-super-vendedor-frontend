@@ -12,56 +12,96 @@ import { BillingProgress } from "../../models/billing.progress.model";
 import { useBillingDailyTotalizer } from "../../services/billing.totalizer.service";
 import { DailyTotalizer } from "../../models/daily.totalizer.model";
 import { AlternateLoading } from "../../components/modals/loading";
+import { BillingModel } from "../../models/billing.model";
+import { useBillingProgressService } from "../../services/billing.progress.service";
+import { useBillingService } from "../../services/billing.service";
 
 interface Properties extends StackScreenProps<StackParams, "Billing"> {}
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
-  let DATA = context.billingProgresses;
+  const [billingProgresses, setBillingProgresses] =
+    useState<BillingProgress[]>();
+  const [billings, setBillings] = useState<BillingModel[]>();
   const [data, setData] = useState<BillingProgress[] | undefined>();
   const [element, setElement] = useState<BillingProgress>();
   const [dailyTotalizer, setDailyTotalizer] = useState<DailyTotalizer>();
-  let item = context.billingTitle;
+  let date = context.date;
   const billingDailyTotalizer = useBillingDailyTotalizer();
+  const billingProgressService = useBillingProgressService();
+  const billingService = useBillingService();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const init = async () => {
-      if (!DATA) {
-        await context.getBillingProgresses();
-      }
-    };
-    init().catch((error) => console.error(error));
+    context.startLoading();
+    init()
+      .finally(() => context.stopLoading())
+      .catch(() => context.showDialog());
   }, []);
+
+  const init = async () => {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
+        await Promise.all([
+          billingProgressService.get(context.user?.sub!, auth.token),
+        ]).then(async ([_billingProgresses]) => {
+          if (!_billingProgresses.length) {
+            context.showDialog();
+          } else {
+            setBillingProgresses(_billingProgresses);
+          }
+        });
+      }
+    });
+  };
+
+  const getBilling = async (_date: string) => {
+    setLoading(true);
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
+        await billingService
+          .get(context.user?.sub!, _date, auth.token)
+          .then((_billings) => {
+            if (_billings) {
+              setBillings(_billings);
+            }
+          });
+      }
+    });
+    setLoading(false);
+  };
 
   useEffect(() => {
     const init = async () => {
-      await handleBillingProgresses(DATA);
-      await handleChangeItem(DATA, item);
+      await Promise.all([
+        await handleBillingProgresses(billingProgresses),
+        await handleChangeItem(billingProgresses, date),
+      ]);
     };
-    if (context.billingProgresses) {
+
+    if (billingProgresses) {
       init().catch((error) => console.error(error));
     }
-  }, [DATA, context.billingTitle]);
+  }, [billingProgresses, context.date]);
 
   const handleBillingProgresses = async (
-    DATA: BillingProgress[] | undefined
+    billingProgresses: BillingProgress[] | undefined
   ) => {
     setLoading(true);
-    if (DATA) {
-      let data: BillingProgress[] = [];
-      DATA.forEach((element) => {
-        data.push(element);
+    if (billingProgresses) {
+      let _data: BillingProgress[] = [];
+      billingProgresses.forEach((element) => {
+        _data.push(element);
       });
-      if (data.length > 0) {
-        let _item = data[data.length - 1].periodo;
-        let element = data.find((element) => element.periodo == _item)!;
+      if (_data.length > 0) {
+        let _item = _data[_data.length - 1].periodo;
+        let element = _data.find((element) => element.periodo == _item)!;
         element.selected = true;
         setElement(element);
-        let index = data.findIndex((element) => element.periodo == _item);
-        data[index] = element;
-        setData(data);
-        await context.getBilling(_item);
+        let index = _data.findIndex((element) => element.periodo == _item);
+        _data[index] = element;
+        setData(_data);
+        await getBilling(_item);
         await getDailyTotalizer(_item);
       }
     }
@@ -69,25 +109,25 @@ export default function Billing({ navigation }: Properties) {
   };
 
   const handleChangeItem = async (
-    DATA: BillingProgress[] | undefined,
+    billingProgresses: BillingProgress[] | undefined,
     _item?: string
   ) => {
     setLoading(true);
-    if (DATA && _item) {
-      let data: BillingProgress[] = [];
-      DATA.forEach((element) => {
-        data.push(element);
+    if (billingProgresses && _item) {
+      let _data: BillingProgress[] = [];
+      billingProgresses.forEach((element) => {
+        _data.push(element);
       });
-      let _element = data.find((element) => element.periodo == _item)!;
-      DATA.forEach((element) => {
+      let _element = _data.find((element) => element.periodo == _item)!;
+      billingProgresses.forEach((element) => {
         element.selected = false;
       });
       _element.selected = true;
       setElement(_element);
-      let index = data.findIndex((element) => element.periodo == _item);
-      data[index] = _element;
-      setData(data);
-      await context.getBilling(_item);
+      let index = _data.findIndex((element) => element.periodo == _item);
+      _data[index] = _element;
+      setData(_data);
+      await getBilling(_item);
       await getDailyTotalizer(_item);
     }
     setLoading(false);
@@ -139,7 +179,7 @@ export default function Billing({ navigation }: Properties) {
           <View style={{ flex: 3 }}>
             <Text style={styles.overview_1}>{element?.periodo}</Text>
             <View style={styles.overview_box}>
-              {dailyTotalizer ? (
+              {dailyTotalizer && liquido != "R$ 0,00" ? (
                 <Text style={styles.overview_2}>R$ {liquido}</Text>
               ) : undefined}
               {false ? (
@@ -152,7 +192,7 @@ export default function Billing({ navigation }: Properties) {
           </View>
         </View>
         <View style={styles.list}>
-          <BillingList data={context.billings} />
+          <BillingList data={billings} />
         </View>
       </View>
       <AlternateLoading visible={loading} />

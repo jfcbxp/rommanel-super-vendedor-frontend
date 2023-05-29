@@ -33,29 +33,20 @@ export default function Wallet({ navigation }: Properties) {
     context.startLoading();
     init()
       .finally(() => context.stopLoading())
-      .catch((error) => context.showDialog());
+      .catch(() => context.showDialog());
   }, []);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await Promise.all([
-          walletService.get(context.user?.sub!, context.token.token),
-          walletTotalizerService.getActives(
-            context.user?.sub!,
-            context.token.token
-          ),
-          walletTotalizerService.getInactives(
-            context.user?.sub!,
-            context.token.token
-          ),
+          walletService.get(context.user?.sub!, auth.token),
+          walletTotalizerService.getActives(context.user?.sub!, auth.token),
+          walletTotalizerService.getInactives(context.user?.sub!, auth.token),
         ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
           if (!walletResponse.length) {
             context.showDialog();
           } else {
-            walletResponse = walletResponse.sort((n1, n2) =>
-              n1.nomeCliente > n2.nomeCliente ? 1 : -1
-            );
             setWallets(walletResponse);
             setWalletsResponse(walletResponse);
             setActivesTotalizer(activesResponse);

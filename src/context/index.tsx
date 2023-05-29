@@ -1,21 +1,11 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { User } from "../models/user.model";
 import { Token } from "../models/token.model";
-import { useSchedulingService } from "../services/scheduling.service";
-import { Schedule } from "../models/schedule.model";
 import { useSignInService } from "../services/sign-in.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
 import { Dialog } from "../components/modals/dialog";
-import { SchedulingTotalizer } from "../models/scheduling.totalizer.model";
-import { useSchedulingTotalizerService } from "../services/scheduling.totalizers.service";
 import { Loading } from "../components/modals/loading";
-import { BillingProgress } from "../models/billing.progress.model";
-import { useBillingProgressService } from "../services/billing.progress.service";
-import { useBillingService } from "../services/billing.service";
-import { BillingModel } from "../models/billing.model";
-import { useMetaService } from "../services/meta.service";
-import { Meta } from "../models/meta.model";
 import { NavigationParams } from "../types/navigation.params";
 import { useNavigation } from "@react-navigation/native";
 import { useTokenRenewService } from "../services/token-renew.service";
@@ -23,22 +13,12 @@ import { useTokenRenewService } from "../services/token-renew.service";
 type ContextProps = {
   user: User | undefined;
   token: Token | undefined;
-  meta: Meta | undefined;
-  dailyTotalizer: SchedulingTotalizer | undefined;
-  monthlyTotalizer: SchedulingTotalizer | undefined;
-  schedules: Schedule[] | undefined;
-  billingTitle: string | undefined;
-  billings: BillingModel[] | undefined;
-  billingProgresses: BillingProgress[] | undefined;
+  date: string | undefined;
   loading: boolean;
-  getMeta(): Promise<void>;
-  getSchedules(): Promise<void>;
-  getBillingProgresses(): Promise<void>;
-  getBilling(_date: string): Promise<void>;
-  handleChangeBillingTitle(_title: string): void;
+  handleChangeDate(_title: string): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
-  isUserAuthenticated(): Promise<void>;
+  isUserAuthenticated(): Promise<Token | undefined>;
   startLoading(): void;
   stopLoading(): void;
   showDialog(): void;
@@ -47,22 +27,14 @@ type ContextProps = {
 const defaultState = {
   user: undefined,
   token: undefined,
-  meta: undefined,
-  dailyTotalizer: undefined,
-  monthlyTotalizer: undefined,
-  schedules: undefined,
-  billingTitle: undefined,
-  billings: undefined,
-  billingProgresses: undefined,
+  date: undefined,
   loading: true,
-  getMeta: async () => {},
-  getSchedules: async () => {},
-  getBillingProgresses: async () => {},
-  getBilling: async () => {},
-  handleChangeBillingTitle: () => {},
+  handleChangeDate: () => {},
   signIn: async () => {},
   signOut: async () => {},
-  isUserAuthenticated: async () => {},
+  isUserAuthenticated: async () => {
+    return Promise.resolve(undefined);
+  },
   startLoading: () => {},
   stopLoading: () => {},
   showDialog: () => {},
@@ -78,46 +50,19 @@ const Provider = ({ children }: ProviderProps) => {
   const navigation = useNavigation<NavigationParams>();
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<Token>();
-  const [meta, setMeta] = useState<Meta>();
-  const [dailyTotalizer, setDailyTotalizer] = useState<SchedulingTotalizer>();
-  const [monthlyTotalizer, setMonthlyTotalizer] =
-    useState<SchedulingTotalizer>();
-  const [schedules, setSchedules] = useState<Schedule[]>();
-  const [billingTitle, setBillingTitle] = useState<string>();
-  const [billings, setBillings] = useState<BillingModel[]>();
-  const [billingProgresses, setBillingProgresses] =
-    useState<BillingProgress[]>();
+  const [date, setDate] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
   const defaultDialog = { title: "", content: "", visible: false };
   const [dialog, setDialog] = useState(defaultDialog);
   const signInService = useSignInService();
   const tokenRenewService = useTokenRenewService();
-  const schedulingService = useSchedulingService();
-  const schedulingTotalizerService = useSchedulingTotalizerService();
-  const billingProgressService = useBillingProgressService();
-  const billingService = useBillingService();
-  const metaService = useMetaService();
 
   useEffect(() => {
     const init = async () => {
-      await _getUser();
-      await _getToken();
+      await Promise.all([await _getUser(), await _getToken()]);
     };
     init().catch((error) => console.error(error));
-    setLoading(false);
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      _check(1);
-    }
-  }, [schedules]);
-
-  useEffect(() => {
-    if (user) {
-      _check(3);
-    }
-  }, [billingProgresses]);
 
   useEffect(() => {
     if (dialog.visible) {
@@ -131,9 +76,12 @@ const Provider = ({ children }: ProviderProps) => {
       .signIn(code, password)
       .then(async (_token) => {
         setToken(_token);
-        await _storeToken(_token);
         setUser(_decodeToken(_token));
-        await _storeUser(_decodeToken(_token));
+
+        await Promise.all([
+          await _storeToken(_token),
+          await _storeUser(_decodeToken(_token)),
+        ]);
       })
       .catch(() => {
         setDialog({
@@ -145,119 +93,29 @@ const Provider = ({ children }: ProviderProps) => {
     setLoading(false);
   };
 
-  const _renewToken = async (_token: Token) => {
-    await tokenRenewService.renewToken(_token).then(async (token_) => {
-      setToken(token_);
-      await _storeToken(token_);
-      setUser(_decodeToken(token_));
-      await _storeUser(_decodeToken(token_));
-    });
+  const _renewToken = async (_token: Token): Promise<Token> => {
+    let token = await tokenRenewService.renewToken(_token);
+
+    setToken(token);
+    setUser(_decodeToken(token));
+    await Promise.all([
+      await _storeToken(token),
+      await _storeUser(_decodeToken(token)),
+    ]);
+    return token;
   };
 
   const signOut = async () => {
     setLoading(true);
     setUser(undefined);
-    setMeta(undefined);
-    setBillingProgresses(undefined);
-    setSchedules(undefined);
-    setBillings(undefined);
     setToken(undefined);
-    setDailyTotalizer(undefined);
-    setMonthlyTotalizer(undefined);
-    setBillingTitle(undefined);
+    setDate(undefined);
     await AsyncStorage.clear();
     setLoading(false);
   };
 
-  const getMeta = async () => {
-    setLoading(true);
-    await isUserAuthenticated().then(async () => {
-      if (token) {
-        await metaService.get(user?.sub!, token.token).then((_meta) => {
-          if (_meta) {
-            setMeta(_meta);
-          }
-        });
-      }
-    });
-    setLoading(false);
-  };
-
-  const getSchedules = async () => {
-    setLoading(true);
-    await isUserAuthenticated().then(async () => {
-      if (token) {
-        await schedulingService
-          .get(user?.sub!, token.token)
-          .then((_schedules) => {
-            if (_schedules) {
-              _schedules = _schedules.sort((n1, n2) =>
-                n1.horaInicial > n2.horaInicial ? 1 : -1
-              );
-              setSchedules(_schedules);
-            }
-          });
-        await _getSchedulingTotalizers();
-      }
-    });
-    setLoading(false);
-  };
-
-  const _getSchedulingTotalizers = async () => {
-    setLoading(true);
-    await isUserAuthenticated().then(async () => {
-      if (token) {
-        await schedulingTotalizerService
-          .getDaily(user?.sub!, token.token)
-          .then((_dailyTotalizer) => {
-            if (_dailyTotalizer) {
-              setDailyTotalizer(_dailyTotalizer);
-            }
-          });
-        await schedulingTotalizerService
-          .getMontly(user?.sub!, token.token)
-          .then((_monthlyTotalizer) => {
-            if (_monthlyTotalizer) {
-              setMonthlyTotalizer(_monthlyTotalizer);
-            }
-          });
-      }
-    });
-    setLoading(false);
-  };
-
-  const getBillingProgresses = async () => {
-    setLoading(true);
-    await isUserAuthenticated().then(async () => {
-      if (token) {
-        await billingProgressService
-          .get(user?.sub!, token.token)
-          .then((_billingProgresses) => {
-            if (_billingProgresses) {
-              setBillingProgresses(_billingProgresses);
-            }
-          });
-      }
-    });
-    setLoading(false);
-  };
-
-  const getBilling = async (_date: string) => {
-    await isUserAuthenticated().then(async () => {
-      if (token) {
-        await billingService
-          .get(user?.sub!, _date, token.token)
-          .then((_billings) => {
-            if (_billings) {
-              setBillings(_billings);
-            }
-          });
-      }
-    });
-  };
-
-  const handleChangeBillingTitle = (_title: string) => {
-    setBillingTitle(_title);
+  const handleChangeDate = (_title: string) => {
+    setDate(_title);
   };
 
   const _getUser = async () => {
@@ -306,39 +164,17 @@ const Provider = ({ children }: ProviderProps) => {
     return jwtDecode<User>(_token.token);
   };
 
-  const isUserAuthenticated = async () => {
+  const isUserAuthenticated = async (): Promise<Token | undefined> => {
     let isTokenValid = false;
+    let actualToken = token;
     if (token && user) {
       const expiration = user.exp;
       isTokenValid = expiration * 1000 > Date.now();
     }
     if (!isTokenValid && token) {
-      await _renewToken(token);
+      actualToken = await _renewToken(token);
     }
-  };
-
-  const _check = (option: number) => {
-    const _title = "Nada consta";
-    const _content = "Nenhum dado foi encontrado para exibir";
-    if (option == 1) {
-      if (!schedules || schedules.length == 0) {
-        navigation.goBack();
-        setDialog({
-          title: _title,
-          content: _content,
-          visible: true,
-        });
-      }
-    } else if (option == 3) {
-      if (!billingProgresses || billingProgresses.length == 0) {
-        navigation.goBack();
-        setDialog({
-          title: _title,
-          content: _content,
-          visible: true,
-        });
-      }
-    }
+    return actualToken;
   };
 
   const showDialog = async () => {
@@ -363,19 +199,9 @@ const Provider = ({ children }: ProviderProps) => {
     () => ({
       user,
       token,
-      meta,
-      dailyTotalizer,
-      monthlyTotalizer,
-      schedules,
-      billingProgresses,
       loading,
-      getSchedules,
-      billingTitle,
-      billings,
-      getMeta,
-      getBillingProgresses,
-      getBilling,
-      handleChangeBillingTitle,
+      date,
+      handleChangeDate,
       signIn,
       signOut,
       isUserAuthenticated,
@@ -386,19 +212,9 @@ const Provider = ({ children }: ProviderProps) => {
     [
       user,
       token,
-      meta,
-      dailyTotalizer,
-      monthlyTotalizer,
-      schedules,
-      billingProgresses,
       loading,
-      getMeta,
-      getSchedules,
-      billingTitle,
-      billings,
-      getBillingProgresses,
-      getBilling,
-      handleChangeBillingTitle,
+      date,
+      handleChangeDate,
       signIn,
       signOut,
       isUserAuthenticated,

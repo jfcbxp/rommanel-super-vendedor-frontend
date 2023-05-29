@@ -8,21 +8,46 @@ import { NavigationButton } from "../../components/buttons/navigation";
 import { StatusBar } from "expo-status-bar";
 import { ProgressBar } from "../../components/progress_bar";
 import { Divider } from "../../components/divider";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../context";
+import { useMetaService } from "../../services/meta.service";
+import { Meta } from "../../models/meta.model";
 
 interface Properties extends StackScreenProps<StackParams, "Home"> {}
 
 export default function Home({ navigation }: Properties) {
   const context = useContext(Context);
-  let meta = context.meta;
+  const [meta, setMeta] = useState<Meta>();
+  const metaService = useMetaService();
 
   useEffect(() => {
-    const init = async () => {
-      await context.getMeta();
-    };
-    init().catch((error) => console.error(error));
+    init()
+      .finally(() => context.stopLoading())
+      .catch(() => context.showDialog());
   }, [context.token]);
+
+  const init = async () => {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
+        await Promise.all([
+          metaService.get(context.user?.sub!, auth.token),
+        ]).then(async ([_meta]) => {
+          if (!_meta) {
+            context.showDialog();
+          } else {
+            setMeta(_meta);
+          }
+        });
+      }
+    });
+  };
+
+  const reload = () => {
+    context.startLoading();
+    init()
+      .finally(() => context.stopLoading())
+      .catch(() => context.showDialog());
+  };
 
   return (
     <View style={styles.container}>
@@ -52,7 +77,11 @@ export default function Home({ navigation }: Properties) {
           />
         </View>
         <View style={styles.bottom}>
-          <Container title="Apuração">
+          <Container
+            title="Apuração"
+            onReload={reload}
+            disabled={meta ? true : false}
+          >
             {meta ? (
               <>
                 <Text style={styles.title}>
