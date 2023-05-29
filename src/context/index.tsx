@@ -59,7 +59,7 @@ const Provider = ({ children }: ProviderProps) => {
 
   useEffect(() => {
     const init = async () => {
-      await Promise.all([await _getUser(), await _getToken()]);
+      await Promise.all([_getUser(), _getToken()]);
     };
     init().catch((error) => console.error(error));
   }, []);
@@ -79,8 +79,8 @@ const Provider = ({ children }: ProviderProps) => {
         setUser(_decodeToken(_token));
 
         await Promise.all([
-          await _storeToken(_token),
-          await _storeUser(_decodeToken(_token)),
+          _storeToken(_token),
+          _storeUser(_decodeToken(_token)),
         ]);
       })
       .catch(() => {
@@ -98,10 +98,7 @@ const Provider = ({ children }: ProviderProps) => {
 
     setToken(token);
     setUser(_decodeToken(token));
-    await Promise.all([
-      await _storeToken(token),
-      await _storeUser(_decodeToken(token)),
-    ]);
+    await Promise.all([_storeToken(token), _storeUser(_decodeToken(token))]);
     return token;
   };
 
