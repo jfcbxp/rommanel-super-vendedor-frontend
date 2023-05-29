@@ -146,14 +146,12 @@ const Provider = ({ children }: ProviderProps) => {
   };
 
   const _renewToken = async (_token: Token) => {
-    setLoading(true);
     await tokenRenewService.renewToken(_token).then(async (token_) => {
       setToken(token_);
       await _storeToken(token_);
       setUser(_decodeToken(token_));
       await _storeUser(_decodeToken(token_));
     });
-    setLoading(false);
   };
 
   const signOut = async () => {
@@ -193,6 +191,9 @@ const Provider = ({ children }: ProviderProps) => {
           .get(user?.sub!, token.token)
           .then((_schedules) => {
             if (_schedules) {
+              _schedules = _schedules.sort((n1, n2) =>
+                n1.horaInicial > n2.horaInicial ? 1 : -1
+              );
               setSchedules(_schedules);
             }
           });
@@ -286,7 +287,6 @@ const Provider = ({ children }: ProviderProps) => {
       if (jsonValue) {
         let _token: Token = JSON.parse(jsonValue);
         setToken(_token);
-        await _renewToken(_token);
       }
     } catch (error) {
       console.error(error);

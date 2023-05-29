@@ -33,7 +33,7 @@ export default function Wallet({ navigation }: Properties) {
     context.startLoading();
     init()
       .finally(() => context.stopLoading())
-      .catch((error) => console.error(error));
+      .catch((error) => context.showDialog());
   }, []);
 
   const init = async () => {
@@ -51,7 +51,7 @@ export default function Wallet({ navigation }: Properties) {
           ),
         ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
           if (!walletResponse.length) {
-            await context.showDialog();
+            context.showDialog();
           } else {
             walletResponse = walletResponse.sort((n1, n2) =>
               n1.nomeCliente > n2.nomeCliente ? 1 : -1

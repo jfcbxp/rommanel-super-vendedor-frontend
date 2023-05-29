@@ -3,7 +3,7 @@ import axios from "axios";
 export function http(token?: string) {
   // test : "26.214.78.128"
   // production : "192.168.0.239"
-  const host = "192.168.1.100";
+  const host = "192.168.0.239";
   const domain = `http://${host}:9191`;
   // const domain = "http://ebae-170-82-181-193.ngrok-free.app"
   const _baseURL = `${domain}/super-vendedor`;
