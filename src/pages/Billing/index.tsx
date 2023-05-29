@@ -16,11 +16,12 @@ import { BillingModel } from "../../models/billing.model";
 import { useBillingProgressService } from "../../services/billing.progress.service";
 import { useBillingService } from "../../services/billing.service";
 
-interface Properties extends StackScreenProps<StackParams, "Billing"> { }
+interface Properties extends StackScreenProps<StackParams, "Billing"> {}
 
 export default function Billing({ navigation }: Properties) {
   const context = useContext(Context);
-  const [billingProgresses, setBillingProgresses] = useState<BillingProgress[]>();
+  const [billingProgresses, setBillingProgresses] =
+    useState<BillingProgress[]>();
   const [billings, setBillings] = useState<BillingModel[]>();
   const [data, setData] = useState<BillingProgress[] | undefined>();
   const [element, setElement] = useState<BillingProgress>();
@@ -42,42 +43,42 @@ export default function Billing({ navigation }: Properties) {
     await context.isUserAuthenticated().then(async () => {
       if (context.token) {
         await Promise.all([
-          billingProgressService.get(context.user?.sub!, context.token.token)
+          billingProgressService.get(context.user?.sub!, context.token.token),
         ]).then(async ([_billingProgresses]) => {
           if (!_billingProgresses.length) {
-            context.showDialog()
+            context.showDialog();
           } else {
-            _billingProgresses = _billingProgresses.sort((i, j) =>
-              i.periodo > j.periodo ? 1 : -1
-            )
-            setBillingProgresses(_billingProgresses)
+            setBillingProgresses(_billingProgresses);
           }
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
   const getBilling = async (_date: string) => {
-    setLoading(true)
+    setLoading(true);
     await context.isUserAuthenticated().then(async () => {
       if (context.token) {
         await billingService
           .get(context.user?.sub!, _date, context.token.token)
           .then((_billings) => {
             if (_billings) {
-              setBillings(_billings)
+              setBillings(_billings);
             }
-          })
+          });
       }
-    })
-    setLoading(false)
-  }
+    });
+    setLoading(false);
+  };
 
   useEffect(() => {
     const init = async () => {
-      await handleBillingProgresses(billingProgresses);
-      await handleChangeItem(billingProgresses, date);
+      await Promise.all([
+        await handleBillingProgresses(billingProgresses),
+        await handleChangeItem(billingProgresses, date),
+      ]);
     };
+
     if (billingProgresses) {
       init().catch((error) => console.error(error));
     }

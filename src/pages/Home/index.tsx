@@ -13,7 +13,7 @@ import { Context } from "../../context";
 import { useMetaService } from "../../services/meta.service";
 import { Meta } from "../../models/meta.model";
 
-interface Properties extends StackScreenProps<StackParams, "Home"> { }
+interface Properties extends StackScreenProps<StackParams, "Home"> {}
 
 export default function Home({ navigation }: Properties) {
   const context = useContext(Context);
@@ -21,35 +21,33 @@ export default function Home({ navigation }: Properties) {
   const metaService = useMetaService();
 
   useEffect(() => {
-    context.startLoading()
     init()
       .finally(() => context.stopLoading())
       .catch(() => context.showDialog());
-  }, [navigation.isFocused()])
+  }, [context.token]);
 
   const init = async () => {
     await context.isUserAuthenticated().then(async () => {
       if (context.token) {
         await Promise.all([
-          metaService.get(context.user?.sub!, context.token.token)
-        ])
-          .then(async ([_meta]) => {
-            if (!_meta) {
-              context.showDialog()
-            } else {
-              setMeta(_meta)
-            }
-          })
+          metaService.get(context.user?.sub!, context.token.token),
+        ]).then(async ([_meta]) => {
+          if (!_meta) {
+            context.showDialog();
+          } else {
+            setMeta(_meta);
+          }
+        });
       }
-    })
-  }
+    });
+  };
 
   const reload = () => {
-    context.startLoading()
+    context.startLoading();
     init()
       .finally(() => context.stopLoading())
       .catch(() => context.showDialog());
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -79,7 +77,11 @@ export default function Home({ navigation }: Properties) {
           />
         </View>
         <View style={styles.bottom}>
-          <Container title="Apuração" onReload={reload} disabled={meta ? true : false}>
+          <Container
+            title="Apuração"
+            onReload={reload}
+            disabled={meta ? true : false}
+          >
             {meta ? (
               <>
                 <Text style={styles.title}>

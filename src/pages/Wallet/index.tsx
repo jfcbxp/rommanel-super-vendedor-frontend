@@ -14,7 +14,7 @@ import { useWalletService } from "../../services/wallet.service";
 import { Wallet as WalletModel } from "../../models/wallet.model";
 import { WalletTotalizer } from "../../models/wallet.totalizer.model";
 import { useWalletWalletTotalizerService } from "../../services/wallet.totalizers.service";
-interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
+interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
@@ -24,7 +24,8 @@ export default function Wallet({ navigation }: Properties) {
   const [wallets, setWallets] = useState<WalletModel[]>();
   const [walletsReponse, setWalletsResponse] = useState<WalletModel[]>();
   const [activesTotalizer, setActivesTotalizer] = useState<WalletTotalizer>();
-  const [inactivesTotalizer, setInactivesTotalizer] = useState<WalletTotalizer>();
+  const [inactivesTotalizer, setInactivesTotalizer] =
+    useState<WalletTotalizer>();
   const walletService = useWalletService();
   const walletTotalizerService = useWalletWalletTotalizerService();
 
@@ -52,9 +53,6 @@ export default function Wallet({ navigation }: Properties) {
           if (!walletResponse.length) {
             context.showDialog();
           } else {
-            walletResponse = walletResponse.sort((n1, n2) =>
-              n1.nomeCliente > n2.nomeCliente ? 1 : -1
-            );
             setWallets(walletResponse);
             setWalletsResponse(walletResponse);
             setActivesTotalizer(activesResponse);

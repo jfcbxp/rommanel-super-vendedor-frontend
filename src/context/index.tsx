@@ -29,13 +29,13 @@ const defaultState = {
   token: undefined,
   date: undefined,
   loading: true,
-  handleChangeDate: () => { },
-  signIn: async () => { },
-  signOut: async () => { },
-  isUserAuthenticated: async () => { },
-  startLoading: () => { },
-  stopLoading: () => { },
-  showDialog: () => { },
+  handleChangeDate: () => {},
+  signIn: async () => {},
+  signOut: async () => {},
+  isUserAuthenticated: async () => {},
+  startLoading: () => {},
+  stopLoading: () => {},
+  showDialog: () => {},
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -57,11 +57,9 @@ const Provider = ({ children }: ProviderProps) => {
 
   useEffect(() => {
     const init = async () => {
-      await _getUser();
-      await _getToken();
+      await Promise.all([await _getUser(), await _getToken()]);
     };
     init().catch((error) => console.error(error));
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -76,9 +74,12 @@ const Provider = ({ children }: ProviderProps) => {
       .signIn(code, password)
       .then(async (_token) => {
         setToken(_token);
-        await _storeToken(_token);
         setUser(_decodeToken(_token));
-        await _storeUser(_decodeToken(_token));
+
+        await Promise.all([
+          await _storeToken(_token),
+          await _storeUser(_decodeToken(_token)),
+        ]);
       })
       .catch(() => {
         setDialog({
@@ -93,9 +94,11 @@ const Provider = ({ children }: ProviderProps) => {
   const _renewToken = async (_token: Token) => {
     await tokenRenewService.renewToken(_token).then(async (token_) => {
       setToken(token_);
-      await _storeToken(token_);
       setUser(_decodeToken(token_));
-      await _storeUser(_decodeToken(token_));
+      await Promise.all([
+        await _storeToken(_token),
+        await _storeUser(_decodeToken(_token)),
+      ]);
     });
   };
 
