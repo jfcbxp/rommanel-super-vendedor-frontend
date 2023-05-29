@@ -8,7 +8,7 @@ import {
 
 export function SchedulingItem({ data }: { data: Schedule }) {
   const adjustPhone = (phone: string) => {
-    phone = phone.trim().replace(" ", "").replace("-", "");
+    phone = phone.trim().replace(/\s/g, '').replace("-", "");
     phone = phone.startsWith("0") ? phone.slice(1) : phone;
     let ddd = "";
     let _phone = "";
@@ -24,12 +24,14 @@ export function SchedulingItem({ data }: { data: Schedule }) {
       _phone = phone.slice(2, 6);
       phone_ = phone.slice(6, 10);
       pattern = `(${ddd}) 9${_phone}-${phone_}`;
+    } else {
+      return phone
     }
     return pattern;
   };
 
   const adjustTime = (time: string) => {
-    time = time.trim().replace(" ", "").replace(":", "");
+    time = time.trim().replace(/\s/g, '').replace(":", "");
     if (time.length == 1) {
       time = `0${time}:00`;
     } else if (time.length == 2) {
@@ -43,29 +45,35 @@ export function SchedulingItem({ data }: { data: Schedule }) {
   };
 
   const onPressWhatsApp = (phone: string) => {
-    phone = phone.trim().replace(" ", "").replace("-", "");
+    phone = phone.trim().replace(/\s/g, '').replace("-", "");
     if (phone.startsWith("0")) {
       phone = phone.slice(1);
     }
     phone = `55${phone}`;
     let text = `Olá *${data.nomeCliente}*, você tem uma visita agendada para hoje, às *${data.horaInicial}*, podemos confirmar? Senão, podemos remarcar?`;
-    Linking.canOpenURL(`whatsapp://send?text=${text}`).then((suppoted) => {
-      if (suppoted) {
-        return Linking.openURL(`whatsapp://send?phone=${phone}&text=${text}`);
-      } else {
-        return Linking.openURL(
-          `https://api.whatsapp.com/send?phone=${phone}&text=${text}`
-        );
-      }
-    });
+    const link = async () => {
+      await Linking.canOpenURL(`whatsapp://send?text=${text}`).then((suppoted) => {
+        if (suppoted) {
+          return Linking.openURL(`whatsapp://send?phone=${phone}&text=${text}`);
+        } else {
+          return Linking.openURL(
+            `https://api.whatsapp.com/send?phone=${phone}&text=${text}`
+          );
+        }
+      });
+    }
+    link().catch(error => console.error(error))
   };
 
   const onPressPhoneCall = (phone: string) => {
-    phone = phone.trim().replace(" ", "").replace("-", "");
+    phone = phone.trim().replace(/\s/g, '').replace("-", "");
     if (phone.startsWith("0")) {
       phone = phone.slice(1);
     }
-    Linking.openURL(`tel:${phone}`);
+    const link = async () => {
+      await Linking.openURL(`tel:${phone}`);
+    }
+    link().catch(error => console.error(error))
   };
 
   return (
@@ -79,8 +87,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
               backgroundColor:
                 data.situacao == "Chegou" ? "#00B81F" : "#C00404",
             },
-          ]}
-        >
+          ]}>
           <Text style={[styles.costumer, { color: "white" }]}>
             {adjustTime(data.horaInicial)}
           </Text>
@@ -92,8 +99,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
               backgroundColor:
                 data.situacao == "Previsto" ? "#FE38F2" : "#00B81F",
             },
-          ]}
-        >
+          ]}>
           <Text style={[styles.costumer, { color: "white" }]}>
             {adjustTime(data.horaFinal)}
           </Text>
@@ -104,24 +110,25 @@ export function SchedulingItem({ data }: { data: Schedule }) {
             position: "absolute",
             right: 0,
             gap: 32,
-          }}
-        >
-          <Icon
-            name="phone"
-            color="#73186D"
-            size={24}
-            onPress={() => {
-              onPressPhoneCall(data.telefone);
-            }}
-          />
-          <Icons
-            name="whatsapp"
-            color="green"
-            size={24}
-            onPress={() => {
-              onPressWhatsApp(data.telefone);
-            }}
-          />
+          }}>
+          {data.telefone ?
+            <>
+              <Icon
+                name="phone"
+                color="#73186D"
+                size={24}
+                onPress={() => {
+                  onPressPhoneCall(data.telefone);
+                }} />
+              <Icons
+                name="whatsapp"
+                color="green"
+                size={24}
+                onPress={() => {
+                  onPressWhatsApp(data.telefone);
+                }} />
+            </>
+            : undefined}
         </View>
       </View>
       <View style={styles.bottom}>

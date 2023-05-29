@@ -17,6 +17,19 @@ interface Properties {
 }
 
 export function SchedulingHeader(properties: Properties) {
+    if (!properties) {
+        properties = {
+            dailyTotal: 0,
+            monthlyTotal: 0,
+            dailyPredicted: 0,
+            monthlyPredicted: 0,
+            dailyAbsences: 0,
+            monthlyAbsences: 0,
+            dailyArrivals: 0,
+            monthlyArrivals: 0
+        }
+    }
+
     const navigation = useNavigation<NavigationParams>()
 
     return (

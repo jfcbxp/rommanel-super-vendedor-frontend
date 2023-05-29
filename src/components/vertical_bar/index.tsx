@@ -22,7 +22,7 @@ export function VerticalBar(properties: Properties) {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
-          context.handleChangeBillingTitle(properties.title);
+          context.handleChangeDate(properties.title);
         }}
         style={[
           styles.bar,

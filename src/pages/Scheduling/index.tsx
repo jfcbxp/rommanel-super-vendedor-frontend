@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../context";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text } from "react-native";
@@ -8,31 +8,64 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { SchedulingList } from "../../components/lists/scheduling";
 import { SchedulingHeader } from "../../components/headers/scheduling";
+import { useSchedulingService } from "../../services/scheduling.service";
+import { SchedulingTotalizer } from "../../models/scheduling.totalizer.model";
+import { Schedule } from "../../models/schedule.model";
+import { useSchedulingTotalizerService } from "../../services/scheduling.totalizers.service";
 
 interface Properties extends StackScreenProps<StackParams, "Scheduling"> { }
 
 export default function Scheduling({ navigation }: Properties) {
     const context = useContext(Context)
+    const [schedules, setSchedules] = useState<Schedule[]>();
+    const [dailyTotalizer, setDailyTotalizer] = useState<SchedulingTotalizer>();
+    const [monthlyTotalizer, setMonthlyTotalizer] = useState<SchedulingTotalizer>();
+    const schedulingService = useSchedulingService();
+    const schedulingTotalizerService = useSchedulingTotalizerService();
 
     useEffect(() => {
-        const init = async () => {
-            await context.getSchedules()
-        }
-        init().catch(error => console.log(error))
+        context.startLoading()
+        init()
+            .finally(() => context.stopLoading())
+            .catch(() => context.showDialog());
     }, [])
+
+    const init = async () => {
+        await context.isUserAuthenticated().then(async () => {
+            if (context.token) {
+                await Promise.all([
+                    schedulingService.get(context.user?.sub!, context.token.token),
+                    schedulingTotalizerService.getDaily(context.user?.sub!, context.token.token),
+                    schedulingTotalizerService.getMontly(context.user?.sub!, context.token.token)
+                ])
+                    .then(async ([_schedules, _dailyTotalizer, _monthlyTotalizer]) => {
+                        if (!_schedules.length || !_dailyTotalizer || !_monthlyTotalizer) {
+                            context.showDialog()
+                        } else {
+                            _schedules = _schedules.sort((n1, n2) =>
+                                n1.horaInicial > n2.horaInicial ? 1 : -1
+                            );
+                            setSchedules(_schedules)
+                            setDailyTotalizer(_dailyTotalizer)
+                            setMonthlyTotalizer(_monthlyTotalizer)
+                        }
+                    })
+            }
+        })
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
                 <SchedulingHeader
-                    dailyTotal={context.dailyTotalizer ? context.dailyTotalizer?.total : 0}
-                    monthlyTotal={context.monthlyTotalizer ? context.monthlyTotalizer.total : 0}
-                    dailyPredicted={context.dailyTotalizer ? context.dailyTotalizer.previstos : 0}
-                    monthlyPredicted={context.monthlyTotalizer ? context.monthlyTotalizer.previstos : 0}
-                    dailyAbsences={context.dailyTotalizer ? context.dailyTotalizer.faltas : 0}
-                    monthlyAbsences={context.monthlyTotalizer ? context.monthlyTotalizer.faltas : 0}
-                    dailyArrivals={context.dailyTotalizer ? context.dailyTotalizer.chegadas : 0}
-                    monthlyArrivals={context.monthlyTotalizer ? context.monthlyTotalizer.chegadas : 0} />
+                    dailyTotal={dailyTotalizer?.total!}
+                    monthlyTotal={monthlyTotalizer?.total!}
+                    dailyPredicted={dailyTotalizer?.previstos!}
+                    monthlyPredicted={monthlyTotalizer?.previstos!}
+                    dailyAbsences={dailyTotalizer?.faltas!}
+                    monthlyAbsences={monthlyTotalizer?.faltas!}
+                    dailyArrivals={dailyTotalizer?.chegadas!}
+                    monthlyArrivals={monthlyTotalizer?.chegadas!} />
             </View>
             <View style={styles.bottom}>
                 {false ?
@@ -58,7 +91,7 @@ export default function Scheduling({ navigation }: Properties) {
                     : undefined
                 }
                 <View style={styles.list}>
-                    <SchedulingList data={context.schedules} />
+                    <SchedulingList data={schedules} />
                 </View>
             </View>
             <StatusBar style="light" translucent={false} backgroundColor="#601C5C" />

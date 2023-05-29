@@ -16,6 +16,13 @@ export default function SignIn({ navigation }: Properties) {
     const [password, setPassword] = useState("")
     const context = useContext(Context)
 
+    const signIn = () => {
+        const init = async () => {
+            await context.signIn(code, password)
+        }
+        init().catch(error => console.error(error))
+    }
+
     return (
         <View style={styles.container}>
             <View style={{ marginBottom: 32 }}>
@@ -35,7 +42,7 @@ export default function SignIn({ navigation }: Properties) {
                 <Button
                     title="ENTRAR"
                     disabled={(code.length == 6 && password) ? false : true}
-                    onPress={() => context.signIn(code, password)} />
+                    onPress={signIn} />
             </View>
             <Text style={styles.text}>Solicite seu acesso ao setor de T.I</Text>
             <StatusBar style="light" translucent={false} backgroundColor="#BEC0C5" />

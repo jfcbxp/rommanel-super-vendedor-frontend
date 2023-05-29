@@ -12,4 +12,5 @@ export interface Wallet {
     telefone: string
     ultimoCodigoVendedor: string
     ultimaEmpresa: string
+    ultimaCompra: string
 }

@@ -8,21 +8,41 @@ import { NavigationButton } from "../../components/buttons/navigation";
 import { StatusBar } from "expo-status-bar";
 import { ProgressBar } from "../../components/progress_bar";
 import { Divider } from "../../components/divider";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../../context";
+import { useMetaService } from "../../services/meta.service";
+import { Meta } from "../../models/meta.model";
 
-interface Properties extends StackScreenProps<StackParams, "Home"> {}
+interface Properties extends StackScreenProps<StackParams, "Home"> { }
 
 export default function Home({ navigation }: Properties) {
   const context = useContext(Context);
-  let meta = context.meta;
+  const [meta, setMeta] = useState<Meta>();
+  const metaService = useMetaService();
 
   useEffect(() => {
-    const init = async () => {
-      await context.getMeta();
-    };
-    init().catch((error) => console.error(error));
-  }, [context.token]);
+    context.startLoading()
+    init()
+      .finally(() => context.stopLoading())
+      .catch(() => context.showDialog());
+  }, [navigation])
+
+  const init = async () => {
+    await context.isUserAuthenticated().then(async () => {
+      if (context.token) {
+        await Promise.all([
+          metaService.get(context.user?.sub!, context.token.token)
+        ])
+          .then(async ([_meta]) => {
+            if (!_meta) {
+              context.showDialog()
+            } else {
+              setMeta(_meta)
+            }
+          })
+      }
+    })
+  }
 
   return (
     <View style={styles.container}>
