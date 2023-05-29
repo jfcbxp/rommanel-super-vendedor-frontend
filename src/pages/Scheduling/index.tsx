@@ -32,18 +32,12 @@ export default function Scheduling({ navigation }: Properties) {
   }, []);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await Promise.all([
-          schedulingService.get(context.user?.sub!, context.token.token),
-          schedulingTotalizerService.getDaily(
-            context.user?.sub!,
-            context.token.token
-          ),
-          schedulingTotalizerService.getMontly(
-            context.user?.sub!,
-            context.token.token
-          ),
+          schedulingService.get(context.user?.sub!, auth.token),
+          schedulingTotalizerService.getDaily(context.user?.sub!, auth.token),
+          schedulingTotalizerService.getMontly(context.user?.sub!, auth.token),
         ]).then(async ([_schedules, _dailyTotalizer, _monthlyTotalizer]) => {
           if (!_schedules.length || !_dailyTotalizer || !_monthlyTotalizer) {
             context.showDialog();

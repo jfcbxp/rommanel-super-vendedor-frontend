@@ -40,10 +40,10 @@ export default function Billing({ navigation }: Properties) {
   }, []);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await Promise.all([
-          billingProgressService.get(context.user?.sub!, context.token.token),
+          billingProgressService.get(context.user?.sub!, auth.token),
         ]).then(async ([_billingProgresses]) => {
           if (!_billingProgresses.length) {
             context.showDialog();
@@ -57,10 +57,10 @@ export default function Billing({ navigation }: Properties) {
 
   const getBilling = async (_date: string) => {
     setLoading(true);
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await billingService
-          .get(context.user?.sub!, _date, context.token.token)
+          .get(context.user?.sub!, _date, auth.token)
           .then((_billings) => {
             if (_billings) {
               setBillings(_billings);

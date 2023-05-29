@@ -18,7 +18,7 @@ type ContextProps = {
   handleChangeDate(_title: string): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
-  isUserAuthenticated(): Promise<void>;
+  isUserAuthenticated(): Promise<Token | undefined>;
   startLoading(): void;
   stopLoading(): void;
   showDialog(): void;
@@ -32,7 +32,9 @@ const defaultState = {
   handleChangeDate: () => {},
   signIn: async () => {},
   signOut: async () => {},
-  isUserAuthenticated: async () => {},
+  isUserAuthenticated: async () => {
+    return Promise.resolve(undefined);
+  },
   startLoading: () => {},
   stopLoading: () => {},
   showDialog: () => {},
@@ -91,15 +93,16 @@ const Provider = ({ children }: ProviderProps) => {
     setLoading(false);
   };
 
-  const _renewToken = async (_token: Token) => {
-    await tokenRenewService.renewToken(_token).then(async (token_) => {
-      setToken(token_);
-      setUser(_decodeToken(token_));
-      await Promise.all([
-        await _storeToken(_token),
-        await _storeUser(_decodeToken(_token)),
-      ]);
-    });
+  const _renewToken = async (_token: Token): Promise<Token> => {
+    let token = await tokenRenewService.renewToken(_token);
+
+    setToken(token);
+    setUser(_decodeToken(token));
+    await Promise.all([
+      await _storeToken(token),
+      await _storeUser(_decodeToken(token)),
+    ]);
+    return token;
   };
 
   const signOut = async () => {
@@ -161,15 +164,17 @@ const Provider = ({ children }: ProviderProps) => {
     return jwtDecode<User>(_token.token);
   };
 
-  const isUserAuthenticated = async () => {
+  const isUserAuthenticated = async (): Promise<Token | undefined> => {
     let isTokenValid = false;
+    let actualToken = token;
     if (token && user) {
       const expiration = user.exp;
       isTokenValid = expiration * 1000 > Date.now();
     }
     if (!isTokenValid && token) {
-      await _renewToken(token);
+      actualToken = await _renewToken(token);
     }
+    return actualToken;
   };
 
   const showDialog = async () => {

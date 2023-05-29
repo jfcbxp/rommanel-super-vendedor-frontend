@@ -27,10 +27,10 @@ export default function Home({ navigation }: Properties) {
   }, [context.token]);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await Promise.all([
-          metaService.get(context.user?.sub!, context.token.token),
+          metaService.get(context.user?.sub!, auth.token),
         ]).then(async ([_meta]) => {
           if (!_meta) {
             context.showDialog();

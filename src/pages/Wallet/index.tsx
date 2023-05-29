@@ -37,18 +37,12 @@ export default function Wallet({ navigation }: Properties) {
   }, []);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async () => {
-      if (context.token) {
+    await context.isUserAuthenticated().then(async (auth) => {
+      if (auth) {
         await Promise.all([
-          walletService.get(context.user?.sub!, context.token.token),
-          walletTotalizerService.getActives(
-            context.user?.sub!,
-            context.token.token
-          ),
-          walletTotalizerService.getInactives(
-            context.user?.sub!,
-            context.token.token
-          ),
+          walletService.get(context.user?.sub!, auth.token),
+          walletTotalizerService.getActives(context.user?.sub!, auth.token),
+          walletTotalizerService.getInactives(context.user?.sub!, auth.token),
         ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
           if (!walletResponse.length) {
             context.showDialog();
