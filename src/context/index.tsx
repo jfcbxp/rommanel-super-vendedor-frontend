@@ -13,31 +13,31 @@ import { useTokenRenewService } from "../services/token-renew.service";
 type ContextProps = {
   user: User | undefined;
   token: Token | undefined;
-  date: string | undefined;
   loading: boolean;
+  date: string | undefined;
   handleChangeDate(_title: string): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
-  isUserAuthenticated(): Promise<Token | undefined>;
+  validateToken(): Promise<Token | undefined>;
   startLoading(): void;
   stopLoading(): void;
-  showDialog(): void;
+  showDialog(
+    _type: string
+  ): void;
 };
 
 const defaultState = {
   user: undefined,
   token: undefined,
-  date: undefined,
   loading: true,
-  handleChangeDate: () => {},
-  signIn: async () => {},
-  signOut: async () => {},
-  isUserAuthenticated: async () => {
-    return Promise.resolve(undefined);
-  },
-  startLoading: () => {},
-  stopLoading: () => {},
-  showDialog: () => {},
+  date: undefined,
+  handleChangeDate: () => { },
+  signIn: async () => { },
+  signOut: async () => { },
+  validateToken: async () => Promise.resolve(undefined),
+  startLoading: () => { },
+  stopLoading: () => { },
+  showDialog: () => { },
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -53,19 +53,27 @@ const Provider = ({ children }: ProviderProps) => {
   const [date, setDate] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
   const defaultDialog = { title: "", content: "", visible: false };
+  const error = {
+    title: "Erro",
+    content: "Não foi possível se comunicar com o servidor",
+    visible: true
+  };
+  const noData = {
+    title: "Nada consta",
+    content: "Nenhum dado foi encontrado para exibir",
+    visible: true,
+  }
+  const invalidCredentials = {
+    title: "Credenciais inválidas",
+    content: "Código do vendedor e/ou senha incorreto(a)s",
+    visible: true,
+  }
   const [dialog, setDialog] = useState(defaultDialog);
   const signInService = useSignInService();
   const tokenRenewService = useTokenRenewService();
 
   useEffect(() => {
-    const init = async () => {
-      await Promise.all([_getUser(), _getToken()]);
-    };
-    init().catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
-    if (dialog.visible) {
+    if (dialog.visible && navigation.canGoBack()) {
       navigation.goBack();
     }
   }, [dialog]);
@@ -77,29 +85,12 @@ const Provider = ({ children }: ProviderProps) => {
       .then(async (_token) => {
         setToken(_token);
         setUser(_decodeToken(_token));
-
-        await Promise.all([
-          _storeToken(_token),
-          _storeUser(_decodeToken(_token)),
-        ]);
+        await _storeToken(_token)
       })
       .catch(() => {
-        setDialog({
-          title: "Credenciais inválidas",
-          content: "Código do vendedor e/ou senha incorreto(a)s",
-          visible: true,
-        });
+        setDialog(invalidCredentials);
       });
     setLoading(false);
-  };
-
-  const _renewToken = async (_token: Token): Promise<Token> => {
-    let token = await tokenRenewService.renewToken(_token);
-
-    setToken(token);
-    setUser(_decodeToken(token));
-    await Promise.all([_storeToken(token), _storeUser(_decodeToken(token))]);
-    return token;
   };
 
   const signOut = async () => {
@@ -115,33 +106,12 @@ const Provider = ({ children }: ProviderProps) => {
     setDate(_title);
   };
 
-  const _getUser = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@user");
-      if (jsonValue) {
-        let _user: User = JSON.parse(jsonValue);
-        setUser(_user);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const _storeUser = async (_user: User) => {
-    try {
-      const jsonValue = JSON.stringify(_user);
-      await AsyncStorage.setItem("@user", jsonValue);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const _getToken = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("@token");
       if (jsonValue) {
         let _token: Token = JSON.parse(jsonValue);
-        setToken(_token);
+        return _token
       }
     } catch (error) {
       console.error(error);
@@ -161,37 +131,47 @@ const Provider = ({ children }: ProviderProps) => {
     return jwtDecode<User>(_token.token);
   };
 
-  const isUserAuthenticated = async (): Promise<Token | undefined> => {
+  const validateToken = async () => {
+    let token: Token | undefined
     let isTokenValid = false;
-    let actualToken = token;
-    if (token && user) {
-      const expiration = user.exp;
-      isTokenValid = expiration * 1000 > Date.now();
-    }
-    if (!isTokenValid && token) {
-      actualToken = await _renewToken(token);
-    }
-    return actualToken;
+    await _getToken()
+      .then(async _token => {
+        token = _token
+        if (token) {
+          let user = _decodeToken(token)
+          let expiration = user.exp;
+          isTokenValid = expiration * 1000 > Date.now();
+          if (isTokenValid) {
+            setUser(user)
+          } else {
+            token = await tokenRenewService.renewToken(token)
+            setToken(token);
+            setUser(_decodeToken(token))
+            await _storeToken(token)
+          }
+        }
+      })
+    return token
   };
 
-  const showDialog = async () => {
-    const _title = "Nada consta";
-    const _content = "Nenhum dado foi encontrado para exibir";
+  const showDialog = async (_type: string) => {
     setLoading(false);
-    setDialog({
-      title: _title,
-      content: _content,
-      visible: true,
-    });
+    if (_type == "error") {
+      setDialog(error);
+    }
+    if (_type == "noData") {
+      setDialog(noData)
+    }
   };
 
   const startLoading = () => {
     setLoading(true);
-  };
+  }
 
   const stopLoading = () => {
     setLoading(false);
-  };
+  }
+
   const contextValue = useMemo(
     () => ({
       user,
@@ -201,7 +181,7 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeDate,
       signIn,
       signOut,
-      isUserAuthenticated,
+      validateToken,
       startLoading,
       stopLoading,
       showDialog,
@@ -214,7 +194,7 @@ const Provider = ({ children }: ProviderProps) => {
       handleChangeDate,
       signIn,
       signOut,
-      isUserAuthenticated,
+      validateToken,
       startLoading,
       stopLoading,
       showDialog,

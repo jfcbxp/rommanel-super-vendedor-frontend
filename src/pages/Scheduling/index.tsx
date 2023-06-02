@@ -13,7 +13,7 @@ import { SchedulingTotalizer } from "../../models/scheduling.totalizer.model";
 import { Schedule } from "../../models/schedule.model";
 import { useSchedulingTotalizerService } from "../../services/scheduling.totalizers.service";
 
-interface Properties extends StackScreenProps<StackParams, "Scheduling"> {}
+interface Properties extends StackScreenProps<StackParams, "Scheduling"> { }
 
 export default function Scheduling({ navigation }: Properties) {
   const context = useContext(Context);
@@ -25,30 +25,28 @@ export default function Scheduling({ navigation }: Properties) {
   const schedulingTotalizerService = useSchedulingTotalizerService();
 
   useEffect(() => {
-    context.startLoading();
-    init()
-      .finally(() => context.stopLoading())
-      .catch(() => context.showDialog());
-  }, []);
+    const focusListener = navigation.addListener('focus', () => {
+      context.startLoading()
+      init()
+        .finally(context.stopLoading)
+    });
+    return focusListener;
+  }, [navigation]);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async (auth) => {
-      if (auth) {
-        await Promise.all([
-          schedulingService.get(context.user?.sub!, auth.token),
-          schedulingTotalizerService.getDaily(context.user?.sub!, auth.token),
-          schedulingTotalizerService.getMontly(context.user?.sub!, auth.token),
-        ]).then(async ([_schedules, _dailyTotalizer, _monthlyTotalizer]) => {
-          if (!_schedules.length || !_dailyTotalizer || !_monthlyTotalizer) {
-            context.showDialog();
-          } else {
-            setSchedules(_schedules);
-            setDailyTotalizer(_dailyTotalizer);
-            setMonthlyTotalizer(_monthlyTotalizer);
-          }
-        });
+    await Promise.all([
+      schedulingService.get(context.user?.sub!),
+      schedulingTotalizerService.getDaily(context.user?.sub!),
+      schedulingTotalizerService.getMontly(context.user?.sub!),
+    ]).then(async ([_schedules, _dailyTotalizer, _monthlyTotalizer]) => {
+      if (!_schedules.length || !_dailyTotalizer || !_monthlyTotalizer) {
+        context.showDialog("noData");
+      } else {
+        setSchedules(_schedules);
+        setDailyTotalizer(_dailyTotalizer);
+        setMonthlyTotalizer(_monthlyTotalizer);
       }
-    });
+    })
   };
 
   return (
