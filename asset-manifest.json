@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/rommanel-super-vendedor-frontend/static/js/main.91f2e634.js",
+    "main.js": "/rommanel-super-vendedor-frontend/static/js/main.0d2b48da.js",
     "static/js/227.ef81e9d3.js": "/rommanel-super-vendedor-frontend/static/js/227.ef81e9d3.js",
     "static/media/MaterialCommunityIcons.ttf": "/rommanel-super-vendedor-frontend/static/media/MaterialCommunityIcons.5d42b4e60858731e7b65.ttf",
     "static/media/Inter_800ExtraBold.ttf": "/rommanel-super-vendedor-frontend/static/media/Inter_800ExtraBold.e4a4cb7133001f282a15.ttf",
@@ -24,11 +24,11 @@
     "favicon-16.png": "/rommanel-super-vendedor-frontend/favicon-16.png",
     "manifest.json": "/rommanel-super-vendedor-frontend/manifest.json",
     "serve.json": "/rommanel-super-vendedor-frontend/serve.json",
-    "main.91f2e634.js.map": "/rommanel-super-vendedor-frontend/static/js/main.91f2e634.js.map",
+    "main.0d2b48da.js.map": "/rommanel-super-vendedor-frontend/static/js/main.0d2b48da.js.map",
     "227.ef81e9d3.js.map": "/rommanel-super-vendedor-frontend/static/js/227.ef81e9d3.js.map"
   },
   "entrypoints": [
     "static/js/227.ef81e9d3.js",
-    "static/js/main.91f2e634.js"
+    "static/js/main.0d2b48da.js"
   ]
 }
