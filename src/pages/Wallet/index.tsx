@@ -14,7 +14,7 @@ import { useWalletService } from "../../services/wallet.service";
 import { Wallet as WalletModel } from "../../models/wallet.model";
 import { WalletTotalizer } from "../../models/wallet.totalizer.model";
 import { useWalletWalletTotalizerService } from "../../services/wallet.totalizers.service";
-interface Properties extends StackScreenProps<StackParams, "Wallet"> {}
+interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
 
 export default function Wallet({ navigation }: Properties) {
   const context = useContext(Context);
@@ -30,30 +30,28 @@ export default function Wallet({ navigation }: Properties) {
   const walletTotalizerService = useWalletWalletTotalizerService();
 
   useEffect(() => {
-    context.startLoading();
-    init()
-      .finally(() => context.stopLoading())
-      .catch(() => context.showDialog());
-  }, []);
+    const focusListener = navigation.addListener('focus', () => {
+      context.startLoading()
+      init()
+        .finally(context.stopLoading)
+    });
+    return focusListener;
+  }, [navigation]);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async (auth) => {
-      if (auth) {
-        await Promise.all([
-          walletService.get(context.user?.sub!, auth.token),
-          walletTotalizerService.getActives(context.user?.sub!, auth.token),
-          walletTotalizerService.getInactives(context.user?.sub!, auth.token),
-        ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
-          if (!walletResponse.length) {
-            context.showDialog();
-          } else {
-            setWallets(walletResponse);
-            setWalletsResponse(walletResponse);
-            setActivesTotalizer(activesResponse);
-            setInactivesTotalizer(inactiveResponse);
-            handlePicker();
-          }
-        });
+    await Promise.all([
+      walletService.get(context.user?.sub!),
+      walletTotalizerService.getActives(context.user?.sub!),
+      walletTotalizerService.getInactives(context.user?.sub!),
+    ]).then(async ([walletResponse, activesResponse, inactiveResponse]) => {
+      if (!walletResponse.length) {
+        context.showDialog("noData");
+      } else {
+        setWallets(walletResponse);
+        setWalletsResponse(walletResponse);
+        setActivesTotalizer(activesResponse);
+        setInactivesTotalizer(inactiveResponse);
+        handlePicker();
       }
     });
   };

@@ -13,7 +13,7 @@ import { Context } from "../../context";
 import { useMetaService } from "../../services/meta.service";
 import { Meta } from "../../models/meta.model";
 
-interface Properties extends StackScreenProps<StackParams, "Home"> {}
+interface Properties extends StackScreenProps<StackParams, "Home"> { }
 
 export default function Home({ navigation }: Properties) {
   const context = useContext(Context);
@@ -21,32 +21,31 @@ export default function Home({ navigation }: Properties) {
   const metaService = useMetaService();
 
   useEffect(() => {
-    init()
-      .finally(() => context.stopLoading())
-      .catch(() => context.showDialog());
-  }, [context.token]);
+    const focusListener = navigation.addListener('focus', () => {
+      context.startLoading()
+      init()
+        .finally(context.stopLoading)
+    });
+    return focusListener;
+  }, [navigation]);
 
   const init = async () => {
-    await context.isUserAuthenticated().then(async (auth) => {
-      if (auth) {
-        await Promise.all([
-          metaService.get(context.user?.sub!, auth.token),
-        ]).then(async ([_meta]) => {
-          if (!_meta) {
-            context.showDialog();
-          } else {
-            setMeta(_meta);
-          }
-        });
+    await Promise.all([
+      metaService.get(context.user?.sub!),
+    ]).then(async ([_meta]) => {
+      if (_meta) {
+        setMeta(_meta);
+      } else {
+        context.showDialog("noData")
       }
-    });
-  };
+    })
+  }
 
   const reload = () => {
     context.startLoading();
     init()
       .finally(() => context.stopLoading())
-      .catch(() => context.showDialog());
+      .catch(() => context.showDialog("noData"));
   };
 
   return (
