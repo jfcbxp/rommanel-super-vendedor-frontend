@@ -3,6 +3,7 @@ import { http } from "./http.service";
 import { Schedule } from "../models/schedule.model";
 import { useContext } from "react";
 import { Context } from "../context";
+import { ScheduleResponse } from "../models/schedule.response.model";
 
 const resourceURL: string = "/agendamento"
 
@@ -15,7 +16,13 @@ export const useSchedulingService = () => {
         return response.data
     }
 
+    const put = async (scheduleResponse: ScheduleResponse): Promise<void> => {
+        let auth = await context.validateToken().then(token => { return token })
+        await http(auth?.token).put<ScheduleResponse>(resourceURL, scheduleResponse)
+    }
+
     return ({
         get,
+        put,
     })
 }

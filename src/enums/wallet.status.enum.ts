@@ -7,4 +7,5 @@ export enum WalletStatusEnum {
   BLOQUEADO_MEDIA = "Bloqueado media de vendas",
   BLOQUEADO_90_DIAS = "Bloqueado 90 dias sem compras",
   BLOQUEADO_150_DIAS = "Bloqueado 150 dias sem compras",
+  ANIVERSARIANTES = "Aniversariantes",
 }

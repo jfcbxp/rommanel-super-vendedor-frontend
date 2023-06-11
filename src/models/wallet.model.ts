@@ -13,4 +13,5 @@ export interface Wallet {
     ultimoCodigoVendedor: string
     ultimaEmpresa: string
     ultimaCompra: string
+    nascimento: string
 }

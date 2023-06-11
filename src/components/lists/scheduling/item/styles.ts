@@ -10,7 +10,8 @@ export const SchedulingItemStyles = StyleSheet.create({
     },
     top: {
         flexDirection: "row",
-        marginBottom: "5%"
+        marginBottom: "5%",
+        justifyContent: "space-between",
     },
     bottom: {
         flexDirection: "row",
@@ -31,5 +32,19 @@ export const SchedulingItemStyles = StyleSheet.create({
         paddingHorizontal: 6,
         marginHorizontal: 4,
         borderRadius: 4,
-    }
+    },
+    icons: {
+        flexDirection: "row",
+        position: "relative",
+        right: 0,
+        gap: 32,
+    },
+    icon: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#73186D",
+        padding: 8,
+        borderRadius: 4,
+        zIndex: 99,
+    },
 })

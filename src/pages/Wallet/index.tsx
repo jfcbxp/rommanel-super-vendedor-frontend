@@ -14,6 +14,7 @@ import { useWalletService } from "../../services/wallet.service";
 import { Wallet as WalletModel } from "../../models/wallet.model";
 import { WalletTotalizer } from "../../models/wallet.totalizer.model";
 import { useWalletWalletTotalizerService } from "../../services/wallet.totalizers.service";
+import { getDateNow } from "../../services/dates.service";
 interface Properties extends StackScreenProps<StackParams, "Wallet"> { }
 
 export default function Wallet({ navigation }: Properties) {
@@ -71,11 +72,21 @@ export default function Wallet({ navigation }: Properties) {
       if (value == WalletStatusEnum.TODOS) {
         setWallets(walletsReponse);
       } else {
-        setWallets(
-          walletsReponse.filter((element) => {
-            return element.situacao.includes(value);
-          })
-        );
+        if (value == WalletStatusEnum.ANIVERSARIANTES) {
+          setWallets(walletsReponse.filter((element) => {
+            let dateElement = element.nascimento.slice(0, 5)
+            let dateNow = getDateNow().slice(0, 5)
+            if (dateElement == dateNow) {
+              return element
+            }
+          }))
+        } else {
+          setWallets(
+            walletsReponse.filter((element) => {
+              return element.situacao.includes(value);
+            })
+          );
+        }
       }
     }
   };
