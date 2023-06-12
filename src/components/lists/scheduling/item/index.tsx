@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { SchedulingItemStyles as styles } from "./styles";
 import { Schedule } from "../../../../models/schedule.model";
 import { adjustPhone, adjustTime } from "../../../../services/phone.service";
 import { shorten } from "../../../../services/shorten.service";
@@ -13,6 +12,7 @@ import { ScheduleStatusEnum } from "../../../../enums/schedule.status.enum";
 import { useSchedulingService } from "../../../../services/scheduling.service";
 import { IconsStyles } from "../../../icons/styles";
 import { ContactIcons } from "../../../icons";
+import { ItemsStyles as styles } from "../../items/styles";
 
 export function SchedulingItem({ data }: { data: Schedule }) {
   const [visible, setVisible] = useState(false)

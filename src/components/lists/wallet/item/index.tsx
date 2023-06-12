@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { WalletItemStyles as styles } from "./styles";
 import { Wallet } from "../../../../models/wallet.model";
 import { adjustPhone } from "../../../../services/phone.service";
 import { shorten } from "../../../../services/shorten.service";
 import { IconsStyles } from "../../../icons/styles";
 import { ContactIcons } from "../../../icons";
+import { ItemsStyles as styles } from "../../items/styles";
 
 export function WalletItem({ data }: { data: Wallet }) {
   return (

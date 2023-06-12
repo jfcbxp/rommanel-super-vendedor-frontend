@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const SchedulingItemStyles = StyleSheet.create({
+export const ItemsStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
@@ -10,7 +10,7 @@ export const SchedulingItemStyles = StyleSheet.create({
     },
     top: {
         flexDirection: "row",
-        marginBottom: "5%",
+        marginBottom: "2.5%",
         justifyContent: "space-between",
     },
     bottom: {
