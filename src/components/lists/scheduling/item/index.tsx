@@ -1,11 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { SchedulingItemStyles as styles } from "./styles";
 import { Schedule } from "../../../../models/schedule.model";
-import {
-  MaterialIcons as Icon,
-  MaterialCommunityIcons as Icons,
-} from "@expo/vector-icons";
-import { adjustPhone, adjustTime, onPressPhoneCall, onPressWhatsApp } from "../../../../services/phone.service";
+import { adjustPhone, adjustTime } from "../../../../services/phone.service";
 import { shorten } from "../../../../services/shorten.service";
 import { useEffect, useState } from "react";
 import { ContentDialog } from "../../../modals/dialog/content";
@@ -15,6 +11,8 @@ import { Picker } from "../../../buttons/picker";
 import { ItemType } from "react-native-dropdown-picker";
 import { ScheduleStatusEnum } from "../../../../enums/schedule.status.enum";
 import { useSchedulingService } from "../../../../services/scheduling.service";
+import { IconsStyles } from "../../../icons/styles";
+import { ContactIcons } from "../../../icons";
 
 export function SchedulingItem({ data }: { data: Schedule }) {
   const [visible, setVisible] = useState(false)
@@ -40,12 +38,14 @@ export function SchedulingItem({ data }: { data: Schedule }) {
 
   const update = () => {
     const put = async () => {
-      await schedulingService.put({
-        id: data.id,
-        codigoVendedor: data.codigoVendedor,
-        comentario: comment.toUpperCase(),
-        situacao: status!
-      })
+      if (status) {
+        await schedulingService.put({
+          id: data.id,
+          codigoVendedor: data.codigoVendedor,
+          comentario: comment.toUpperCase(),
+          situacao: status
+        })
+      }
     }
     put()
       .then(() => { })
@@ -92,26 +92,9 @@ export function SchedulingItem({ data }: { data: Schedule }) {
           <Text style={styles.costumer}>Comentário:</Text>
           <Text style={styles.costumer}>{shorten(data.observacao.trim())}</Text>
         </View>
-        <View style={styles.icons}>
+        <View style={IconsStyles.icons}>
           {data.telefone ?
-            <>
-              <TouchableOpacity
-                style={styles.icon}
-                onPress={() => { onPressPhoneCall(data.telefone) }}>
-                <Icon
-                  name="phone"
-                  color="white"
-                  size={32} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.icon, { backgroundColor: "green" }]}
-                onPress={() => { onPressWhatsApp(data.telefone, data.nomeCliente) }}>
-                <Icons
-                  name="whatsapp"
-                  color="white"
-                  size={32} />
-              </TouchableOpacity>
-            </>
+            <ContactIcons data={data} />
             : undefined}
         </View>
       </View>
