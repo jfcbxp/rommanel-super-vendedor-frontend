@@ -94,7 +94,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
         </View>
         <View style={IconsStyles.icons}>
           {data.telefone ?
-            <ContactIcons data={data} />
+            <ContactIcons phone={data.telefone} costumer={data.nomeCliente} />
             : undefined}
         </View>
       </View>

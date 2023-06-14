@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native"
+import { View, TouchableOpacity } from "react-native"
 import { IconsStyles } from "./styles"
 import { onPressPhoneCall, onPressWhatsApp } from "../../services/phone.service"
 import {
@@ -6,12 +6,17 @@ import {
     MaterialCommunityIcons as Icons,
 } from "@expo/vector-icons";
 
-export function ContactIcons(data: any) {
+interface Properties {
+    phone: string
+    costumer?: string
+}
+
+export function ContactIcons(properties: Properties) {
     return (
         <>
             <TouchableOpacity
                 style={IconsStyles.icon}
-                onPress={() => { onPressPhoneCall(data.telefone) }}>
+                onPress={() => { onPressPhoneCall(properties.phone) }}>
                 <Icon
                     name="phone"
                     color="white"
@@ -19,7 +24,7 @@ export function ContactIcons(data: any) {
             </TouchableOpacity>
             <TouchableOpacity
                 style={[IconsStyles.icon, { backgroundColor: "green" }]}
-                onPress={() => { onPressWhatsApp(data.telefone, data.nomeCliente) }}>
+                onPress={() => { onPressWhatsApp(properties.phone, properties.costumer) }}>
                 <Icons
                     name="whatsapp"
                     color="white"
