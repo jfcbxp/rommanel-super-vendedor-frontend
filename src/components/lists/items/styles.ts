@@ -1,16 +1,17 @@
 import { StyleSheet } from "react-native";
 
-export const WalletItemStyles = StyleSheet.create({
+export const ItemsStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
         borderRadius: 8,
         marginVertical: "2.5%",
-        padding: "2.5%"
+        padding: "2.5%",
     },
     top: {
         flexDirection: "row",
         marginBottom: "2.5%",
+        justifyContent: "space-between",
     },
     bottom: {
         flexDirection: "row",
@@ -31,5 +32,5 @@ export const WalletItemStyles = StyleSheet.create({
         paddingHorizontal: 6,
         marginHorizontal: 4,
         borderRadius: 4,
-    }
+    },
 })

@@ -73,6 +73,15 @@ const Provider = ({ children }: ProviderProps) => {
   const tokenRenewService = useTokenRenewService();
 
   useEffect(() => {
+    const validate = async () => {
+      await validateToken()
+    }
+    if (!user) {
+      validate().catch(() => { })
+    }
+  }, [])
+
+  useEffect(() => {
     if (dialog.visible && navigation.canGoBack()) {
       navigation.goBack();
     }

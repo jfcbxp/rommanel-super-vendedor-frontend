@@ -111,6 +111,13 @@ export default function Home({ navigation }: Properties) {
                 />
                 <Divider />
                 <ProgressBar
+                  title="Items"
+                  step={meta.quantidadeItens}
+                  steps={meta.quantidadeItens}
+                  type="number"
+                />
+                <Divider />
+                <ProgressBar
                   title="Ticket Médio"
                   step={meta.ticketMedio}
                   steps={meta.ticketMedio}

@@ -1,8 +1,9 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const SignInStyles = StyleSheet.create({
     container: {
         flex: 1,
+        maxHeight: Dimensions.get("window").height,
         backgroundColor: "#F0F2F7",
         justifyContent: "center",
         paddingHorizontal: "10%"

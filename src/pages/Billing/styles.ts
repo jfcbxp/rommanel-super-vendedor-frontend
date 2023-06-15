@@ -1,8 +1,9 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const BillingStyles = StyleSheet.create({
   container: {
     flex: 1,
+    maxHeight: Dimensions.get("window").height,
     backgroundColor: "#F0F2F7",
   },
   top: {
