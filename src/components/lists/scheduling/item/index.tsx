@@ -42,7 +42,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
         await schedulingService.put({
           id: data.id,
           codigoVendedor: data.codigoVendedor,
-          comentario: comment.toUpperCase(),
+          observacao: comment.toUpperCase(),
           situacao: status
         })
       }
@@ -50,6 +50,12 @@ export function SchedulingItem({ data }: { data: Schedule }) {
     put()
       .then(() => { })
       .finally(() => { setVisible(false) })
+  }
+
+  const remove = () => {
+    const exclude = async () => {
+      await schedulingService
+    }
   }
 
   return (
@@ -116,6 +122,9 @@ export function SchedulingItem({ data }: { data: Schedule }) {
           title="SALVAR"
           disabled={status ? false : true}
           onPress={update} />
+        <Button
+          title="EXCLUIR"
+          onPress={remove} />
       </ContentDialog>
     </TouchableOpacity>
   );

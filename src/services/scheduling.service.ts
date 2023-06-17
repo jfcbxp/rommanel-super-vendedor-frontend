@@ -4,6 +4,7 @@ import { Schedule } from "../models/schedule.model";
 import { useContext } from "react";
 import { Context } from "../context";
 import { ScheduleResponse } from "../models/schedule.response.model";
+import { ScheduleRequest } from "../models/schedule.request.model";
 
 const resourceURL: string = "/agendamento"
 
@@ -21,8 +22,20 @@ export const useSchedulingService = () => {
         await http(auth?.token).put<ScheduleResponse>(resourceURL, scheduleResponse)
     }
 
+    const post = async (scheduleRequest: ScheduleRequest): Promise<void> => {
+        let auth = await context.validateToken().then(token => { return token })
+        await http(auth?.token).post<ScheduleResponse>(resourceURL, scheduleRequest)
+    }
+
+    const remove = async (id: number): Promise<void> => {
+        let auth = await context.validateToken().then(token => { return token })
+        await http(auth?.token).delete<Schedule>(`resourceURL/${id}`)
+    }
+
     return ({
         get,
         put,
+        post,
+        remove,
     })
 }

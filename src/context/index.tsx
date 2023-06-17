@@ -9,13 +9,16 @@ import { Loading } from "../components/modals/loading";
 import { NavigationParams } from "../types/navigation.params";
 import { useNavigation } from "@react-navigation/native";
 import { useTokenRenewService } from "../services/token-renew.service";
+import { Costumer } from "../models/costumer.model";
 
 type ContextProps = {
   user: User | undefined;
+  costumer: Costumer | undefined;
   token: Token | undefined;
   loading: boolean;
   date: string | undefined;
   handleChangeDate(_title: string): void;
+  handleChangeCostumer(_title: Costumer): void;
   signIn(_code: string, _password: string): Promise<void>;
   signOut(): Promise<void>;
   validateToken(): Promise<Token | undefined>;
@@ -28,10 +31,12 @@ type ContextProps = {
 
 const defaultState = {
   user: undefined,
+  costumer: undefined,
   token: undefined,
   loading: true,
   date: undefined,
   handleChangeDate: () => { },
+  handleChangeCostumer: () => { },
   signIn: async () => { },
   signOut: async () => { },
   validateToken: async () => Promise.resolve(undefined),
@@ -49,6 +54,7 @@ type ProviderProps = {
 const Provider = ({ children }: ProviderProps) => {
   const navigation = useNavigation<NavigationParams>();
   const [user, setUser] = useState<User>();
+  const [costumer, setCostumer] = useState<Costumer>();
   const [token, setToken] = useState<Token>();
   const [date, setDate] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -114,6 +120,10 @@ const Provider = ({ children }: ProviderProps) => {
   const handleChangeDate = (_title: string) => {
     setDate(_title);
   };
+
+  const handleChangeCostumer = (_costumer: Costumer) => {
+    setCostumer(_costumer)
+  }
 
   const _getToken = async () => {
     try {
@@ -184,10 +194,12 @@ const Provider = ({ children }: ProviderProps) => {
   const contextValue = useMemo(
     () => ({
       user,
+      costumer,
       token,
       loading,
       date,
       handleChangeDate,
+      handleChangeCostumer,
       signIn,
       signOut,
       validateToken,
@@ -197,10 +209,12 @@ const Provider = ({ children }: ProviderProps) => {
     }),
     [
       user,
+      costumer,
       token,
       loading,
       date,
       handleChangeDate,
+      handleChangeCostumer,
       signIn,
       signOut,
       validateToken,
