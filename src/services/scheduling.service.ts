@@ -27,9 +27,9 @@ export const useSchedulingService = () => {
         await http(auth?.token).post<ScheduleResponse>(resourceURL, scheduleRequest)
     }
 
-    const remove = async (id: number): Promise<void> => {
+    const remove = async (code: string, id: number): Promise<void> => {
         let auth = await context.validateToken().then(token => { return token })
-        await http(auth?.token).delete<Schedule>(`resourceURL/${id}`)
+        await http(auth?.token).delete<Schedule>(`${resourceURL}/${code}/${id}`)
     }
 
     return ({

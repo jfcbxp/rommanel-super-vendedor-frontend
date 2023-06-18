@@ -13,10 +13,12 @@ import { Costumer } from "../models/costumer.model";
 
 type ContextProps = {
   user: User | undefined;
+  company: string | undefined
   costumer: Costumer | undefined;
   token: Token | undefined;
   loading: boolean;
   date: string | undefined;
+  handleChangeCompany(_company: string): void;
   handleChangeDate(_title: string): void;
   handleChangeCostumer(_title: Costumer): void;
   signIn(_code: string, _password: string): Promise<void>;
@@ -31,10 +33,12 @@ type ContextProps = {
 
 const defaultState = {
   user: undefined,
+  company: undefined,
   costumer: undefined,
   token: undefined,
   loading: true,
   date: undefined,
+  handleChangeCompany: () => { },
   handleChangeDate: () => { },
   handleChangeCostumer: () => { },
   signIn: async () => { },
@@ -54,6 +58,7 @@ type ProviderProps = {
 const Provider = ({ children }: ProviderProps) => {
   const navigation = useNavigation<NavigationParams>();
   const [user, setUser] = useState<User>();
+  const [company, setCompany] = useState<string>();
   const [costumer, setCostumer] = useState<Costumer>();
   const [token, setToken] = useState<Token>();
   const [date, setDate] = useState<string>();
@@ -116,6 +121,10 @@ const Provider = ({ children }: ProviderProps) => {
     await AsyncStorage.clear();
     setLoading(false);
   };
+
+  const handleChangeCompany = (_company: string) => {
+    setCompany(_company)
+  }
 
   const handleChangeDate = (_title: string) => {
     setDate(_title);
@@ -194,10 +203,12 @@ const Provider = ({ children }: ProviderProps) => {
   const contextValue = useMemo(
     () => ({
       user,
+      company,
       costumer,
       token,
       loading,
       date,
+      handleChangeCompany,
       handleChangeDate,
       handleChangeCostumer,
       signIn,
@@ -209,10 +220,12 @@ const Provider = ({ children }: ProviderProps) => {
     }),
     [
       user,
+      company,
       costumer,
       token,
       loading,
       date,
+      handleChangeCompany,
       handleChangeDate,
       handleChangeCostumer,
       signIn,

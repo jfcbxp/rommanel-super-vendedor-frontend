@@ -1,9 +1,12 @@
 export interface ScheduleRequest {
+    empresa: string
+    codigoVendedor: string
     dataAgendamento: string
     codigoCliente: string
     lojaCliente: string
+    nomeCliente: string
     valor: number
-    comentario: string
+    observacao: string
     horaInicial: string
     horaFinal: string
 }

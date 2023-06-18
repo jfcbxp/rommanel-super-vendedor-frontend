@@ -74,9 +74,7 @@ export default function Scheduling({ navigation }: Properties) {
       schedulingTotalizerService.getDaily(context.user?.sub!),
       schedulingTotalizerService.getMontly(context.user?.sub!),
     ]).then(async ([_schedules, _dailyTotalizer, _monthlyTotalizer]) => {
-      if (!_schedules.length || !_dailyTotalizer || !_monthlyTotalizer) {
-        context.showDialog("noData");
-      } else {
+      if (_schedules.length || _dailyTotalizer || _monthlyTotalizer) {
         setSchedules(_schedules);
         setDailyTotalizer(_dailyTotalizer);
         setMonthlyTotalizer(_monthlyTotalizer);
@@ -103,19 +101,23 @@ export default function Scheduling({ navigation }: Properties) {
         dataAgendamento: date,
         codigoCliente: costumerCode,
         lojaCliente: shop,
+        nomeCliente: context.costumer?.nome!,
         valor: parseFloat(value),
         horaInicial: start,
         horaFinal: end,
-        comentario: comment
+        observacao: comment,
+        codigoVendedor: context.user?.sub!,
+        empresa: context.company!,
       })
     }
     context.startLoading()
     post()
       .then(() => {
         setVisible(false)
-        initials()
+        context.stopLoading()
       })
-      .finally(() => navigation.navigate("Scheduling"))
+      .finally(() => navigation.navigate("Home"))
+    initials()
   }
 
   const initials = () => {

@@ -13,14 +13,18 @@ import { useSchedulingService } from "../../../../services/scheduling.service";
 import { IconsStyles } from "../../../icons/styles";
 import { ContactIcons } from "../../../icons";
 import { ItemsStyles as styles } from "../../items/styles";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationParams } from "../../../../types/navigation.params";
 
 export function SchedulingItem({ data }: { data: Schedule }) {
+  const navigation = useNavigation<NavigationParams>()
   const [visible, setVisible] = useState(false)
   const [comment, setComment] = useState(data.observacao ? data.observacao : "")
   const [items, setItems] = useState<ItemType<ScheduleStatusEnum>[]>();
   const [status, setStatus] = useState<ScheduleStatusEnum>();
   const [open, setOpen] = useState(false)
   const schedulingService = useSchedulingService()
+  const [visible_, setVisible_] = useState(false)
 
   useEffect(() => {
     handlePicker()
@@ -48,14 +52,20 @@ export function SchedulingItem({ data }: { data: Schedule }) {
       }
     }
     put()
-      .then(() => { })
-      .finally(() => { setVisible(false) })
+      .then(() => { setVisible(false) })
+      .finally(() => { navigation.navigate("Home") })
   }
 
   const remove = () => {
     const exclude = async () => {
-      await schedulingService
+      await schedulingService.remove(data.codigoVendedor, data.id)
     }
+    exclude()
+      .then(() => {
+        setVisible_(false)
+        setVisible(false)
+      })
+      .finally(() => { navigation.navigate("Home") })
   }
 
   return (
@@ -89,6 +99,12 @@ export function SchedulingItem({ data }: { data: Schedule }) {
               {adjustTime(data.horaFinal)}
             </Text>
           </View>
+          <View
+            style={[styles.box, { backgroundColor: "#00B81F" }]}>
+            <Text style={[styles.costumer, { color: "white" }]}>
+              {data.situacao}
+            </Text>
+          </View>
         </View>
         <Text style={styles.code}>{adjustPhone(data.telefone)}</Text>
       </View>
@@ -119,11 +135,23 @@ export function SchedulingItem({ data }: { data: Schedule }) {
           setOpen={setOpen}
           placeholder="Selecione" />
         <Button
-          title="SALVAR"
+          title="ATUALIZAR"
           disabled={status ? false : true}
           onPress={update} />
         <Button
           title="EXCLUIR"
+          onPress={() => setVisible_(true)} />
+      </ContentDialog>
+      <ContentDialog
+        title="Confirmar exclusão"
+        visible={visible_}
+        dismiss={() => setVisible_(false)}>
+        <Text
+          style={[styles.costumer, { fontSize: 16 }]}>
+          {`Deseja realmente excluir o agendamento (${data.id})?`}
+        </Text>
+        <Button
+          title="CONFIRMAR"
           onPress={remove} />
       </ContentDialog>
     </TouchableOpacity>
