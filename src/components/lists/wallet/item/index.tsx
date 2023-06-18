@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Wallet } from '../../../../models/wallet.model';
-import { adjustPhone } from '../../../../services/phone.service';
 import { shorten } from '../../../../services/shorten.service';
 import { IconsStyles } from '../../../icons/styles';
 import { ContactIcons } from '../../../icons';

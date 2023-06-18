@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Schedule } from '../../../../models/schedule.model';
-import { adjustPhone, adjustTime } from '../../../../services/phone.service';
+import { adjustTime } from '../../../../services/phone.service';
 import { shorten } from '../../../../services/shorten.service';
 import { useEffect, useState } from 'react';
 import { ContentDialog } from '../../../modals/dialog/content';
