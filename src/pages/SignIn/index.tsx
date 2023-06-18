@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { StackParams } from "../../types/stack.params";
 import { StatusBar } from "expo-status-bar";
 import { SignInStyles as styles } from "./styles";
-import { CodeInput } from "../../components/inputs/username";
+import { CodeInput } from "../../components/inputs/code";
 import { PasswordInput } from "../../components/inputs/password";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../../components/buttons/button";

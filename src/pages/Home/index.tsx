@@ -30,15 +30,18 @@ export default function Home({ navigation }: Properties) {
   }, [navigation]);
 
   const init = async () => {
-    await Promise.all([
-      metaService.get(context.user?.sub!),
-    ]).then(async ([_meta]) => {
-      if (_meta) {
-        setMeta(_meta);
-      } else {
-        context.showDialog("noData")
-      }
-    })
+    if (context.user) {
+      await Promise.all([
+        metaService.get(context.user.sub),
+      ]).then(async ([_meta]) => {
+        if (_meta) {
+          context.handleChangeCompany(_meta.empresa)
+          setMeta(_meta);
+        } else {
+          context.showDialog("noData")
+        }
+      })
+    }
   }
 
   const reload = () => {
@@ -111,9 +114,16 @@ export default function Home({ navigation }: Properties) {
                 />
                 <Divider />
                 <ProgressBar
-                  title="Items"
+                  title="Peças vendidas"
                   step={meta.quantidadeItens}
-                  steps={meta.quantidadeItens}
+                  steps={meta.metaQuantidadePecas}
+                  type="number"
+                />
+                <Divider />
+                <ProgressBar
+                  title="Base carteira"
+                  step={meta.quantidadeClientes}
+                  steps={meta.quantidadeCarteira}
                   type="number"
                 />
                 <Divider />
