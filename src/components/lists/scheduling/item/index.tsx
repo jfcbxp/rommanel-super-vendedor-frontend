@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Schedule } from '../../../../models/schedule.model';
-import { adjustTime } from '../../../../services/phone.service';
 import { shorten } from '../../../../services/shorten.service';
 import { useEffect, useState } from 'react';
 import { ContentDialog } from '../../../modals/dialog/content';
@@ -15,6 +14,7 @@ import { ContactIcons } from '../../../icons';
 import { ItemsStyles as styles } from '../../items/styles';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationParams } from '../../../../types/navigation.params';
+import { fixTime } from '../../../../services/date.time.service';
 
 export function SchedulingItem({ data }: { data: Schedule }) {
     const navigation = useNavigation<NavigationParams>();
@@ -90,7 +90,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
                             },
                         ]}
                     >
-                        <Text style={[styles.costumer, { color: 'white' }]}>{adjustTime(data.horaInicial)}</Text>
+                        <Text style={[styles.costumer, { color: 'white' }]}>{fixTime(data.horaInicial)}</Text>
                     </View>
                     <View
                         style={[
@@ -100,7 +100,7 @@ export function SchedulingItem({ data }: { data: Schedule }) {
                             },
                         ]}
                     >
-                        <Text style={[styles.costumer, { color: 'white' }]}>{adjustTime(data.horaFinal)}</Text>
+                        <Text style={[styles.costumer, { color: 'white' }]}>{fixTime(data.horaFinal)}</Text>
                     </View>
                     <View style={[styles.box, { backgroundColor: '#00B81F' }]}>
                         <Text style={[styles.costumer, { color: 'white' }]}>{data.situacao}</Text>

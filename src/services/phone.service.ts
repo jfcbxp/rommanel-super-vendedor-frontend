@@ -23,20 +23,6 @@ export const adjustPhone = (phone: string) => {
     return pattern;
 };
 
-export const adjustTime = (time: string) => {
-    time = time.trim().replace(/\s/g, '').replace(":", "");
-    if (time.length == 1) {
-        time = `0${time}:00`;
-    } else if (time.length == 2) {
-        time = `${time}:00`;
-    } else {
-        let hour = time.slice(0, 2);
-        let minute = time.slice(2, 4);
-        time = `${hour}:${minute}`;
-    }
-    return time;
-};
-
 export const onPressWhatsApp = (phone: string, name?: string, time?: string) => {
     phone = phone.trim().replace(/\s/g, '').replace("-", "");
     if (phone.startsWith("0")) {

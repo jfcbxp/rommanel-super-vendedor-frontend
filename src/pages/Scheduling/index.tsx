@@ -22,8 +22,9 @@ import { MaskedInput } from '../../components/inputs/mask';
 import { Input } from '../../components/inputs/default';
 import { useCostumerService } from '../../services/costumer.service';
 import { Costumer } from '../../models/costumer.model';
+import { adjustDate, adjustTime } from '../../services/date.time.service';
 
-interface Properties extends StackScreenProps<StackParams, 'Scheduling'> {}
+interface Properties extends StackScreenProps<StackParams, 'Scheduling'> { }
 
 export default function Scheduling({ navigation }: Properties) {
     const context = useContext(Context);
@@ -94,13 +95,13 @@ export default function Scheduling({ navigation }: Properties) {
     const toSchedule = () => {
         const post = async () => {
             await schedulingService.post({
-                dataAgendamento: date,
+                dataAgendamento: adjustDate(date),
                 codigoCliente: costumerCode,
                 lojaCliente: shop,
                 nomeCliente: context.costumer?.nome!,
                 valor: parseFloat(value),
-                horaInicial: start,
-                horaFinal: end,
+                horaInicial: adjustTime(start),
+                horaFinal: adjustTime(end),
                 observacao: comment,
                 codigoVendedor: context.user?.sub!,
                 empresa: context.company!,
@@ -194,7 +195,9 @@ export default function Scheduling({ navigation }: Properties) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <MaskedInput
                         value={date}
-                        onChangeText={setDate}
+                        onChangeText={(maskedText, rawText) => {
+                            setDate(adjustDate(maskedText))
+                        }}
                         placeholder="Data"
                         type="datetime"
                         options={{
@@ -204,7 +207,7 @@ export default function Scheduling({ navigation }: Properties) {
                     />
                     <MaskedInput
                         value={value}
-                        onChangeText={(_maskedText, rawText) => {
+                        onChangeText={(maskedText, rawText) => {
                             rawText && setValue(rawText);
                         }}
                         placeholder="Valor"
@@ -221,7 +224,9 @@ export default function Scheduling({ navigation }: Properties) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <MaskedInput
                         value={start}
-                        onChangeText={setStart}
+                        onChangeText={(maskedText, rawText) => {
+                            setStart(adjustTime(maskedText))
+                        }}
                         placeholder="Hora inicial"
                         type="datetime"
                         options={{
@@ -231,7 +236,9 @@ export default function Scheduling({ navigation }: Properties) {
                     />
                     <MaskedInput
                         value={end}
-                        onChangeText={setEnd}
+                        onChangeText={(maskedText, rawText) => {
+                            setEnd(adjustTime(maskedText))
+                        }}
                         placeholder="Hora final"
                         type="datetime"
                         options={{
