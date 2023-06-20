@@ -12,7 +12,7 @@
 
 
 
-export function register(config) {
+export function register(config) { 
 const isLocalhost = Boolean(
 
   (window.location.hostname === "localhost" ||

@@ -5,7 +5,7 @@ import { ButtonStyles as styles } from "./styles";
 interface Properties extends TouchableOpacityProps {
     title: string;
     disabled?: boolean;
-}
+} 
 
 export function Button(properties: Properties) {
     const [opacity, setOpacity] = useState(1);
