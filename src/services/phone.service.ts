@@ -1,12 +1,12 @@
-import { Linking } from "react-native";
+import { Linking } from 'react-native';
 
 export const adjustPhone = (phone: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    phone = phone.startsWith("0") ? phone.slice(1) : phone;
-    let ddd = "";
-    let _phone = "";
-    let phone_ = "";
-    let pattern = "";
+    phone = phone.trim().replace(/\s/g, '').replace('-', '');
+    phone = phone.startsWith('0') ? phone.slice(1) : phone;
+    let ddd = '';
+    let _phone = '';
+    let phone_ = '';
+    let pattern = '';
     if (phone.length == 11) {
         ddd = phone.slice(0, 2);
         _phone = phone.slice(2, 7);
@@ -18,18 +18,18 @@ export const adjustPhone = (phone: string) => {
         phone_ = phone.slice(6, 10);
         pattern = `(${ddd}) 9${_phone}-${phone_}`;
     } else {
-        return phone
+        return phone;
     }
     return pattern;
 };
 
 export const onPressWhatsApp = (phone: string, name?: string, time?: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    if (phone.startsWith("0")) {
+    phone = phone.trim().replace(/\s/g, '').replace('-', '');
+    if (phone.startsWith('0')) {
         phone = phone.slice(1);
     }
     phone = `55${phone}`;
-    let text = ""
+    let text = '';
     if (!time) {
         text = `Olá *${name}*`;
     } else {
@@ -40,22 +40,20 @@ export const onPressWhatsApp = (phone: string, name?: string, time?: string) => 
             if (suppoted) {
                 return Linking.openURL(`whatsapp://send?phone=${phone}&text=${text}`);
             } else {
-                return Linking.openURL(
-                    `https://api.whatsapp.com/send?phone=${phone}&text=${text}`
-                );
+                return Linking.openURL(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`);
             }
         });
-    }
-    link().catch(error => console.error(error))
+    };
+    link().catch((error) => console.error(error));
 };
 
 export const onPressPhoneCall = (phone: string) => {
-    phone = phone.trim().replace(/\s/g, '').replace("-", "");
-    if (phone.startsWith("0")) {
+    phone = phone.trim().replace(/\s/g, '').replace('-', '');
+    if (phone.startsWith('0')) {
         phone = phone.slice(1);
     }
     const link = async () => {
         await Linking.openURL(`tel:${phone}`);
-    }
-    link().catch(error => console.error(error))
+    };
+    link().catch((error) => console.error(error));
 };

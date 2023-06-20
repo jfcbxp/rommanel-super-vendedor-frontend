@@ -15,7 +15,7 @@ import { Wallet as WalletModel } from '../../models/wallet.model';
 import { WalletTotalizer } from '../../models/wallet.totalizer.model';
 import { useWalletWalletTotalizerService } from '../../services/wallet.totalizers.service';
 import { getDateNow } from '../../services/date.time.service';
-interface Properties extends StackScreenProps<StackParams, 'Wallet'> { }
+interface Properties extends StackScreenProps<StackParams, 'Wallet'> {}
 
 export default function Wallet({ navigation }: Properties) {
     const context = useContext(Context);

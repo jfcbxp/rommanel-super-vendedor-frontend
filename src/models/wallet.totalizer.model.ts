@@ -1,6 +1,6 @@
 export interface WalletTotalizer {
-    total: number
-    ativos: number
-    preInativos: number
-    inativos: number
+    total: number;
+    ativos: number;
+    preInativos: number;
+    inativos: number;
 }

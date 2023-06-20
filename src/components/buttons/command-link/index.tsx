@@ -1,5 +1,5 @@
-import { Pressable, PressableProps, Text } from "react-native";
-import { CommandLinkStyles as styles } from "./styles";
+import { Pressable, PressableProps, Text } from 'react-native';
+import { CommandLinkStyles as styles } from './styles';
 
 interface Properties extends PressableProps {
     title: string;

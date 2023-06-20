@@ -24,7 +24,7 @@ import { useCostumerService } from '../../services/costumer.service';
 import { Costumer } from '../../models/costumer.model';
 import { adjustDate, adjustTime } from '../../services/date.time.service';
 
-interface Properties extends StackScreenProps<StackParams, 'Scheduling'> { }
+interface Properties extends StackScreenProps<StackParams, 'Scheduling'> {}
 
 export default function Scheduling({ navigation }: Properties) {
     const context = useContext(Context);
@@ -196,7 +196,7 @@ export default function Scheduling({ navigation }: Properties) {
                     <MaskedInput
                         value={date}
                         onChangeText={(maskedText, rawText) => {
-                            setDate(adjustDate(maskedText))
+                            setDate(adjustDate(maskedText));
                         }}
                         placeholder="Data"
                         type="datetime"
@@ -225,7 +225,7 @@ export default function Scheduling({ navigation }: Properties) {
                     <MaskedInput
                         value={start}
                         onChangeText={(maskedText, rawText) => {
-                            setStart(adjustTime(maskedText))
+                            setStart(adjustTime(maskedText));
                         }}
                         placeholder="Hora inicial"
                         type="datetime"
@@ -237,7 +237,7 @@ export default function Scheduling({ navigation }: Properties) {
                     <MaskedInput
                         value={end}
                         onChangeText={(maskedText, rawText) => {
-                            setEnd(adjustTime(maskedText))
+                            setEnd(adjustTime(maskedText));
                         }}
                         placeholder="Hora final"
                         type="datetime"

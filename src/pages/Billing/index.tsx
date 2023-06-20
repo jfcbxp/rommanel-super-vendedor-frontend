@@ -16,7 +16,7 @@ import { BillingModel } from '../../models/billing.model';
 import { useBillingProgressService } from '../../services/billing.progress.service';
 import { useBillingService } from '../../services/billing.service';
 
-interface Properties extends StackScreenProps<StackParams, 'Billing'> { }
+interface Properties extends StackScreenProps<StackParams, 'Billing'> {}
 
 export default function Billing({ navigation }: Properties) {
     const context = useContext(Context);
@@ -33,9 +33,8 @@ export default function Billing({ navigation }: Properties) {
 
     useEffect(() => {
         const focusListener = navigation.addListener('focus', () => {
-            context.startLoading()
-            init()
-                .finally(context.stopLoading)
+            context.startLoading();
+            init().finally(context.stopLoading);
         });
         return focusListener;
     }, [navigation]);
@@ -61,15 +60,13 @@ export default function Billing({ navigation }: Properties) {
     }, [context.date]);
 
     const init = async () => {
-        await Promise.all([billingProgressService.get(context.user?.sub!)]).then(
-            async ([_billingProgresses]) => {
-                if (!_billingProgresses.length) {
-                    context.showDialog("noData");
-                } else {
-                    setBillingProgresses(_billingProgresses);
-                }
-            },
-        );
+        await Promise.all([billingProgressService.get(context.user?.sub!)]).then(async ([_billingProgresses]) => {
+            if (!_billingProgresses.length) {
+                context.showDialog('noData');
+            } else {
+                setBillingProgresses(_billingProgresses);
+            }
+        });
     };
 
     const getBilling = async (_date: string) => {

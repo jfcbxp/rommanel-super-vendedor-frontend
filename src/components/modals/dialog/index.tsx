@@ -1,6 +1,6 @@
-import { GestureResponderEvent, Modal, View, Text } from "react-native";
-import { DialogStyles as styles } from "./styles";
-import { Button } from "../../buttons/button";
+import { GestureResponderEvent, Modal, View, Text } from 'react-native';
+import { DialogStyles as styles } from './styles';
+import { Button } from '../../buttons/button';
 
 interface Properties {
     visible: boolean | undefined;
@@ -11,10 +11,7 @@ interface Properties {
 
 export function Dialog(properties: Properties) {
     return (
-        <Modal {...properties}
-            visible={properties.visible}
-            transparent={true}
-            animationType="fade">
+        <Modal {...properties} visible={properties.visible} transparent={true} animationType="fade">
             <View style={styles.container}>
                 <View style={styles.field}>
                     <Text style={styles.title}>{properties.title}</Text>

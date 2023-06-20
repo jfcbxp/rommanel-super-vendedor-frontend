@@ -1,5 +1,5 @@
-import { TextInput, TextInputProps } from "react-native";
-import { InputStyles as styles } from "../styles";
+import { TextInput, TextInputProps } from 'react-native';
+import { InputStyles as styles } from '../styles';
 
 export function CodeInput(properties: TextInputProps) {
     return (
@@ -11,6 +11,7 @@ export function CodeInput(properties: TextInputProps) {
             placeholderTextColor="#73186D"
             maxLength={6}
             keyboardType="number-pad"
-            style={styles.input} />
-    )
+            style={styles.input}
+        />
+    );
 }
