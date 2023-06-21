@@ -1,6 +1,6 @@
 export const getDateNow = () => {
     const date = new Date();
-    let day = date.getDay().toString();
+    let day = date.getDate().toString();
     if (day.toString().length == 1) {
         day = '0' + day;
     }
