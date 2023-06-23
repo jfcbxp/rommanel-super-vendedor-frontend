@@ -13,7 +13,7 @@ import { Context } from '../../context';
 import { useMetaService } from '../../services/meta.service';
 import { Meta } from '../../models/meta.model';
 
-interface Properties extends StackScreenProps<StackParams, 'Home'> {}
+interface Properties extends StackScreenProps<StackParams, 'Home'> { }
 
 export default function Home({ navigation }: Properties) {
     const context = useContext(Context);
@@ -50,7 +50,7 @@ export default function Home({ navigation }: Properties) {
 
     return (
         <View style={styles.container}>
-            <HomeHeader />
+            <HomeHeader type={meta?.tipoVendedor} />
             <View style={styles.body}>
                 <View style={styles.navigator}>
                     <NavigationButton
