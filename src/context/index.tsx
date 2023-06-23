@@ -26,7 +26,7 @@ type ContextProps = {
     validateToken(): Promise<Token | undefined>;
     startLoading(): void;
     stopLoading(): void;
-    showDialog(_type: string): void;
+    showDialog(_message: string): void;
 };
 
 const defaultState = {
@@ -36,15 +36,15 @@ const defaultState = {
     token: undefined,
     loading: true,
     date: undefined,
-    handleChangeCompany: () => {},
-    handleChangeDate: () => {},
-    handleChangeCostumer: () => {},
-    signIn: async () => {},
-    signOut: async () => {},
+    handleChangeCompany: () => { },
+    handleChangeDate: () => { },
+    handleChangeCostumer: () => { },
+    signIn: async () => { },
+    signOut: async () => { },
     validateToken: async () => Promise.resolve(undefined),
-    startLoading: () => {},
-    stopLoading: () => {},
-    showDialog: () => {},
+    startLoading: () => { },
+    stopLoading: () => { },
+    showDialog: () => { },
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -86,7 +86,7 @@ const Provider = ({ children }: ProviderProps) => {
             await validateToken();
         };
         if (!user) {
-            validate().catch(() => {});
+            validate().catch(() => { });
         }
     }, []);
 
@@ -179,14 +179,20 @@ const Provider = ({ children }: ProviderProps) => {
         return token;
     };
 
-    const showDialog = async (_type: string) => {
+    const showDialog = async (_message: string) => {
         setLoading(false);
-        if (_type == 'error') {
+        if (_message == 'error') {
             setDialog(error);
-        }
-        if (_type == 'noData') {
+        } else if (_message == 'noData') {
             setDialog(noData);
+        } else {
+            setDialog({
+                title: "Alerta",
+                content: _message,
+                visible: true
+            })
         }
+
     };
 
     const startLoading = () => {

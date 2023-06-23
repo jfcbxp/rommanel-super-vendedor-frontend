@@ -4,7 +4,11 @@ import { HomeHeaderStyles as styles } from './styles';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { Context } from '../../../context';
 
-export function HomeHeader() {
+interface Properties {
+    type?: string
+}
+
+export function HomeHeader(properties: Properties) {
     const context = useContext(Context);
     return (
         <View style={styles.container}>
@@ -23,7 +27,10 @@ export function HomeHeader() {
             </View>
             <View style={styles.titles}>
                 <Text style={styles.title}>{context.user?.fullName.trim()}</Text>
-                <Text style={styles.subTitle}>{context.user?.role[0] == 'ROLE_USER' ? 'Vendedor' : undefined}</Text>
+                <Text style={styles.subTitle}>
+                    {context.user?.role[0] == 'ROLE_USER' ? 'Vendedor' : undefined}
+                    {" " + properties.type}
+                </Text>
             </View>
             <View style={styles.logout}>
                 <Icon

@@ -15,7 +15,7 @@ import { Wallet as WalletModel } from '../../models/wallet.model';
 import { WalletTotalizer } from '../../models/wallet.totalizer.model';
 import { useWalletWalletTotalizerService } from '../../services/wallet.totalizers.service';
 import { getDateNow } from '../../services/date.time.service';
-interface Properties extends StackScreenProps<StackParams, 'Wallet'> {}
+interface Properties extends StackScreenProps<StackParams, 'Wallet'> { }
 
 export default function Wallet({ navigation }: Properties) {
     const context = useContext(Context);
@@ -71,9 +71,11 @@ export default function Wallet({ navigation }: Properties) {
                 if (value == WalletStatusEnum.ANIVERSARIANTES_DIA) {
                     setWallets(
                         walletsReponse.filter((element) => {
-                            let dateElement = element.nascimento.slice(0, 5);
-                            let dateNow = getDateNow().slice(0, 5);
-                            if (dateElement == dateNow) {
+                            let dateElement = element.nascimento.split("/");
+                            let eDayMonth = dateElement[0] + "/" + dateElement[1]
+                            let dateNow = getDateNow().split("/");
+                            let nDayMonth = dateNow[0] + "/" + dateNow[1]
+                            if (eDayMonth == nDayMonth) {
                                 return element;
                             }
                         }),
