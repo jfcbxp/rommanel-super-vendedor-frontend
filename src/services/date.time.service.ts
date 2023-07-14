@@ -1,72 +1,69 @@
-export const getDateNow = () => {
-    const date = new Date();
-    let day = date.getDate().toString();
-    if (day.toString().length == 1) {
-        day = '0' + day;
-    }
-    let month = (date.getMonth() + 1).toString();
-    if (month.toString().length == 1) {
-        month = '0' + month;
-    }
-    let year = date.getFullYear().toString();
-    return `${day}/${month}/${year}`;
+const MAX_DAY = 31;
+const MAX_MONTH = 12;
+const MAX_HOUR = 23;
+const MAX_MINUTE = 59;
+
+const isNumeric = (value: any): boolean => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
 };
 
-export const fixTime = (time: string) => {
-    time = time.trim().replace(/\s/g, '').replace(':', '');
-    if (time.length == 1) {
-        time = `0${time}:00`;
-    } else if (time.length == 2) {
-        time = `${time}:00`;
-    } else {
-        let hour = time.slice(0, 2);
-        let minute = time.slice(2, 4);
-        time = `${hour}:${minute}`;
-    }
-    return time;
+const formatValue = (value: number): string => {
+    return String(value).padStart(2, '0');
 };
 
-export const adjustDate = (date?: string) => {
-    if (date) {
-        if (date.length == 10) {
-            let day = parseInt(date.substring(0, 2), 10);
-            let month = parseInt(date.substring(3, 5), 10);
-            let year = parseInt(date.substring(6, 10), 10);
-            const date_ = new Date();
-            if (day > 31) {
-                day = 31;
-            }
-            if (month > 12) {
-                month = 12;
-            }
-            if (year > date_.getFullYear()) {
-                year = date_.getFullYear();
-            }
-            return `${day}/${month}/${year}`;
-        } else {
-            return date;
-        }
-    } else {
+const extractDateValues = (date: string): [number, number, number] => {
+    const [day, month, year] = date.split('/').map(Number);
+    return [day, month, year];
+};
+
+export const getDateNow = (): string => {
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1;
+    const year = currentDate.getFullYear();
+    return `${formatValue(day)}/${formatValue(month)}/${year}`;
+};
+
+export const fixTime = (time: string): string => {
+    const trimmedTime = time.replace(/\s|:/g, '');
+
+    const hour = trimmedTime.slice(0, 2).padStart(2, '0');
+    const minute = trimmedTime.slice(2, 4).padStart(2, '0');
+
+    return `${hour}:${minute}`;
+};
+
+export const adjustDate = (date?: string): string => {
+    if (!date || date.length !== 10) {
+        return date!;
+    }
+
+    const [day, month, year] = extractDateValues(date);
+
+    if (!isNumeric(day) || !isNumeric(month) || !isNumeric(year)) {
+        return date;
+    }
+
+    const currentYear = new Date().getFullYear();
+    const adjustedDay = formatValue(Math.min(day, MAX_DAY));
+    const adjustedMonth = formatValue(Math.min(month, MAX_MONTH));
+
+    if (adjustedDay === '00' || adjustedMonth === '00') {
         return '';
     }
+
+    return `${adjustedDay}/${adjustedMonth}/${currentYear}`;
 };
 
-export const adjustTime = (time?: string) => {
-    if (time) {
-        if (time.length == 5) {
-            let hour = parseInt(time.substring(0, 2), 10);
-            let minute = parseInt(time.substring(3, 5), 10);
-            if (hour > 23) {
-                hour = 23;
-            }
-            if (minute > 59) {
-                minute = 59;
-            }
-            return `${hour}:${minute}`;
-        } else {
-            return time;
-        }
-    } else {
-        return '';
+export const adjustTime = (time?: string): string => {
+    if (!time || time.length !== 5) {
+        return time!;
     }
+
+    const [hour, minute] = time.split(':').map(Number);
+
+    const adjustedHour = formatValue(Math.min(hour, MAX_HOUR));
+    const adjustedMinute = formatValue(Math.min(minute, MAX_MINUTE));
+
+    return `${adjustedHour}:${adjustedMinute}`;
 };
