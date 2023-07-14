@@ -27,46 +27,62 @@ export const fixTime = (time: string) => {
 };
 
 export const adjustDate = (date?: string) => {
-    if (date) {
-        if (date.length == 10) {
-            let day = parseInt(date.substring(0, 2), 10);
-            let month = parseInt(date.substring(3, 5), 10);
-            let year = parseInt(date.substring(6, 10), 10);
-            const date_ = new Date();
-            if (day > 31) {
-                day = 31;
-            }
-            if (month > 12) {
-                month = 12;
-            }
-            if (year > date_.getFullYear()) {
-                year = date_.getFullYear();
-            }
-            return `${day}/${month}/${year}`;
-        } else {
-            return date;
-        }
+    if (!date) {
+        return ''
     } else {
-        return '';
-    }
+        const dateArray: string[] = date.split('/');
+        let day = parseInt(dateArray[0], 10);
+        let month = parseInt(dateArray[1], 10);
+        let year = parseInt(dateArray[2], 10);
+
+        if (date.length !== 10) {
+            return date
+        };
+
+        const currentDate = new Date();
+
+        if (day > 31) {
+            day = 31
+        };
+
+        if (month > 12) {
+            month = 12
+        };
+
+        if (year > currentDate.getFullYear()) {
+            year = currentDate.getFullYear()
+        };
+
+        const _day = day.toString().padStart(2, '0');
+        const _month = month.toString().padStart(2, '0');
+
+        return `${_day}/${_month}/${year}`;
+    };
+
 };
 
 export const adjustTime = (time?: string) => {
-    if (time) {
-        if (time.length == 5) {
-            let hour = parseInt(time.substring(0, 2), 10);
-            let minute = parseInt(time.substring(3, 5), 10);
-            if (hour > 23) {
-                hour = 23;
-            }
-            if (minute > 59) {
-                minute = 59;
-            }
-            return `${hour}:${minute}`;
-        } else {
-            return time;
-        }
+    if (!time) {
+        return ''
     } else {
-        return '';
-    }
+        const timeArray: string[] = time.split(':');
+        let hour = parseInt(timeArray[0], 10);
+        let minute = parseInt(timeArray[1], 10);
+
+        if (time.length !== 5) return time;
+
+        if (hour > 23) {
+            hour = 23
+        };
+
+        if (minute > 59) {
+            minute = 59
+        };
+
+        const _hour = hour.toString().padStart(2, '0');
+        const _minute = minute.toString().padStart(2, '0');
+
+        return `${_hour}:${_minute}`;
+    };
+
 };
