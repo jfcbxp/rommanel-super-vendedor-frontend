@@ -6,7 +6,13 @@ import Provider from './src/context';
 import Routes from './src/routes';
 import * as serviceWorkerRegistration from './src/serviceWorkerRegistration';
 import { useFonts, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
+/*
+TODO CHECK SIDE EFFECTS "react-native-reanimated": "~3.3.0" REMOVED IN EXPO 49 BY PIPELINE APK ERROR
+ npx expo start --clear
+eas build -p android --profile staging
+eas build:run -p android --latest
 
+*/
 export default function App() {
     let [fontsLoaded] = useFonts({
         Inter_500Medium,
