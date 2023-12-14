@@ -7,18 +7,24 @@ export const HomeStyles = StyleSheet.create({
         backgroundColor: '#F0F2F7',
     },
     body: {
-        flex: 9,
+        flex: 12,
         paddingHorizontal: '5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     navigator: {
         flex: 1.75,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingTop: '5%',
+        paddingTop: '2%',
+        maxWidth: 550,
+        width: '100%',
     },
     bottom: {
         flex: 7.25,
-        paddingTop: '2.5%',
+        paddingTop: '0.5%',
+        maxWidth: 550,
+        width: '100%',
     },
     title: {
         fontSize: 13,

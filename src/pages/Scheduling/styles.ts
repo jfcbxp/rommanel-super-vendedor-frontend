@@ -10,10 +10,14 @@ export const SchedulingStyles = StyleSheet.create({
         flex: 0.8,
         backgroundColor: '#73186D',
         paddingHorizontal: '2.5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     bottom: {
         flex: 1.2,
         paddingHorizontal: '2.5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     overview: {
         flex: 0.4,
@@ -22,7 +26,7 @@ export const SchedulingStyles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginTop: '2.5%',
+        marginTop: '1.5%',
         marginHorizontal: '2.5%',
         marginBottom: '1.25%',
         borderRadius: 8,
@@ -30,6 +34,8 @@ export const SchedulingStyles = StyleSheet.create({
     list: {
         flex: 1.6,
         margin: '2.5%',
+        maxWidth: 550,
+        width: '100%',
     },
     overview_1: {
         fontSize: 14,

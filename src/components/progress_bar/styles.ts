@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const ProgressBarStyles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        paddingVertical: '2.5%',
+        paddingVertical: '1.5%',
     },
     titles: {
         flex: 1,
@@ -22,7 +22,7 @@ export const ProgressBarStyles = StyleSheet.create({
     },
     progressBar: {
         flex: 1,
-        paddingVertical: '2.5%',
+        paddingVertical: '1.5%',
     },
     icon: {
         flex: 1,
