@@ -7,13 +7,17 @@ export const BillingStyles = StyleSheet.create({
         backgroundColor: '#F0F2F7',
     },
     top: {
-        height: 300,
+        flex: 0.5,
         backgroundColor: '#73186D',
         paddingHorizontal: '2.5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     bottom: {
         flex: 1.3,
         paddingHorizontal: '2.5%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     overview: {
         flex: 0.4,
@@ -21,10 +25,12 @@ export const BillingStyles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginTop: '2.5%',
+        marginTop: '1.5%',
         marginHorizontal: '2.5%',
         marginBottom: '1.25%',
         borderRadius: 8,
+        maxWidth: 550,
+        width: '100%',
     },
     overview_box: {
         flex: 1,
@@ -38,7 +44,9 @@ export const BillingStyles = StyleSheet.create({
     },
     list: {
         flex: 1.6,
-        margin: '2.5%',
+        margin: '1.5%',
+        maxWidth: 550,
+        width: '100%',
     },
     overview_1: {
         fontSize: 14,

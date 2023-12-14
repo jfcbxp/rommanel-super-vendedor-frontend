@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 export const WalletHeaderStyles = StyleSheet.create({
     container: {
         flex: 1,
+        maxWidth: 550,
+        width: '100%',
     },
     head: {
         flexDirection: 'row',
