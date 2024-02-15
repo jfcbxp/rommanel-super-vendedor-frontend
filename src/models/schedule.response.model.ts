@@ -3,4 +3,7 @@ export interface ScheduleResponse {
     codigoVendedor: string;
     situacao: string;
     observacao: string;
+    dataAgendamento: string;
+    horaInicial: string;
+    horaFinal: string;
 }
