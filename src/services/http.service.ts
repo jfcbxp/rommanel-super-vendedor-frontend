@@ -1,18 +1,16 @@
 import axios from 'axios';
 
 export function http(token?: string) {
-    // test : "26.214.78.128"
-    // production : "192.168.0.239"
     const host = '192.168.0.239';
     const domain = `http://${host}:9191`;
-    //const domain = "http://35c0-170-82-181-193.ngrok-free.app"
+    //const domain = 'https://37e4-2804-1b2-d000-d3be-39b1-d16-be77-9ae7.ngrok-free.app';
     const _baseURL = `${domain}/super-vendedor`;
     if (token) {
         return axios.create({
             baseURL: _baseURL,
             headers: {
                 'Content-Type': 'application/json',
-                //"ngrok-skip-browser-warning": "24002023",
+                'ngrok-skip-browser-warning': '24002023',
                 'Authorization': `Bearer ${token}`,
             },
             timeout: 20000,
@@ -22,7 +20,7 @@ export function http(token?: string) {
             baseURL: _baseURL,
             headers: {
                 'Content-Type': 'application/json',
-                //"ngrok-skip-browser-warning": "24002023",
+                'ngrok-skip-browser-warning': '24002023',
             },
             timeout: 20000,
         });

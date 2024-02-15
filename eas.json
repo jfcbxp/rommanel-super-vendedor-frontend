@@ -7,7 +7,7 @@
                 "API_KEY": "X"
             },
             "android": {
-                "image": "default",
+                "image": "latest",
                 "env": {
                     "PLATFORM": "android"
                 }
@@ -40,7 +40,8 @@
             },
             "distribution": "internal",
             "android": {
-                "buildType": "apk"
+                "buildType": "apk",
+                "image": "latest"
             }
         },
         "production": {
