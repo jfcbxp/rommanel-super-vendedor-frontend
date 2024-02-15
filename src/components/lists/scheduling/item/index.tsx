@@ -14,9 +14,10 @@ import { ContactIcons } from '../../../icons';
 import { ItemsStyles as styles } from '../../items/styles';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationParams } from '../../../../types/navigation.params';
-import { fixTime } from '../../../../services/date.time.service';
+import { adjustDate, adjustTime, fixTime } from '../../../../services/date.time.service';
+import { MaskedInput } from '../../../inputs/mask';
 
-export function SchedulingItem({ data }: { data: Schedule }) {
+export function SchedulingItem({ data }: Readonly<{ data: Schedule }>) {
     const navigation = useNavigation<NavigationParams>();
     const [visible, setVisible] = useState(false);
     const [comment, setComment] = useState(data.observacao ? data.observacao : '');
@@ -25,6 +26,9 @@ export function SchedulingItem({ data }: { data: Schedule }) {
     const [open, setOpen] = useState(false);
     const schedulingService = useSchedulingService();
     const [visible_, setVisible_] = useState(false);
+    const [date, setDate] = useState('');
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
 
     useEffect(() => {
         handlePicker();
@@ -46,6 +50,9 @@ export function SchedulingItem({ data }: { data: Schedule }) {
                     codigoVendedor: data.codigoVendedor,
                     observacao: comment.toUpperCase(),
                     situacao: status,
+                    dataAgendamento: date,
+                    horaInicial: start,
+                    horaFinal: end,
                 });
             }
         };
@@ -127,6 +134,48 @@ export function SchedulingItem({ data }: { data: Schedule }) {
                     setOpen={setOpen}
                     placeholder="Selecione"
                 />
+                {status === ScheduleStatusEnum.REMARCADO && (
+                    <View style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
+                        <MaskedInput
+                            value={date}
+                            onChangeText={(maskedText, rawText) => {
+                                setDate(adjustDate(maskedText));
+                            }}
+                            placeholder="Data"
+                            type="datetime"
+                            options={{
+                                format: 'DD/MM/YYYY',
+                            }}
+                            keyboardType="number-pad"
+                        />
+
+                        <MaskedInput
+                            value={start}
+                            onChangeText={(maskedText, rawText) => {
+                                setStart(adjustTime(maskedText));
+                            }}
+                            placeholder="Hora inicial"
+                            type="datetime"
+                            options={{
+                                format: 'HH:mm',
+                            }}
+                            keyboardType="number-pad"
+                        />
+                        <MaskedInput
+                            value={end}
+                            onChangeText={(maskedText, rawText) => {
+                                setEnd(adjustTime(maskedText));
+                            }}
+                            placeholder="Hora final"
+                            type="datetime"
+                            options={{
+                                format: 'HH:mm',
+                            }}
+                            keyboardType="number-pad"
+                        />
+                    </View>
+                )}
+
                 <Button title="ATUALIZAR" disabled={status ? false : true} onPress={update} />
                 <Button title="EXCLUIR" onPress={() => setVisible_(true)} />
             </ContentDialog>
