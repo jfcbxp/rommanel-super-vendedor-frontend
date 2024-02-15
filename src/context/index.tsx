@@ -36,15 +36,15 @@ const defaultState = {
     token: undefined,
     loading: true,
     date: undefined,
-    handleChangeCompany: () => { },
-    handleChangeDate: () => { },
-    handleChangeCostumer: () => { },
-    signIn: async () => { },
-    signOut: async () => { },
+    handleChangeCompany: () => {},
+    handleChangeDate: () => {},
+    handleChangeCostumer: () => {},
+    signIn: async () => {},
+    signOut: async () => {},
     validateToken: async () => Promise.resolve(undefined),
-    startLoading: () => { },
-    stopLoading: () => { },
-    showDialog: () => { },
+    startLoading: () => {},
+    stopLoading: () => {},
+    showDialog: () => {},
 };
 
 export const Context = createContext<ContextProps>(defaultState);
@@ -86,7 +86,7 @@ const Provider = ({ children }: ProviderProps) => {
             await validateToken();
         };
         if (!user) {
-            validate().catch(() => { });
+            validate().catch(() => {});
         }
     }, []);
 
@@ -105,7 +105,9 @@ const Provider = ({ children }: ProviderProps) => {
                 setUser(_decodeToken(_token));
                 await _storeToken(_token);
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error);
+                invalidCredentials.content = error.message;
                 setDialog(invalidCredentials);
             });
         setLoading(false);
@@ -187,12 +189,11 @@ const Provider = ({ children }: ProviderProps) => {
             setDialog(noData);
         } else {
             setDialog({
-                title: "Alerta",
+                title: 'Alerta',
                 content: _message,
-                visible: true
-            })
+                visible: true,
+            });
         }
-
     };
 
     const startLoading = () => {

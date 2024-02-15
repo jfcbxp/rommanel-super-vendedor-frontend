@@ -22,8 +22,8 @@ export default function Home({ navigation }: Properties) {
 
     useEffect(() => {
         const focusListener = navigation.addListener('focus', () => {
-            //context.startLoading();
-            //init().finally(context.stopLoading);
+            context.startLoading();
+            init().finally(context.stopLoading);
         });
         return focusListener;
     }, [navigation]);
