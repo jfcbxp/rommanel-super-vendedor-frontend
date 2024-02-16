@@ -12,7 +12,8 @@
       "backgroundColor": "#73186D"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/ce78c35f-85ee-4684-a6fe-9d5d98719591"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -38,6 +39,9 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }

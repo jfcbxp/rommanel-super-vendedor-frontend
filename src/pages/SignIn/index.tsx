@@ -20,11 +20,11 @@ export default function SignIn({ navigation }: Properties) {
         context.stopLoading();
     }, []);
 
-    const signIn = () => {
+    const signIn = async () => {
         const init = async () => {
             await context.signIn(code, password);
         };
-        init().catch((error) => console.error(error));
+        await init().catch((error) => console.error(error));
     };
 
     return (

@@ -20,6 +20,7 @@
             }
         },
         "development": {
+            "channel": "development",
             "extends": "base",
             "developmentClient": true,
             "env": {
@@ -27,13 +28,15 @@
             },
             "android": {
                 "distribution": "internal",
-                "withoutCredentials": true
+                "withoutCredentials": true,
+                "buildType": "apk"
             },
             "ios": {
                 "simulator": true
             }
         },
         "staging": {
+            "channel": "staging",
             "extends": "base",
             "env": {
                 "ENVIRONMENT": "staging"
@@ -45,10 +48,15 @@
             }
         },
         "production": {
+            "channel": "production",
             "extends": "base",
             "env": {
                 "ENVIRONMENT": "production"
             }
+        },
+        "preview": {
+            "channel": "preview",
+            "distribution": "internal"
         }
     }
 }
