@@ -21,10 +21,7 @@ export default function SignIn({ navigation }: Properties) {
     }, []);
 
     const signIn = async () => {
-        const init = async () => {
-            await context.signIn(code, password);
-        };
-        await init().catch((error) => console.error(error));
+        await context.signIn(code, password);
     };
 
     return (

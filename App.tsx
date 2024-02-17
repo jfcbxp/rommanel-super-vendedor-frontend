@@ -6,13 +6,8 @@ import Provider from './src/context';
 import Routes from './src/routes';
 import * as serviceWorkerRegistration from './src/serviceWorkerRegistration';
 import { useFonts, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
-/*
-TODO CHECK SIDE EFFECTS "react-native-reanimated": "~3.3.0" REMOVED IN EXPO 49 BY PIPELINE APK ERROR
- npx expo start --clear
-eas build -p android --profile staging
-eas build:run -p android --latest
+import * as Notifications from 'expo-notifications';
 
-*/
 export default function App() {
     let [fontsLoaded] = useFonts({
         Inter_500Medium,
@@ -22,6 +17,23 @@ export default function App() {
     if (!fontsLoaded) {
         return null;
     }
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+        }),
+    });
+
+    Notifications.scheduleNotificationAsync({
+        content: {
+            title: 'Bom dia super vendedor(a)!! \uD83D\uDE00',
+            body: 'Lembre-se de conferir se temos aniversariantes na carteira hoje. \ud83d\udc41\ufe0f',
+        },
+
+        trigger: { hour: 10, minute: 1, repeats: true },
+    });
 
     return (
         <SafeAreaView style={styles.container}>

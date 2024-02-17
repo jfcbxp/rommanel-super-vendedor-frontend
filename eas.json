@@ -56,7 +56,14 @@
         },
         "preview": {
             "channel": "preview",
-            "distribution": "internal"
+            "distribution": "internal",
+            "env": {
+                "ENVIRONMENT": "preview"
+            },
+            "android": {
+                "buildType": "apk",
+                "image": "latest"
+            }
         }
     }
 }

@@ -102,15 +102,15 @@ const Provider = ({ children }: ProviderProps) => {
             .signIn(code, password)
             .then(async (_token) => {
                 setToken(_token);
-                setUser(_decodeToken(_token));
                 await _storeToken(_token);
+                setUser(_decodeToken(_token));
             })
             .catch((error) => {
+                setLoading(false);
                 console.log(error);
                 invalidCredentials.content = error.message;
                 setDialog(invalidCredentials);
             });
-        setLoading(false);
     };
 
     const signOut = async () => {

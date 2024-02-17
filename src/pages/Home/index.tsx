@@ -21,21 +21,15 @@ export default function Home({ navigation }: Properties) {
     const metaService = useMetaService();
 
     useEffect(() => {
-        const focusListener = navigation.addListener('focus', () => {
-            context.startLoading();
-            init().finally(context.stopLoading);
-        });
-        return focusListener;
-    }, [navigation]);
+        reload();
+    }, []);
 
     const init = async () => {
         if (context.user) {
-            await Promise.all([metaService.get(context.user.sub)]).then(async ([_meta]) => {
+            await metaService.get(context.user.sub).then((_meta) => {
                 if (_meta) {
                     context.handleChangeCompany(_meta.empresa);
                     setMeta(_meta);
-                } else {
-                    context.showDialog('noData');
                 }
             });
         }
