@@ -127,6 +127,13 @@ export default function Home({ navigation }: Properties) {
                                     type="number"
                                 />
                                 <Divider />
+                                <ProgressBar
+                                    title="Total Comissão"
+                                    step={meta.totalComissao}
+                                    steps={meta.totalComissao}
+                                    type="money"
+                                />
+                                <Divider />
                                 <Text style={styles.subtitle}>
                                     Solicite a atualização da apuração para seu gerente.
                                 </Text>
