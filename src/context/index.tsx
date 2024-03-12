@@ -10,6 +10,7 @@ import { NavigationParams } from '../types/navigation.params';
 import { useNavigation } from '@react-navigation/native';
 import { useTokenRenewService } from '../services/token-renew.service';
 import { Costumer } from '../models/costumer.model';
+import * as Updates from 'expo-updates';
 
 type ContextProps = {
     user: User | undefined;
@@ -84,9 +85,15 @@ const Provider = ({ children }: ProviderProps) => {
     useEffect(() => {
         const validate = async () => {
             await validateToken();
+            const update = await Updates.checkForUpdateAsync();
+
+            if (update.isAvailable) {
+                await Updates.fetchUpdateAsync();
+                await Updates.reloadAsync();
+            }
         };
         if (!user) {
-            validate().catch(() => {});
+            validate();
         }
     }, []);
 
